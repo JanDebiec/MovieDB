@@ -1,3 +1,9 @@
+# local helper development folder
+imdbpy-master/
+
+# user db files
+*.sqlite
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
