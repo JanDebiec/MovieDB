@@ -1,8 +1,12 @@
-# local helper development folder
+# local helper development folders
 imdbpy-master/
+tutorial/
 
 # user db files
 *.sqlite
+
+# user resources, pictures, ...
+res/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
