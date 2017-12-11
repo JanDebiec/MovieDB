@@ -71,3 +71,16 @@ class TestExtractSicarioInfos:
     def test_directorName(self):
         directorName = self._inst.getFilmFirstDirectorName(self._film)
         assert directorName == 'Villeneuve, Denis'
+
+    def test_getActorName(self):
+        actorList = self._inst.getFilmCast(self._film,1)
+        actor = actorList[0]
+        actorId, actorName = self._inst.getPersonDetails(actor)
+        assert actorId == '1289434'
+        assert actorName == 'Blunt, Emily'
+
+    def test_getActorRole(self):
+        actorList = self._inst.getFilmCast(self._film, 1)
+        actor = actorList[0]
+        role = self._inst.getActorRole(actor)
+        assert role == 'Kate Macer'

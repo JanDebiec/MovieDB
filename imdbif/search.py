@@ -72,6 +72,16 @@ class SearchImdb:
         for people in film['cast'][0:6]:
             print('name {0}, role {1}'.format(people['name'], people.currentRole))
 
+    def getPersonDetails(self, person):
+        '''person should be class imdb.Person.Person'''
+        personId = person.personID
+        name = person.data['name']
+        return (personId, name)
+
+    def getActorRole(self, person):
+        currentRole = person.currentRole.data['name']
+        return currentRole
+
 
     def printResults(self, results):
         # Print the results.
