@@ -34,6 +34,39 @@ class SearchImdb:
             return (None)
         return film
 
+    def getFilmTitle(self, movie):
+        return movie['title']
+
+    def getFilmYear(self, movie):
+        return movie['year']
+
+    def getFilmRating(self, movie):
+        return movie['rating']
+
+    def getFilmDirectors(self, movie):
+        return movie['director']
+
+    def getFilmFirstDirector(self, movie):
+        list = movie['director']
+        return list[0]
+
+    def getFilmFirstDirectorID(self, movie):
+        list = movie['director']
+        first = list[0]
+        return first.personID
+
+    def getFilmFirstDirectorName(self, movie):
+        list = movie['director']
+        first = list[0]
+        return first.data['name']
+
+    def getFilmCast(self, movie, amount = -1):
+        cast = movie['cast']
+        if amount < 0:
+            return cast
+        else:
+            return cast[0:amount]
+
     def printFilmInfo(self,film):
         print('ID = {0}, title = {1}, data = {2} '.format(film.movieID, film['long imdb canonical title'], film.data))
         for people in film['cast'][0:6]:

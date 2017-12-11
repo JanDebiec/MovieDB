@@ -4,19 +4,70 @@ sys.path.extend(['/home/jan/project/movie_db'])
 
 import imdbif.search as ims
 
-# def test_found_one_result_should_be_list_with_one_movie(search_movie):
-#     page = search_movie('od instituta do proizvodnje')
-#     data = parser.parse(page)['data']
-#     assert data == [
-#         ('0483758', {'kind': 'short', 'title': 'Od instituta do proizvodnje', 'year': 1971})
-#     ]
 
-@fixture(scope='module')
-def creatInstance():
-    inst = ims.SearchImdb()
-    return inst
+# @fixture(scope='module')
+# def creatInstance():
+#     inst = ims.SearchImdb()
+#     return inst
+#
+# def test_search_imdb_Sicario():
+#     i = creatInstance()
+#     films = i.searchMovie("Sicario")
+#     assert len(films[1]) == 20
+#
+# def test_getSicario():
+#     i = creatInstance()
+#     film = i.getMovie(3397884)
+#     assert film['title'] == 'Sicario'
 
-def test_search_imdb_Sicario():
-    i = creatInstance()
-    films = i.searchMovie("Sicario")
-    assert len(films[1]) == 20
+class TestExtractSicarioInfos:
+
+    def setup(self):
+        print("setup      class:TestExtractInfosClass, fixture test method")
+        # self.inp = inputFrame.Input()
+
+    def teardown(self):
+        print("teardown      class:TestExtractInfosClass")
+
+    def setup_class(self):
+        self._inst = ims.SearchImdb()
+        self._film = self._inst.getMovie(3397884)
+
+        print("\nsetup class      class: %s, fixture test class" %self.__name__)
+
+    def teardown_class(self):
+        print("teardown class      class: %s" % self.__name__)
+
+    def test_title(self):
+        title = self._inst.getFilmTitle(self._film)
+        assert title == 'Sicario'
+
+    def test_year(self):
+        year = self._inst.getFilmYear(self._film)
+        assert year == 2015
+
+    def test_rating(self):
+        year = self._inst.getFilmRating(self._film)
+        assert year == 7.6
+
+    def test_cast_whole(self):
+        cast = self._inst.getFilmCast(self._film)
+        size = len(cast)
+        assert size == 101
+
+    def test_cast_6(self):
+        cast = self._inst.getFilmCast(self._film, 6)
+        size = len(cast)
+        assert size == 6
+
+    def test_directorsList(self):
+        list = self._inst.getFilmDirectors(self._film)
+        assert len(list) == 1
+
+    def test_directorID(self):
+        directorID = self._inst.getFilmFirstDirectorID(self._film)
+        assert directorID == '0898288'
+
+    def test_directorName(self):
+        directorName = self._inst.getFilmFirstDirectorName(self._film)
+        assert directorName == 'Villeneuve, Denis'
