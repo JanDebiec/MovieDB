@@ -1,6 +1,7 @@
 # local helper development folders
 imdbpy-master/
 tutorial/
+userdata/
 
 # user db files
 *.sqlite

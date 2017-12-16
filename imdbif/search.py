@@ -68,7 +68,7 @@ class SearchImdb:
             return cast[0:amount]
 
     def printFilmInfo(self,film):
-        print('ID = {0}, title = {1}, data = {2} '.format(film.movieID, film['long imdb canonical title'], film.data))
+        print('ID = {0}, title = {1}, userdata = {2} '.format(film.movieID, film['long imdb canonical title'], film.data))
         for people in film['cast'][0:6]:
             print('name {0}, role {1}'.format(people['name'], people.currentRole))
 
