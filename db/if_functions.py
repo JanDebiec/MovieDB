@@ -30,5 +30,9 @@ def add_column_with_default_value(cursor, configTuple):
               .format(tn=table_name, cn=new_column, ct=column_type, df=default_val))
     # cursor.commit()
 
+def dropTable(cursor, table):
+    cursor.execute("DROP TABLE {tn}".format(tn=table))
+
+
 def closeDB(connection):
     connection.close()
