@@ -34,5 +34,11 @@ class UserDB:
         self._conn.close()
 
     def dropTable(self, table):
+        self._cursor = inf.getCursor(self._conn)
         inf.dropTable(self._cursor,table)
         self._conn.commit()
+
+    def getFieldsCount(self, table):
+        cursor = inf.getCursor(self._conn)
+        count = inf.getFielsCount(cursor, table)
+        return count

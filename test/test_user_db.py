@@ -3,7 +3,7 @@ import sys
 sys.path.extend(['/home/jan/project/movie_db'])
 import db.db as db
 
-dbFileName = '../userdata/movieTestdb6.sqlite'
+dbFileName = '../userdata/movieTestdb2.sqlite'
 
 tableName = 'movies'
 tableMoviesStruct = \
@@ -35,8 +35,14 @@ class TestConstructUserDB:
 
     def test_constructTable(self):
         with db.UserDB(dbFileName) as tdb:
-            tdb.constructTable(tableMoviesStruct)
-            tdb.dropTable(tableName)
+            try:
+                # tdb.dropTable(tableName)
+                tdb.constructTable(tableMoviesStruct)
+                sizeStruct = len(tableMoviesStruct)
+                sizeAct = tdb.getFieldsCount(tableName)
+                assert sizeStruct == sizeAct
+            finally:
+                tdb.dropTable(tableName)
 
 
 #class TestUserDB:
