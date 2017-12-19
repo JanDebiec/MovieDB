@@ -1,5 +1,8 @@
 import sqlite3
 
+# the rest is obsolete,
+# we will use SQLAlchemy
+
 def create_connection(db_file):
     """ create a database connection to the SQLite database
         specified by db_file

@@ -1,5 +1,10 @@
 import csv
 import sys
+import os
+
+from sqlalchemy import create_engine, Column, String, Integer, MetaData, Table
+from sqlalchemy.orm import mapper, create_session
+
 from numbers import Number
 from collections import Set, Mapping, deque
 
@@ -62,3 +67,22 @@ def getsize(obj_0):
             size += sum(inner(getattr(obj, s)) for s in obj.__slots__ if hasattr(obj, s))
         return size
     return inner(obj_0)
+
+def csvToDbTable(csvFile):
+    engine = create_engine('sqlite://')  # memory-only database
+
+    table = None
+    metadata = MetaData(bind=engine)
+    with ManagedFile(csvFile) as f:
+        # assume first line is header
+        cf = csv.DictReader(f, delimiter=',')
+        for row in cf:
+            if table is None:
+                # create the table
+                table = Table('foo', metadata,
+                              Column('id', Integer, primary_key=True),
+                              *(Column(rowname, String()) for rowname in row.keys()))
+                table.create()
+            # insert data into the table
+            table.insert().values(**row).execute()
+    return table

@@ -3,6 +3,9 @@ imdbpy-master/
 tutorial/
 userdata/
 
+# python virtual environment
+venv/
+
 # user db files
 *.sqlite
 
