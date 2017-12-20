@@ -2,8 +2,12 @@ import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'userdata/app.sqlite')
-SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
+class Config(object):
+
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'userdata/app.sqlite')
+    SQLALCHEMY_TRACK_MODIFICATION = False
+    #SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
 #WTF_CSRF_ENABLED = True
 #SECRET_KEY = 'you-will-never-guess'
