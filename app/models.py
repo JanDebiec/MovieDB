@@ -27,7 +27,7 @@ class People(db.Model):
     peopleImdbId = db.Column(db.String(7))
     name = db.Column(db.String(64))
     # relations
-    # roles = db.relationship('Role', backref='actor', lazy='dynamic')
+    roles = db.relationship('Role', backref='actor', lazy='dynamic')
     # director_of = db.relationship('movie', backref='director', lazy='dynamic')
 
     def __repr__(self):
@@ -37,7 +37,7 @@ class Role(db.Model):
     ''' as ids used intger id. Movie or People can not be listed in Imdb'''
     id = db.Column(db.Integer, primary_key=True)
     movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'))
-    # peopleId = db.Column(db.Integer, db.ForeignKey('people.id'))
+    people_Id = db.Column(db.Integer, db.ForeignKey('people.id'))
     characterName = db.Column(db.String(64))
 
     def __repr__(self):

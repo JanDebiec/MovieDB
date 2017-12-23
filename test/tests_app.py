@@ -2,7 +2,7 @@ from pytest import fixture, mark
 import sys
 sys.path.extend(['/home/jan/project/movie_db'])
 from app import create_app, db
-from app.models import Movie, Role
+from app.models import Movie, Role, People
 
 from config import Config
 
@@ -83,5 +83,27 @@ class TestAppDb:
         roles = m.roles.all()
         c = len(roles)
         assert c == 2
+
+    def test_add_two_roles_peoples(self):
+        an = Movie(titleImdb='Apocalypse Now')
+        sic = Movie(titleImdb='Sicario')
+        marlon = People(name='Marlon')
+        sheen = People(name='Scheen')
+        kurz = Role(characterName='Kurz', film=an, actor=marlon)
+        willard = Role(characterName='Willard', film=an, actor=sheen)
+        db.session.add(marlon)
+        db.session.add(sheen)
+        db.session.add(an)
+        db.session.add(sic)
+        db.session.add(kurz)
+        db.session.add(willard)
+        db.session.commit()
+        m = People.query.get(1)
+        roles = m.roles.all()
+        c = len(roles)
+        assert c == 1
+        name = roles[0].characterName
+        assert name == 'Kurz'
+
 
 
