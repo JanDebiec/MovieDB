@@ -7,17 +7,15 @@ class Movie(db.Model):
     imdbId = db.Column(db.String(7))
     EAN = db.Column(db.String(13))
     titleImdb = db.Column(db.String(64)) # Imdb title
-    titleOrig = db.Column(db.String(64)) # polish title for polish movies
+    titleOrig = db.Column(db.String(64)) # polish title for polish movies, or german, or ...
     titleLocal = db.Column(db.String(64)) # polish or german if bought in Pl (De)
     medium = db.Column(db.String(8))
     diskNr = db.Column(db.String(8))
     # relations
-    # posts = db.relationship('Post', backref='author', lazy='dynamic')
     roles = db.relationship('Role', backref='film', lazy='dynamic')
     #
-    # directed_by = db.Column(db.Integer, db.ForeignKey('people.id'))
-    # director = db.relationship("people", backref='movie', lazy='dynamic')
-    # relations
+    directors = db.Column(db.Integer, db.ForeignKey('director.id'))
+    # directors = db.relationship("People", backref='director', lazy='dynamic')
 
     def __repr__(self):
         return '<Movie id={id} title={title} medium={medium}'.format(self.imdbId, self.titleImdb, self.medium)
@@ -28,16 +26,25 @@ class People(db.Model):
     name = db.Column(db.String(64))
     # relations
     roles = db.relationship('Role', backref='actor', lazy='dynamic')
-    # director_of = db.relationship('movie', backref='director', lazy='dynamic')
+    # director_of = db.relationship('Movie', backref='director', lazy='dynamic')
 
     def __repr__(self):
         return '<People peopleId={peopleId} name={name}'.format(self.peopleId, self.name)
+
+class Director(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    peopleImdbId = db.Column(db.String(7))
+    name = db.Column(db.String(64))
+    movies = db.relationship('Movie', backref='director', lazy='dynamic')
+
+    def __repr__(self):
+        return '<Director peopleId={peopleId} name={name}'.format(self.peopleId, self.name)
 
 class Role(db.Model):
     ''' as ids used intger id. Movie or People can not be listed in Imdb'''
     id = db.Column(db.Integer, primary_key=True)
     movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'))
-    people_Id = db.Column(db.Integer, db.ForeignKey('people.id'))
+    people_id = db.Column(db.Integer, db.ForeignKey('people.id'))
     characterName = db.Column(db.String(64))
 
     def __repr__(self):
