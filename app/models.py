@@ -11,11 +11,10 @@ class Movie(db.Model):
     titleLocal = db.Column(db.String(64)) # polish or german if bought in Pl (De)
     medium = db.Column(db.String(8))
     diskNr = db.Column(db.String(8))
+    # external
+    directors = db.Column(db.Integer, db.ForeignKey('director.id'))
     # relations
     roles = db.relationship('Role', backref='film', lazy='dynamic')
-    #
-    directors = db.Column(db.Integer, db.ForeignKey('director.id'))
-    # directors = db.relationship("People", backref='director', lazy='dynamic')
 
     def __repr__(self):
         return '<Movie id={id} title={title} medium={medium}'.format(self.imdbId, self.titleImdb, self.medium)
@@ -26,7 +25,6 @@ class People(db.Model):
     name = db.Column(db.String(64))
     # relations
     roles = db.relationship('Role', backref='actor', lazy='dynamic')
-    # director_of = db.relationship('Movie', backref='director', lazy='dynamic')
 
     def __repr__(self):
         return '<People peopleId={peopleId} name={name}'.format(self.peopleId, self.name)
@@ -35,6 +33,7 @@ class Director(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     peopleImdbId = db.Column(db.String(7))
     name = db.Column(db.String(64))
+    # relations
     movies = db.relationship('Movie', backref='director', lazy='dynamic')
 
     def __repr__(self):
@@ -43,9 +42,10 @@ class Director(db.Model):
 class Role(db.Model):
     ''' as ids used intger id. Movie or People can not be listed in Imdb'''
     id = db.Column(db.Integer, primary_key=True)
+    characterName = db.Column(db.String(64))
+    # external
     movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'))
     people_id = db.Column(db.Integer, db.ForeignKey('people.id'))
-    characterName = db.Column(db.String(64))
 
     def __repr__(self):
         return '<Role peopleId={peopleId} movieId={movieId}'.format(self.peopleId, self.movieId)
