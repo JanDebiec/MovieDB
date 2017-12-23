@@ -2,6 +2,7 @@ from pytest import fixture, mark
 import sys
 sys.path.extend(['/home/jan/project/movie_db'])
 from app import create_app, db
+from app.models import Movie, Role
 
 from config import Config
 
@@ -32,3 +33,55 @@ class TestAppDb:
     def test_1(self):
         value = 2
         assert 2 == value
+
+    def test_add_first_movie(self):
+        an = Movie(titleImdb='Apocalypse Now')
+        db.session.add(an)
+        db.session.commit()
+        movies = Movie.query.all()
+        c = len(movies)
+        assert c == 1
+
+
+    def test_add_two_movies(self):
+        an = Movie(titleImdb='Apocalypse Now')
+        sic = Movie(titleImdb='Sicario')
+        db.session.add(an)
+        db.session.add(sic)
+        db.session.commit()
+        movies = Movie.query.all()
+        c = len(movies)
+        assert c == 2
+
+
+    def test_add_two_roles(self):
+        an = Movie(titleImdb='Apocalypse Now')
+        sic = Movie(titleImdb='Sicario')
+        kurz = Role(characterName='Kurz', film=an)
+        willard = Role(characterName='Willard', film=an)
+        db.session.add(an)
+        db.session.add(sic)
+        db.session.add(kurz)
+        db.session.add(willard)
+        db.session.commit()
+        movies = Movie.query.all()
+        roles = Role.query.all()
+        c = len(roles)
+        assert c == 2
+
+    def test_add_query_two_roles(self):
+        an = Movie(titleImdb='Apocalypse Now')
+        sic = Movie(titleImdb='Sicario')
+        kurz = Role(characterName='Kurz', film=an)
+        willard = Role(characterName='Willard', film=an)
+        db.session.add(an)
+        db.session.add(sic)
+        db.session.add(kurz)
+        db.session.add(willard)
+        db.session.commit()
+        m = Movie.query.get(1)
+        roles = m.roles.all()
+        c = len(roles)
+        assert c == 2
+
+
