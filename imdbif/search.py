@@ -60,6 +60,13 @@ class SearchImdb:
         first = list[0]
         return first.data['name']
 
+    def getDirectorDetailsForDb(self, movie):
+        list = movie['director']
+        director = list[0]
+        imdbId = director.personID
+        name = director.data['name']
+        return (imdbId, name)
+
     def getFilmCast(self, movie, amount = -1):
         cast = movie['cast']
         if amount < 0:
