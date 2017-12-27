@@ -1,3 +1,4 @@
+# OBSOLETE
 import sys
 try:
     import imdb

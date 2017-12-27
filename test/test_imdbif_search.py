@@ -31,7 +31,7 @@ class TestExtractSicarioInfos:
 
     def setup_class(self):
         self._inst = ims.SearchImdb()
-        self._film = self._inst.getMovie(3397884)
+        self._film = self._inst.getMovie('3397884')
         sizeOfFilm = sys.getsizeof(self._film)
         sizeOfClass = sys.getsizeof(self)
         print('size of film = %s' % sizeOfFilm)
