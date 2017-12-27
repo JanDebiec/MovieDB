@@ -11,6 +11,7 @@ venv/
 
 # user resources, pictures, ...
 res/
+*.tsv
 
 # IDE pyCharm folder
 .idea/

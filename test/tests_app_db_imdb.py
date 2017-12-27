@@ -4,7 +4,7 @@ sys.path.extend(['/home/jan/project/movie_db'])
 
 from config import Config
 
-import imdbif.search as ims
+import imdbif.search_obsolete as ims
 from app import create_app, db
 from app.models import Movie, Role, People, Director
 

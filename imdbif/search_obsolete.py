@@ -1,4 +1,9 @@
+#########################################################
 # OBSOLETE
+# after IMDB has changed the API, interface will not work
+#########################################################
+
+
 import sys
 try:
     import imdb
