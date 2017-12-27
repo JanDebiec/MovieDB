@@ -19,7 +19,7 @@ class TestInputCsv:
         pass
 
     def test_openFileOk(self):
-        with h.ManagedFile(testFile) as f:
+        with h.ManagedUtfFile(testFile) as f:
             csvReader = csv.reader(f)
             data = False
             for row in csvReader:
@@ -27,12 +27,12 @@ class TestInputCsv:
                     data = True
                 else:
                     items = row
-                    if len(items) > 0:
-                        print(items[0])
+                    # if len(items) > 0:
+                        # print(items[0])
             assert data == True
 
     def test_openCsvGetTsv(self):
-        with h.ManagedFile(testFile) as f:
+        with h.ManagedUtfFile(testFile) as f:
             csvReader = csv.reader(f)
             data = False
             for row in csvReader:
@@ -41,6 +41,11 @@ class TestInputCsv:
                 else:
                     if len(row) > 0:
                         movieId = row[0]
+                        print(row, movieId)
                         imdbData = tsv.getMovieData(movieId)
-                        print(imdbData)
+                        if imdbData != None:
+                            print(imdbData)
+                        else:
+                            print('No data found')
+                        # print(imdbData)
 

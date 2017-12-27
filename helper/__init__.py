@@ -1,4 +1,6 @@
 import os
+import io
+import codecs
 import csv
 from sqlalchemy import create_engine, Column, String, Integer, MetaData, Table
 
@@ -9,6 +11,20 @@ class ManagedFile:
 
     def __enter__(self):
         self._file = open(self._name,self._mode)
+        return self._file
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self._file:
+            self._file.close()
+
+class ManagedUtfFile:
+    def __init__(self, name, mode = 'r', encoding='utf8'):
+        self._name = name
+        self._mode = mode
+        self._encoding = encoding
+
+    def __enter__(self):
+        self._file = codecs.open(self._name,self._mode, self._encoding)
         return self._file
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -45,7 +61,7 @@ def findLineWithId(filename, matchId, delimiter='\t'):
         end = os.path.getsize(filename)
         endBinary = "{0:b}".format(end)
         maxLoopCount = len(endBinary)
-        with ManagedFile(filename) as fptr:
+        with ManagedUtfFile(filename) as fptr:
 
             while (start < end) and (counter < maxLoopCount):
                 lastId = lineId
@@ -58,7 +74,8 @@ def findLineWithId(filename, matchId, delimiter='\t'):
                 values = line.split(sep=delimiter)
                 firstValue = values[0]
                 lineId = firstValue[2:]# ignore the first 2 chars
-                # print(lineId)
+                # if debug == True:
+                print(lineId)
                 counter = counter + 1
                 if matchId == lineId:
                     return line
@@ -72,6 +89,8 @@ def findLineWithId(filename, matchId, delimiter='\t'):
                             start = end - 1
                     else:
                         end = fptr.tell()
+            # if debug:
+            print("counter = {}".format(counter))
             return []
     except:
         return []
