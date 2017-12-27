@@ -1,7 +1,8 @@
 import helper
 from argparse import ArgumentParser
 
-file = 'imdbif/title_basics.tsv'
+file = 'imdbif/title_crew.tsv'
+# file = 'imdbif/title_basics.tsv'
 
 
 
@@ -23,7 +24,7 @@ args = parser.parse_args()
 print(args.filenameVariable)
 print(args.filenameVariable)
 
-line = helper.findLineWithId(args.filenameVariable, args.valueId)
-# line = helper.findLineWithId(file, '3397885')
+# line = helper.findLineWithId(args.filenameVariable, args.valueId)
+line = helper.findLineWithId(file, '3397884')
 
 print(line)

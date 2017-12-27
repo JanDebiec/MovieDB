@@ -37,18 +37,23 @@ def csvToDbTable(csvFile, delimiter):
 def findLineWithId(filename, matchId, delimiter='\t'):
     '''binary search in TSV files from IMDB'''
     counter = 0
+    helperCounter = 1
     start = 0
+    lastId = ''
+    lineId = ''
     end = os.path.getsize(filename)
     endBinary = "{0:b}".format(end)
     maxLoopCount = len(endBinary)
     with ManagedFile(filename) as fptr:
 
         while (start < end) and (counter < maxLoopCount):
+            lastId = lineId
             pos = start + ((end - start) / 2)
 
             fptr.seek(pos)
             fptr.readline()
             line = fptr.readline()
+            lineLength = len(line)
             values = line.split(sep=delimiter)
             firstValue = values[0]
             lineId = firstValue[2:]# ignore the first 2 chars
@@ -59,6 +64,12 @@ def findLineWithId(filename, matchId, delimiter='\t'):
             elif matchId > lineId:
                 start = fptr.tell()
             else:
-                end = fptr.tell()
+                if lastId == lineId:
+                    helperCounter = helperCounter + 1
+                    end = fptr.tell() - helperCounter*lineLength
+                    if start > end:
+                        start = end - 1
+                else:
+                    end = fptr.tell()
         return []
 
