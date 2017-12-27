@@ -1,7 +1,7 @@
 # the rest is obsolete,
 # we will use SQLAlchemy
 
-import db.if_functions as inf
+import db.if_functions_obsolete as inf
 
 
 

@@ -20,17 +20,21 @@ def getMovieData(movieId):
     tconst	titleType	primaryTitle	originalTitle	isAdult
     startYear	endYear	runtimeMinutes	genres
     '''
-    line = helper.findLineWithId(movieBasicsFile ,movieId)
-    if len(line) > 0:
-        values = line.split('\t')
-        imdbTitle = values[MovieBasics.imdbTitle.value]
-        origTitle = values[MovieBasics.originTitle.value]
-        year = values[MovieBasics.startYear.value]
-        runTime = values[MovieBasics.runTimeMin.value]
-        # return (imdbTitle, origTitle, year, runTime)
-        return (imdbTitle, origTitle, year, runTime)
-    else:
+    try:
+        line = helper.findLineWithId(movieBasicsFile ,movieId)
+        if len(line) > 0:
+            values = line.split('\t')
+            imdbTitle = values[MovieBasics.imdbTitle.value]
+            origTitle = values[MovieBasics.originTitle.value]
+            year = values[MovieBasics.startYear.value]
+            runTime = values[MovieBasics.runTimeMin.value]
+            # return (imdbTitle, origTitle, year, runTime)
+            return (imdbTitle, origTitle, year, runTime)
+        else:
+            return None
+    except:
         return None
+
 
 class MovieDirector(Enum):
     movieId = 0
