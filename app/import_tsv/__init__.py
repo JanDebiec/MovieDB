@@ -2,12 +2,12 @@ import os
 import helper
 from enum import Enum
 
-# movieBasicsFile = 'imdbif/title_basics.tsv'
-movieBasicsFile = 'app/import_tsv/title_basics.tsv'
-# nameBasicsFile = 'imdbif/name_basics.tsv'
-nameBasicsFile = 'app/import_tsv/name_basics.tsv'
-# movieDirectorFile = 'imdbif/title_crew.tsv'
-movieDirectorFile = 'app/import_tsv/title_crew.tsv'
+movieBasicsFile = 'imdbif/title_basics.tsv'
+# movieBasicsFile = 'app/import_tsv/title_basics.tsv'
+nameBasicsFile = 'imdbif/name_basics.tsv'
+# nameBasicsFile = 'app/import_tsv/name_basics.tsv'
+movieDirectorFile = 'imdbif/title_crew.tsv'
+# movieDirectorFile = 'app/import_tsv/title_crew.tsv'
 
 class MovieBasics(Enum):
     movieId = 0
@@ -92,6 +92,7 @@ def findLineWithId(filename, matchId, delimiter='\t'):
         end = os.path.getsize(filename)
         endBinary = "{0:b}".format(end)
         maxLoopCount = len(endBinary)
+        # with helper.ManagedFile(filename) as fptr:
         with helper.ManagedUtfFile(filename) as fptr:
 
             while (start < end) and (counter < maxLoopCount):
@@ -106,7 +107,7 @@ def findLineWithId(filename, matchId, delimiter='\t'):
                 firstValue = values[0]
                 lineId = firstValue[2:]# ignore the first 2 chars
                 # if debug == True:
-                print(lineId)
+                # print(lineId)
                 counter = counter + 1
                 if matchId == lineId:
                     return line
