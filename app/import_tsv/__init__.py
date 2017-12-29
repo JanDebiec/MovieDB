@@ -80,7 +80,7 @@ def getNameData(personId):
     else:
         return None
 
-def findLineWithId(filename, matchId, delimiter='\t'):
+def findLineWithId(filename, matchId, delimiter='\t', quiet=True):
     '''binary search in TSV files from IMDB'''
     try:
         counter = 0
@@ -89,7 +89,7 @@ def findLineWithId(filename, matchId, delimiter='\t'):
         lastId = ''
         lineId = ''
         pwd = os.getcwd()
-        print(pwd)
+        print(pwd , filename)
         end = os.path.getsize(filename)
         endBinary = "{0:b}".format(end)
         maxLoopCount = len(endBinary)
@@ -107,14 +107,17 @@ def findLineWithId(filename, matchId, delimiter='\t'):
                 values = line.split(sep=delimiter)
                 firstValue = values[0]
                 lineId = firstValue[2:]# ignore the first 2 chars
-                # if debug == True:
-                # print(lineId)
+                if quiet != True:
+                    print('lineId {}'.format(lineId))
                 counter = counter + 1
                 if matchId == lineId:
+                    if quiet != True:
+                        print("counter = {0} / {1}".format(counter, maxLoopCount))
                     return line
                 elif matchId > lineId:
                     start = fptr.tell()
                 else:
+                    # dirty trick to fix various length of lines
                     if lastId == lineId:
                         helperCounter = helperCounter + 1
                         end = fptr.tell() - helperCounter*lineLength
@@ -122,8 +125,8 @@ def findLineWithId(filename, matchId, delimiter='\t'):
                             start = end - 1
                     else:
                         end = fptr.tell()
-            # if debug:
-            print("counter = {}".format(counter))
+            if quiet != True:
+                print("counter = {}".format(counter))
             return []
     except:
         print("Oops!", sys.exc_info()[0], "occured.")

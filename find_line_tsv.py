@@ -9,17 +9,16 @@ if __name__ == "__main__":
                         help="write report to FILE", metavar="FILE")
     parser.add_argument("-i", "--id", dest="valueId",
                         help="ID of movie/person in IMDb", metavar="IMDBID")
-    parser.add_argument("-q", "--quiet",
-                        action="store_false", dest="verbose", default=True,
+    # defalt True enable changeing, with default=False nothing changes
+    parser.add_argument("-d", "--debug",
+                        action="store_false", dest="quiet", default=True,
                         help="don't print status messages to stdout")
-    # parser.add_argument("-d", "--debug",
-    #                     action="store_false",
-    #                     dest="debug", default=True,
-    #                     help="some extra infos from function call")
 
     args = parser.parse_args()
 
-    line = tsv.findLineWithId(args.filenameVariable, args.valueId)
-    # line = helper.findLineWithId(file, '3397884')
+    print(args.filenameVariable)
+    print('quiet = {}'.format(args.quiet))
+
+    line = tsv.findLineWithId(args.filenameVariable, args.valueId, quiet=args.quiet)
 
     print(line)
