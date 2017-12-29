@@ -18,13 +18,13 @@ class ManagedFile:
             self._file.close()
 
 class ManagedUtfFile:
-    def __init__(self, name, mode = 'r', encoding='utf-8'):
+    def __init__(self, name, mode = 'r', encoding='UTF-8'):
         self._name = name
         self._mode = mode
         self._encoding = encoding
 
     def __enter__(self):
-        self._file = io.open(self._name,mode=self._mode, encoding=self._encoding)
+        self._file = io.open(self._name,mode=self._mode, encoding=self._encoding, errors='replace')
         return self._file
 
     def __exit__(self, exc_type, exc_val, exc_tb):

@@ -1,4 +1,5 @@
 import os
+import sys
 import helper
 from enum import Enum
 
@@ -125,5 +126,6 @@ def findLineWithId(filename, matchId, delimiter='\t'):
             print("counter = {}".format(counter))
             return []
     except:
+        print("Oops!", sys.exc_info()[0], "occured.")
         return []
 

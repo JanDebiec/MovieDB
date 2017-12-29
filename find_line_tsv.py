@@ -1,4 +1,4 @@
-import helper
+import app.import_tsv as tsv
 
 if __name__ == "__main__":
     from argparse import ArgumentParser
@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    line = helper.findLineWithId(args.filenameVariable, args.valueId)
+    line = tsv.findLineWithId(args.filenameVariable, args.valueId)
     # line = helper.findLineWithId(file, '3397884')
 
     print(line)
