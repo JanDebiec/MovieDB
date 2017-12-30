@@ -12,6 +12,12 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
 
+    from app.userinput import bp as user_bp
+    app.register_blueprint(user_bp)
+
+    from app.db import bp as db_bp
+    app.register_blueprint(db_bp)
+
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
     return app
@@ -19,3 +25,6 @@ def create_app(config_class=Config):
 
 from app import models
 from app.main import routes
+from app.userinput import handler as ush
+from app.db import handler as dbh
+
