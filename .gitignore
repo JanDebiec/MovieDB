@@ -2,6 +2,7 @@
 imdbpy-master/
 tutorial/
 userdata/
+obsolete/
 
 # python virtual environment
 venv/
