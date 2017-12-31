@@ -1,4 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>Manual Input</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.imdbid.label}}<br>
+            {{ form.imdbid(size=7)}}
+        </p>
+        <p>
+            {{ form.localname.label}}<br>
+            {{ form.localname(size=32)}}
+        </p>
+        <p>
+            {{ form.medium.label}}<br>
+            {{ form.medium(size=8)}}
+        </p>
+        <p>
+            {{ form.submit() }}
+        </p>
+    </form>
 {% endblock %}
