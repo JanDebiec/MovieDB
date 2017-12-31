@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect
 # from app import current_app
 from app.main import bp
 from app.userinput import bp as usibp
-from app.userinput.forms import ManInputForm
+from app.userinput.forms import ManInputForm, CsvInputForm
 
 # @app.route('/')
 # @app.route('/index')
@@ -26,5 +26,12 @@ def maninput():
 
 @bp.route('/userinput/csvinput', methods=['GET', 'POST'])
 def csvinput():
+    form = CsvInputForm()
+    if form.validate_on_submit():
+        flash('File choosen: {}'.format(
+            form.filename.data
+        ))
+        return redirect('/index')
     return render_template('userinput/csvinput.html',
-                           title='CSV Input')
+                           title='CSV Input',
+                           form=form)

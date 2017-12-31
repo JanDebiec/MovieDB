@@ -1,4 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>CSV File Input</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.filename.label}}<br>
+            {{ form.filename(size=32)}}
+            {{ form.find() }}
+        </p>
+        <p>
+            {{ form.submit() }}
+        </p>
+    </form>
 {% endblock %}

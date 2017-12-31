@@ -8,3 +8,8 @@ class ManInputForm(FlaskForm):
     localname = StringField('Localname', validators=[DataRequired()])
     medium = StringField('Medium')
     submit = SubmitField('Submit')
+
+class CsvInputForm(FlaskForm):
+    filename = StringField('CsvFileName', validators=[DataRequired()])
+    find = SubmitField('find file')
+    submit = SubmitField('Submit')
