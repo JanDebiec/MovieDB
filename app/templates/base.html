@@ -11,7 +11,11 @@
       {% endif %}
   </head>
   <body>
-    <div>MovieDB: <a href="/index">Home</a></div>
+    <div>
+        MovieDB: <a href="/index">Home</a>
+        Input: <a href="/userinput/maninput">Manual input</a>
+        Input: <a href="/userinput/csvinput">CSV input</a>
+    </div>
     <hr>
     {% with messages = get_flashed_messages() %}
       {% if messages %}

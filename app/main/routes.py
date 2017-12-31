@@ -10,3 +10,12 @@ def index():
     return render_template('index.html',
                            title='Home')
 
+@bp.route('/userinput/maninput', methods=['GET', 'POST'])
+def maninput():
+    return render_template('userinput/maninput.html',
+                           title='Manual Input')
+
+@bp.route('/userinput/csvinput', methods=['GET', 'POST'])
+def csvinput():
+    return render_template('userinput/csvinput.html',
+                           title='CSV Input')
