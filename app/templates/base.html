@@ -1,24 +1,23 @@
-<html>
-  <head>
-      {% if title %}
-        <title>
-            {{ title}} - movieDB
-        </title>
-      {% else %}}
-        <title>
-            Welcome to movieDB
-        </title>
-      {% endif %}
-  </head>
-  <body>
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}
+    {% if title %}{{ title }} - movieDB{% else %}{{ _('Welcome to movieDB') }}{% endif %}
+{% endblock %}
+
+{% block navbar %}
+<nav>
     <div>
         MovieDB:
         <a href="/index">Home</a>
         <a href="/userinput/maninput">Manual input</a>
         <a href="/userinput/csvinput">CSV input</a>
     </div>
-    <hr>
-    {% with messages = get_flashed_messages() %}
+</nav>
+{% endblock %}
+
+{% block content %}
+<div>
+     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <ul>
             {% for message in messages %}
@@ -28,6 +27,6 @@
       {% endif %}
     {% endwith %}
 
-  {% block content %}{% endblock %}
-  </body>
-</html>
+</div>
+{% endblock %}
+

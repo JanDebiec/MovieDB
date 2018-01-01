@@ -1,11 +1,9 @@
-from flask import render_template, flash, redirect
+from flask import render_template, flash, redirect, url_for
 # from app import current_app
 from app.main import bp
 from app.userinput import bp as usibp
 from app.userinput.forms import ManInputForm, CsvInputForm
 
-# @app.route('/')
-# @app.route('/index')
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/index', methods=['GET', 'POST'])
 def index():
