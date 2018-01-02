@@ -1,3 +1,8 @@
+from flask import Blueprint, render_template, flash, redirect, url_for
+
+from app import db
+mod_db = Blueprint('database', __name__, url_prefix='/database')
+
 def insertMovieData(inputMovieId, inputTitle='', medium='', source=''):
     '''insert data from input into db
     Data from Input (manual or csv) has structure:

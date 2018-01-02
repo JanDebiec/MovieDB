@@ -22,17 +22,17 @@ def create_app(config_class=Config):
     app.register_blueprint(input_module)
 
     # Import a module / component using its blueprint handler variable (mod_auth)
-    from app.db import bp as db_bp
+    from app.db.controllers import mod_db as db_module
     # Register blueprint(s)
-    app.register_blueprint(db_bp)
+    app.register_blueprint(db_module)
 
-    from app.main import bp as main_bp
-    app.register_blueprint(main_bp)
+    from app.main.controllers import mod_main as main_module
+    app.register_blueprint(main_module)
     return app
 
 
-from app import models
-from app.main import routes
-from app.userinput import handler as ush
-from app.db import handler as dbh
+# from app import models
+# from app.main import routes
+# from app.userinput import handler as ush
+# from app.db import handler as dbh
 
