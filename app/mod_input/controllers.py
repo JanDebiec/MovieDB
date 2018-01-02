@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
 
 from app import db
-from app.userinput.forms import ManInputForm, CsvInputForm
-import app.db.controllers as dbc
+from app.mod_input.forms import ManInputForm, CsvInputForm
+import app.mod_db.controllers as dbc
 
 mod_input = Blueprint('input', __name__, url_prefix='/userinput')
 

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
 
 from app import db
-from app.db.models import Movie, Role, People, Director
+from app.mod_db.models import Movie, Role, People, Director
 
 mod_db = Blueprint('database', __name__, url_prefix='/database')
 
@@ -25,7 +25,7 @@ def insertMovieData(inputMovieId, inputTitle='', medium='', source=''):
 def searchDb(movieId):
     ''' search local db for movie,
     return set of data if found, or None if not found'''
-    found = Movie.query.filter_by(imdbId= movieId)
+    found = Movie.query.filter_by(imdbId= movieId).first()
     return found
 
 

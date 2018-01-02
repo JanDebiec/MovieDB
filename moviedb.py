@@ -1,6 +1,6 @@
 #!flask/bin/python
 from app import create_app, db
-from app.models import  Movie, People, Director, Role
+from app.mod_db.models import  Movie, People, Director, Role
 
 app = create_app()
 

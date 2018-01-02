@@ -2,7 +2,8 @@ from pytest import fixture, mark
 import sys
 sys.path.extend(['/home/jan/project/movie_db'])
 from app import create_app, db
-from app.models import Movie, Role, People, Director
+from app.mod_db.models import Movie, Role, People, Director
+import app.mod_db.controllers as dbc
 
 from config import Config
 

@@ -29,8 +29,8 @@ class Movie(DbBase):
     # relations
     roles = db.relationship('Role', backref='film', lazy='dynamic')
 
-    def __init__(self, imdbId,  titleImdb, titleOrig, titleLocal,
-                 directors, medium='', source='', diskNr='', EAN=''):
+    def __init__(self, imdbId='',  titleImdb='', titleOrig='', titleLocal='',
+                 directors='', medium='', source='', diskNr='', EAN=''):
         self.imdbId = imdbId
         self.titleImdb = titleImdb
         self.titleOrig = titleOrig
