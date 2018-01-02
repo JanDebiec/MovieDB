@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired
 
 class ManInputForm(FlaskForm):
     imdbid = StringField('Imdb ID')
-    localname = StringField('Localname', validators=[DataRequired()])
+    localname = StringField('Localname')
     medium = StringField('Medium')
     submit = SubmitField('Submit')
 
