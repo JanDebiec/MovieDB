@@ -9,9 +9,9 @@ mod_input = Blueprint('input', __name__, url_prefix='/userinput')
 def maninput():
     form = ManInputForm()
     if form.validate_on_submit():
-        # flash('Added Movie: Id={}, localName={}, medium={}'.format(
-        #     form.imdbid.data, form.localname.data, form.medium.data
-        # ))
+        flash('Added Movie: Id={}, localName={}, medium={}'.format(
+            form.imdbid.data, form.localname.data, form.medium.data
+        ))
         insertManualInput(form)
         return redirect('/index')
     return render_template('userinput/maninput.html',
