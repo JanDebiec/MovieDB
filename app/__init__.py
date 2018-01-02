@@ -16,10 +16,14 @@ def create_app(config_class=Config):
 
     migrate.init_app(app, db)
 
-    from app.userinput import bp as user_bp
-    app.register_blueprint(user_bp)
+    # Import a module / component using its blueprint handler variable (mod_auth)
+    from app.userinput.controllers import mod_input as input_module
+    # Register blueprint(s)
+    app.register_blueprint(input_module)
 
+    # Import a module / component using its blueprint handler variable (mod_auth)
     from app.db import bp as db_bp
+    # Register blueprint(s)
     app.register_blueprint(db_bp)
 
     from app.main import bp as main_bp
