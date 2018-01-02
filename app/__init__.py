@@ -26,13 +26,11 @@ def create_app(config_class=Config):
     # Register blueprint(s)
     app.register_blueprint(db_module)
 
+    # Import a module / component using its blueprint handler variable (mod_auth)
     from app.main.controllers import mod_main as main_module
+    # Register blueprint(s)
     app.register_blueprint(main_module)
+
     return app
 
-
-# from app import models
-# from app.main import routes
-# from app.userinput import handler as ush
-# from app.db import handler as dbh
 

@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for
 
 from app import db
 from app.userinput.forms import ManInputForm, CsvInputForm
+import app.db.controllers as dbc
 
 mod_input = Blueprint('input', __name__, url_prefix='/userinput')
 
@@ -51,6 +52,5 @@ def insertManualInput(manInputForm):
     flash('Added Movie: Id={}, localName={}, medium={}'.format(
         imdbid, localname, medium
     ))
-    # dbData = dbh.insertMovieData(imdbid, localname, medium)
-    pass
+    dbc.insertMovieData(imdbid, localname, medium)
 
