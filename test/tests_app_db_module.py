@@ -1,11 +1,17 @@
 from pytest import fixture, mark
 import sys
+import csv
 sys.path.extend(['/home/jan/project/movie_db'])
 from app import create_app, db
 from app.mod_db.models import Movie, Role, People, Director
 import app.mod_db.controllers as dbc
 
 from config import Config
+
+import helper as h
+import app.import_tsv as tsv
+
+testFile = 'test/testInput.csv'
 
 class TestConfig(Config):
     TESTING = True
@@ -43,3 +49,24 @@ class TestAppDbModule:
         print(type(notfound))
         assert notfound == None
 
+    def testCsvInput(self):
+        ''' first version to show the functionality'''
+        with h.ManagedUtfFile(testFile) as f:
+            csvReader = csv.reader(f)
+            count = 0
+            data = False
+            for row in csvReader:
+                if data == False:
+                    data = True
+                else:
+                    if len(row) > 0:
+                        count = count + 1
+                        movieId = row[0]
+                        (imdbID, EAN, title, titleorig, titlelocal, medium, nr, source) = \
+                        row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]
+                        print(imdbID, EAN, title, titleorig, titlelocal, medium, nr, source)
+                        dbc.addMovieToDb(inputMovieId=imdbID, inputTitle=titlelocal, medium=medium)
+
+            movies = Movie.query.all()
+            c = len(movies)
+            assert c == count

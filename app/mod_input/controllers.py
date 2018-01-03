@@ -4,7 +4,7 @@ from app import db
 from app.mod_input.forms import ManInputForm, CsvInputForm
 import app.mod_db.controllers as dbc
 
-mod_input = Blueprint('input', __name__, url_prefix='/userinput')
+mod_input = Blueprint('input', __name__, url_prefix='/mod_input')
 
 @mod_input.route('/maninput', methods=['GET', 'POST'])
 def maninput():
@@ -15,7 +15,7 @@ def maninput():
         ))
         insertManualInput(form)
         return redirect('/index')
-    return render_template('userinput/maninput.html',
+    return render_template('mod_input/maninput.html',
                            title='Manual Input',
                            form=form)
 
@@ -28,7 +28,7 @@ def csvinput():
             form.filename.data
         ))
         return redirect('/index')
-    return render_template('userinput/csvinput.html',
+    return render_template('mod_input/csvinput.html',
                            title='CSV Input',
                            form=form)
 

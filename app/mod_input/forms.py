@@ -3,10 +3,20 @@ from wtforms import StringField, BooleanField, SubmitField
 
 from wtforms.validators import DataRequired
 
+# class ManInputForm(FlaskForm):
+#     imdbid = StringField('Imdb ID')
+#     localname = StringField('Localname')
+#     medium = StringField('Medium')
+#     submit = SubmitField('Submit')
+#
 class ManInputForm(FlaskForm):
     imdbid = StringField('Imdb ID')
-    localname = StringField('Localname')
+    imdbname = StringField('ImdbName')
+    originname = StringField('OriginalName')
+    localname = StringField('LocalName')
     medium = StringField('Medium')
+    source = StringField('Source')
+    ownrating = StringField('MyOwnRating')
     submit = SubmitField('Submit')
 
 class CsvInputForm(FlaskForm):
