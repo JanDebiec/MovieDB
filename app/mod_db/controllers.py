@@ -17,7 +17,7 @@ def insertMovieData(inputMovieId, inputTitle='', medium='', source=''):
     '''
     dbMovie = searchDb(inputMovieId)
     if dbMovie == None:
-        addMovieToDb(inputMovieId, inputTitle, medium, source)
+        addManMovieToDb(inputMovieId, inputTitle, medium, source)
     else:
         updateMovieInDb(inputMovieId, inputTitle, medium, source)
 
@@ -29,13 +29,13 @@ def searchDb(movieId):
     return found
 
 
-def addMovieToDb(inputMovieId, inputTitle='', medium='', source=''):
+def addManMovieToDb(inputMovieId, inputTitle='', medium='', source=''):
     '''
     first search local imdb data for item, extract infos about
     movie, director, rating
     then insert new data set to db
     '''
-    newMovie = Movie(imdbId=inputMovieId, titleImdb=inputTitle,
+    newMovie = Movie(imdbId=inputMovieId, titleLocal=inputTitle,
                      medium = medium,source = source)
     db.session.add(newMovie)
     db.session.commit()

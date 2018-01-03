@@ -38,8 +38,8 @@ class TestAppDbModule:
         print("teardown class      class: %s" % self.__name__)
 
     def test_add_two_movies(self):
-        dbc.addMovieToDb(inputMovieId='0073802', inputTitle='Three Days of the Condor', medium='DVDR')
-        dbc.addMovieToDb(inputMovieId='1663202', inputTitle='The Revenant', medium='DVD')
+        dbc.addManMovieToDb(inputMovieId='0073802', inputTitle='Three Days of the Condor', medium='DVDR')
+        dbc.addManMovieToDb(inputMovieId='1663202', inputTitle='The Revenant', medium='DVD')
         movies = Movie.query.all()
         c = len(movies)
         assert c == 2
@@ -65,7 +65,7 @@ class TestAppDbModule:
                         (imdbID, EAN, title, titleorig, titlelocal, medium, nr, source) = \
                         row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]
                         print(imdbID, EAN, title, titleorig, titlelocal, medium, nr, source)
-                        dbc.addMovieToDb(inputMovieId=imdbID, inputTitle=titlelocal, medium=medium)
+                        dbc.addManMovieToDb(inputMovieId=imdbID, inputTitle=titlelocal, medium=medium)
 
             movies = Movie.query.all()
             c = len(movies)
