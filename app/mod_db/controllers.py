@@ -24,14 +24,14 @@ def search():
         else:
             foundMessage = 'No movie found, search once more'
     # show form with proper message
-    return render_template('mod_db/search',
+    return render_template('mod_db/search.html',
                             title='Search Movie',
                             form=form)
 
 @mod_db.route('/singleresult', methods=['GET', 'POST'])
 def singleresult():
     form = SingleResultForm()
-    return render_template('mod_db/singleresult',
+    return render_template('mod_db/singleresult.html',
                            title='Movie Result',
                            form=form)
 

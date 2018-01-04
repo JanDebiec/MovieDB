@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired
 
 class SearchDbForm(FlaskForm):
     imdbid = StringField('ImdbId')
-    title = StringField('Title')
+    text = StringField('Text/Title')
     year = StringField('Year')
     director = StringField('Director')
     submit = SubmitField('Submit')
