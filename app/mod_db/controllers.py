@@ -2,8 +2,49 @@ from flask import Blueprint, render_template, flash, redirect, url_for
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director
+from app.mod_db.forms import SearchDbForm, SingleResultForm
 
-mod_db = Blueprint('database', __name__, url_prefix='/database')
+mod_db = Blueprint('database', __name__, url_prefix='/mod_db')
+
+@mod_db.route('/search', methods=['GET', 'POST'])
+def search():
+    form = SearchDbForm()
+    foundMessage = ''
+    # init content of form
+
+    if form.validate_on_submit():
+        # try to search, result => found
+        foundList = searchInDb(form)
+        resultCount = len(foundList)
+        if resultCount > 0:
+            if resultCount == 1:
+                return redirect('result')
+            else:
+                return redirect('movielist')
+        else:
+            foundMessage = 'No movie found, search once more'
+    # show form with proper message
+    return render_template('mod_db/search',
+                            title='Search Movie',
+                            form=form)
+
+@mod_db.route('/singleresult', methods=['GET', 'POST'])
+def singleresult():
+    form = SingleResultForm()
+    return render_template('mod_db/singleresult',
+                           title='Movie Result',
+                           form=form)
+
+@mod_db.route('/pageresults', methods=['GET', 'POST'])
+def pageresults():
+    pass
+
+def searchInDb(flaskForm):
+    ''' extract items from form,
+    search for all movies, that fulfils the criteria
+    return the list of all results'''
+    result = []
+    return result
 
 def insertMovieData(inputMovieId, inputTitle='', medium='', source=''):
     '''insert data from input into db

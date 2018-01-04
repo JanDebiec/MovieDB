@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Search Input</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.imdbid.label}}
+            {{ form.imdbid(size=7)}}
+        </p>
+        <p>
+            {{ form.year.label}}
+            {{ form.year(size=4)}}
+        </p>
+        <p>
+            {{ form.imdbname.label}}
+            {{ form.imdbname(size=32)}}
+        </p>
+        <p>
+            {{ form.originname.label}}
+            {{ form.originname(size=32)}}
+        </p>
+        <p>
+            {{ form.localname.label}}
+            {{ form.localname(size=32)}}
+        </p>
+        <p>
+            {{ form.medium.label}}
+            {{ form.medium(size=8)}}
+            {{ form.source.label}}
+            {{ form.source(size=8)}}
+        </p>
+        <p>
+            {{ form.director.label}}
+            {{ form.director(size=32)}}
+        </p>
+    </form>
+{% endblock %}
