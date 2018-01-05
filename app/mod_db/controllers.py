@@ -9,7 +9,7 @@ mod_db = Blueprint('database', __name__, url_prefix='/mod_db')
 @mod_db.route('/search', methods=['GET', 'POST'])
 def search():
     form = SearchDbForm()
-    foundMessage = ''
+    foundMessage = 'search'
     # init content of form
 
     if form.validate_on_submit():
@@ -26,7 +26,8 @@ def search():
     # show form with proper message
     return render_template('mod_db/search.html',
                             title='Search Movie',
-                            form=form)
+                            form=form,
+                            message=foundMessage)
 
 @mod_db.route('/singleresult', methods=['GET', 'POST'])
 def singleresult():
