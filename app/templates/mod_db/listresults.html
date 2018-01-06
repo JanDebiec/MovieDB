@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+    {% for movie in movies %}
+        {% include '_movie.html' %}
+    {% endfor %}
+    {% if prev_url %}
+        <a href="{{ prev_url }}">Newer movies</a>
+    {% endif %}
+    {% if next_url %}
+        <a href="{{ next_url }}">Older movies</a>
+    {% endif %}
+{% endblock %}
