@@ -1,7 +1,11 @@
 import os
 import sys
-import helper
+from flask import Blueprint, render_template, flash, redirect, url_for
 from enum import Enum
+import helper
+
+mod_imdb = Blueprint('imdb', __name__, url_prefix='/mod_imdb')
+
 
 movieBasicsFile = 'imdbif/title_basics.tsv'
 # movieBasicsFile = 'app/import_tsv/title_basics.tsv'
@@ -10,13 +14,21 @@ nameBasicsFile = 'imdbif/name_basics.tsv'
 movieDirectorFile = 'imdbif/title_crew.tsv'
 # movieDirectorFile = 'app/import_tsv/title_crew.tsv'
 
-class MovieBasics(Enum):
+class EMovieBasics(Enum):
     movieId = 0
     titleTyp = 1
     imdbTitle = 2
     originTitle = 3
     startYear = 5
     runTimeMin = 7
+
+class EMovieDirector(Enum):
+    movieId = 0
+    director = 1
+
+class EPerson(Enum):
+    nameId = 0
+    nameText = 1
 
 def getMovieData(movieId):
     ''' search title_basics.tsv for movie
@@ -29,10 +41,10 @@ def getMovieData(movieId):
         line = findLineWithId(movieBasicsFile ,movieId)
         if len(line) > 0:
             values = line.split('\t')
-            imdbTitle = values[MovieBasics.imdbTitle.value]
-            origTitle = values[MovieBasics.originTitle.value]
-            year = values[MovieBasics.startYear.value]
-            runTime = values[MovieBasics.runTimeMin.value]
+            imdbTitle = values[EMovieBasics.imdbTitle.value]
+            origTitle = values[EMovieBasics.originTitle.value]
+            year = values[EMovieBasics.startYear.value]
+            runTime = values[EMovieBasics.runTimeMin.value]
             # return (imdbTitle, origTitle, year, runTime)
             return (imdbTitle, origTitle, year, runTime)
         else:
@@ -40,10 +52,6 @@ def getMovieData(movieId):
     except:
         return None
 
-
-class MovieDirector(Enum):
-    movieId = 0
-    director = 1
 
 def getMovieDirector(movieId):
     ''' search title_crew.tsv for movie
@@ -54,14 +62,10 @@ def getMovieDirector(movieId):
     line = findLineWithId(movieBasicsFile ,movieId)
     if len(line) > 0:
         values = line.split('\t')
-        director = values[MovieDirector.director.value]
+        director = values[EMovieDirector.director.value]
         return director
     else:
         return None
-
-class PersonEnums(Enum):
-    nameId = 0
-    nameText = 1
 
 def getNameData(personId):
     ''' search name_basics.tsv for person
@@ -75,7 +79,7 @@ def getNameData(personId):
     # line = helper.findLineWithId(nameBasicsFile ,personId)
     if len(line) > 0:
         values = line.split('\t')
-        name = values[PersonEnums.nameText.value]
+        name = values[EPerson.nameText.value]
         return name
     else:
         return None

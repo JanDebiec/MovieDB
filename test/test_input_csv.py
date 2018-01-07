@@ -4,7 +4,8 @@ import csv
 sys.path.extend(['/home/jan/project/movie_db'])
 
 import helper as h
-import app.import_tsv as tsv
+import app.mod_imdb.controllers as tsv
+# import app.import_tsv as tsv
 
 testFile = 'test/testInput.csv'
 

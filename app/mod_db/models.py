@@ -21,6 +21,7 @@ class Movie(DbBase):
     titleImdb = db.Column(db.String(64)) # Imdb title
     titleOrig = db.Column(db.String(64)) # polish title for polish movies, or german, or ...
     titleLocal = db.Column(db.String(64)) # polish or german if bought in Pl (De)
+    year = db.Column(db.String(4))
     medium = db.Column(db.String(8))
     source = db.Column(db.String(8))
     diskNr = db.Column(db.String(8))
@@ -30,11 +31,12 @@ class Movie(DbBase):
     roles = db.relationship('Role', backref='film', lazy='dynamic')
 
     def __init__(self, imdbId='',  titleImdb='', titleOrig='', titleLocal='',
-                 directors='', medium='', source='', diskNr='', EAN=''):
+                 directors='', year='', medium='', source='', diskNr='', EAN=''):
         self.imdbId = imdbId
         self.titleImdb = titleImdb
         self.titleOrig = titleOrig
         self.titleLocal = titleLocal
+        self.year = year
         self.medium = medium
         self.source = source
         self.diskNr = diskNr

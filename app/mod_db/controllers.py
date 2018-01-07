@@ -77,15 +77,42 @@ def addManMovieToDb(inputMovieId, inputTitle='', medium='', source=''):
     movie, director, rating
     then insert new data set to db
     '''
-    newMovie = Movie(imdbId=inputMovieId, titleLocal=inputTitle,
-                     medium = medium,source = source)
+
+    # get data from imdb tsv
+    imdbData = tsv.getMovieData(inputMovieId)
+    titleImdb=''
+    titleOrig=''
+    year = ''
+    director = ''
+    # prepare data for
+    if imdbData != None:
+        titleImdb = imdbData[0]
+        if len(imdbData) > 1:
+            titleOrig = imdbData[1]
+            if len(imdbData) > 2:
+                year = imdbData[2]
+                if len(imdbData) > 4: # director
+                    director = imdbData[4]
+
+    newMovie = Movie(imdbId=inputMovieId,
+                     titleImdb=titleImdb,
+                     titleOrig=titleOrig,
+                     titleLocal=inputTitle,
+                     medium = medium,
+                     year = year,
+                     directors = director,
+                     source = source)
+
     db.session.add(newMovie)
     db.session.commit()
 
 
 def updateMovieInDb(movieId, inputTitle, medium, source):
-    found = Movie.query.filter_by(imdbId= movieId)
+    found = Movie.query.filter_by(imdbId= movieId).first()
     found.titleLocal = inputTitle
     found.medium = medium
     found.source = source
     db.session.commit()
+
+# def updateMovieWithTsv(movieId):
+#     found = Movie.query.filter_by(imdbId= movieId).first()

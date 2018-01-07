@@ -1,4 +1,8 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
+import csv
+
+import helper as h
+import app.mod_imdb.controllers as tsv
 
 from app import db
 from app.mod_input.forms import ManInputForm, CsvInputForm
@@ -27,6 +31,7 @@ def csvinput():
         flash('File choosen: {}'.format(
             form.filename.data
         ))
+        readFileAddItemsToDb(form.filename.data)
         return redirect('/index')
     return render_template('mod_input/csvinput.html',
                            title='CSV Input',
@@ -54,3 +59,21 @@ def insertManualInput(manInputForm):
     ))
     dbc.insertMovieData(imdbid, localname, medium)
 
+def readFileAddItemsToDb(fileName):
+    with h.ManagedUtfFile(fileName) as f:
+        csvReader = csv.reader(f)
+        count = 0
+        data = False
+        for row in csvReader:
+            if data == False:
+                data = True
+            else:
+                if len(row) > 0:
+                    count = count + 1
+                    movieId = row[0]
+                    (imdbID, EAN, title, titleorig, titlelocal, medium, nr, source) = \
+                        row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]
+
+                    # imdbData = tsv.getMovieData(movieId)
+
+                    dbc.insertMovieData(inputMovieId=imdbID, inputTitle=titlelocal, medium=medium)

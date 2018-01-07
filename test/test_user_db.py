@@ -4,7 +4,7 @@
 from pytest import fixture, mark
 import sys
 sys.path.extend(['/home/jan/project/movie_db'])
-import db.db_obsolete as db
+# import db.db_obsolete as db
 
 dbFileName = '../userdata/movieTestdb2.sqlite'
 
