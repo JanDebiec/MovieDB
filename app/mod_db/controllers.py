@@ -4,6 +4,8 @@ from app import db
 from app.mod_db.models import Movie, Role, People, Director
 from app.mod_db.forms import SearchDbForm, SingleResultForm
 
+import app.mod_imdb.controllers as tsv
+
 mod_db = Blueprint('database', __name__, url_prefix='/mod_db')
 
 @mod_db.route('/search', methods=['GET', 'POST'])

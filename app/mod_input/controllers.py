@@ -31,7 +31,10 @@ def csvinput():
         flash('File choosen: {}'.format(
             form.filename.data
         ))
-        readFileAddItemsToDb(form.filename.data)
+        fileName = '/home/jan/project/movie_db/userdata/input.csv'
+        # fileName = '/home/jan/project/movie_db/userdata/input_80.csv'
+        readFileAddItemsToDb(fileName)
+        # readFileAddItemsToDb(form.filename.data)
         return redirect('/index')
     return render_template('mod_input/csvinput.html',
                            title='CSV Input',
@@ -70,10 +73,21 @@ def readFileAddItemsToDb(fileName):
             else:
                 if len(row) > 0:
                     count = count + 1
-                    movieId = row[0]
-                    (imdbID, EAN, title, titleorig, titlelocal, medium, nr, source) = \
-                        row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]
+                    imdbID = row[0]
+                    # only rows with not empty imdbId
+                    if imdbID != '':
+                        if len(row) > 4:
+                            titlelocal = row[4]
+                        else:
+                            titlelocal = ''
+                        if len(row) > 5:
+                            medium = row[5]
+                        else:
+                            medium = ''
 
-                    # imdbData = tsv.getMovieData(movieId)
+                        # (imdbID, EAN, title, titleorig, titlelocal, medium, nr, source) = \
+                        #     row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]
 
-                    dbc.insertMovieData(inputMovieId=imdbID, inputTitle=titlelocal, medium=medium)
+                        dbc.insertMovieData(inputMovieId=imdbID,
+                                            inputTitle=titlelocal,
+                                            medium=medium)

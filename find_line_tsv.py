@@ -1,4 +1,5 @@
-import app.import_tsv as tsv
+import app.mod_imdb.controllers as tsv
+
 
 if __name__ == "__main__":
     from argparse import ArgumentParser
