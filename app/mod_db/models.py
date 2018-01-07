@@ -67,7 +67,7 @@ class Director(DbBase):
     movies = db.relationship('Movie', backref='director', lazy='dynamic')
 
     def __repr__(self):
-        return '<Director peopleId={peopleId} name={name}'.format(self.peopleId, self.name)
+        return '<Director peopleId={peopleImdbId} name={name}'.format(self.peopleImdbId, self.name)
 
 
 class Role(DbBase):

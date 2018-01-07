@@ -73,6 +73,13 @@ def searchDb(movieId):
     return found
 
 
+def searchDirectorDb(peopleId):
+    ''' search local db for movie,
+    return set of data if found, or None if not found'''
+    found = Director.query.filter_by(peopleImdbId= peopleId).first()
+    return found
+
+
 def addManMovieToDb(inputMovieId, inputTitle='', medium='', source=''):
     '''
     first search local imdb data for item, extract infos about
@@ -93,8 +100,6 @@ def addManMovieToDb(inputMovieId, inputTitle='', medium='', source=''):
             titleOrig = imdbData[1]
             if len(imdbData) > 2:
                 year = imdbData[2]
-                if len(imdbData) > 4: # director
-                    director = imdbData[4]
 
     newMovie = Movie(imdbId=inputMovieId,
                      titleImdb=titleImdb,
@@ -102,8 +107,18 @@ def addManMovieToDb(inputMovieId, inputTitle='', medium='', source=''):
                      titleLocal=inputTitle,
                      medium = medium,
                      year = year,
-                     directors = director,
                      source = source)
+    dirData = tsv.getMovieDirector(inputMovieId)
+    if dirData != None:
+        # TODO check if director already exists in DB
+        directorId = dirData
+        dirInDb = searchDirectorDb(directorId)
+        if dirInDb == None:
+            dirName = tsv.getNameData(directorId)
+            director = Director(peopleImdbId=directorId, name=dirName)
+        else:
+            director = dirInDb
+        newMovie.director = director
 
     db.session.add(newMovie)
     db.session.commit()

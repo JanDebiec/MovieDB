@@ -24,6 +24,7 @@ def maninput():
                            form=form)
 
 
+
 @mod_input.route('/csvinput', methods=['GET', 'POST'])
 def csvinput():
     form = CsvInputForm()

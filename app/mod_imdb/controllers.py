@@ -59,13 +59,14 @@ def getMovieDirector(movieId):
     items:
     tconst	directors	writers
     '''
-    line = findLineWithId(movieBasicsFile ,movieId)
+    director = None
+    line = findLineWithId(movieDirectorFile ,movieId)
     if len(line) > 0:
         values = line.split('\t')
-        director = values[EMovieDirector.director.value]
+        crew = values[EMovieDirector.director.value]
+        if len(crew) > 2:
+            director = crew[2:]
         return director
-    else:
-        return None
 
 def getNameData(personId):
     ''' search name_basics.tsv for person
@@ -93,7 +94,8 @@ def findLineWithId(filename, matchId, delimiter='\t', quiet=True):
         lastId = ''
         lineId = ''
         pwd = os.getcwd()
-        print(pwd , filename)
+        if quiet != True:
+            print(pwd , filename)
         end = os.path.getsize(filename)
         endBinary = "{0:b}".format(end)
         maxLoopCount = len(endBinary)
