@@ -21,4 +21,8 @@ The structure of the repository:
 | . | find_line_tsv.py | tester for imdb tsv files script |
 | . | db_*.py | helper for db migration |
 
+Interface to IMDB modified after changes in Dec.2017. Now I'm using the IMDB's TSV files placed in imdbif folder
 
+To extract the information from TSV file, the procedure similar to binary search was developed. 
+One can check with the call:\n
+python find_line_tsv.py -f'imdbif/title_crew.tsv' -i '0053779'  -d
