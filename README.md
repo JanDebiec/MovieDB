@@ -26,7 +26,8 @@ The structure of the repository:
 ## Interface to IMDB modified after changes in Dec.2017. Now I'm using the IMDB's TSV files placed in imdbif folder
 
 To extract the information from TSV file, the procedure similar to binary search was developed. 
-One can check with the call:\n
+One can check with the call:
+
 python find_line_tsv.py -f'imdbif/title_crew.tsv' -i '0053779'  -d
 
 Testing on 08.01.2018: The infos for ca 600 movies and 250 Directors were proper extracted from tsv files
