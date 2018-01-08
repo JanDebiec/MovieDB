@@ -39,14 +39,15 @@ def getMovieData(movieId):
     '''
     try:
         line = findLineWithId(movieBasicsFile ,movieId)
-        if len(line) > 0:
+        length = len(line)
+        if length > 0:
             values = line.split('\t')
             imdbTitle = values[EMovieBasics.imdbTitle.value]
             origTitle = values[EMovieBasics.originTitle.value]
             year = values[EMovieBasics.startYear.value]
             runTime = values[EMovieBasics.runTimeMin.value]
             # return (imdbTitle, origTitle, year, runTime)
-            return (imdbTitle, origTitle, year, runTime)
+            return (length, imdbTitle, origTitle, year )
         else:
             return None
     except:
@@ -90,6 +91,7 @@ def findLineWithId(filename, matchId, delimiter='\t', quiet=True):
     try:
         counter = 0
         helperCounter = 1
+        lineLengthInBytes = 1
         start = 0
         lastId = ''
         lineId = ''
@@ -102,7 +104,7 @@ def findLineWithId(filename, matchId, delimiter='\t', quiet=True):
         # with helper.ManagedFile(filename) as fptr:
         with helper.ManagedUtfFile(filename) as fptr:
 
-            while (start < end) and (counter < maxLoopCount):
+            while (start < end) and (counter < (maxLoopCount + 4)):
                 lastId = lineId
                 pos = start + ((end - start) / 2)
 
@@ -110,29 +112,40 @@ def findLineWithId(filename, matchId, delimiter='\t', quiet=True):
                 fptr.readline()
                 line = fptr.readline()
                 lineLength = len(line)
+                if counter == 0:
+                    lineLengthInBits = "{0:b}".format(lineLength)
+                    lineLengthInDigits = len(lineLengthInBits)
                 values = line.split(sep=delimiter)
                 firstValue = values[0]
                 lineId = firstValue[2:]# ignore the first 2 chars
                 if quiet != True:
-                    print('lineId {}'.format(lineId))
+                    print('lineId {} length {} start {} end {}'.format(lineId, lineLength, start, end))
                 counter = counter + 1
                 if matchId == lineId:
                     if quiet != True:
                         print("counter = {0} / {1}".format(counter, maxLoopCount))
                     return line
                 elif matchId > lineId:
-                    start = fptr.tell()
-                else:
-                    # dirty trick to fix various length of lines
-                    if lastId == lineId:
-                        helperCounter = helperCounter + 1
-                        end = fptr.tell() - helperCounter*lineLength
-                        if start > end:
-                            start = end - 1
+                    # newer dirty trick, from the near of the match, search linear, because of various line length
+                    if maxLoopCount - counter < lineLengthInDigits + 6:
+                        while lineId < matchId:
+                            line = fptr.readline()
+                            values = line.split(sep=delimiter)
+                            firstValue = values[0]
+                            lineId = firstValue[2:]  # ignore the first 2 chars
+                            counter = counter + 1
+                            if matchId == lineId:
+                                if quiet != True:
+                                    print("counter = {0} / {1}".format(counter, maxLoopCount))
+                                return line
                     else:
-                        end = fptr.tell()
+                        start = fptr.tell()
+                        if start > end:
+                            end = start + 1
+                else:
+                    end = fptr.tell()
             if quiet != True:
-                print("counter = {}".format(counter))
+                print("counter = {}, max = {}".format(counter, maxLoopCount))
             return []
     except:
         print("Oops!", sys.exc_info()[0], "occured.")

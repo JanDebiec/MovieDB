@@ -94,12 +94,14 @@ def addManMovieToDb(inputMovieId, inputTitle='', medium='', source=''):
     year = ''
     director = ''
     # prepare data for
+    length = 0
     if imdbData != None:
-        titleImdb = imdbData[0]
-        if len(imdbData) > 1:
-            titleOrig = imdbData[1]
-            if len(imdbData) > 2:
-                year = imdbData[2]
+        length = imdbData[0]
+        titleImdb = imdbData[1]
+        if len(imdbData) > 2:
+            titleOrig = imdbData[2]
+            if len(imdbData) > 3:
+                year = imdbData[3]
 
     newMovie = Movie(imdbId=inputMovieId,
                      titleImdb=titleImdb,
@@ -107,10 +109,10 @@ def addManMovieToDb(inputMovieId, inputTitle='', medium='', source=''):
                      titleLocal=inputTitle,
                      medium = medium,
                      year = year,
+                     linelength = length,
                      source = source)
     dirData = tsv.getMovieDirector(inputMovieId)
     if dirData != None:
-        # TODO check if director already exists in DB
         directorId = dirData
         dirInDb = searchDirectorDb(directorId)
         if dirInDb == None:
@@ -126,6 +128,8 @@ def addManMovieToDb(inputMovieId, inputTitle='', medium='', source=''):
 
 def updateMovieInDb(movieId, inputTitle, medium, source):
     found = Movie.query.filter_by(imdbId= movieId).first()
+    # TODO check if imdb TSV data has new content
+    # if yes, then update
     found.titleLocal = inputTitle
     found.medium = medium
     found.source = source

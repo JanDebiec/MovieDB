@@ -25,13 +25,14 @@ class Movie(DbBase):
     medium = db.Column(db.String(8))
     source = db.Column(db.String(8))
     diskNr = db.Column(db.String(8))
+    linelength = db.Column(db.Integer)
     # external
     directors = db.Column(db.Integer, db.ForeignKey('director.id'))
     # relations
     roles = db.relationship('Role', backref='film', lazy='dynamic')
 
     def __init__(self, imdbId='',  titleImdb='', titleOrig='', titleLocal='',
-                 directors='', year='', medium='', source='', diskNr='', EAN=''):
+                 directors='', year='', medium='', linelength=0, source='', diskNr='', EAN=''):
         self.imdbId = imdbId
         self.titleImdb = titleImdb
         self.titleOrig = titleOrig
@@ -42,6 +43,7 @@ class Movie(DbBase):
         self.diskNr = diskNr
         self.EAN = EAN
         self.directors = directors
+        self.linelength = linelength
 
 
     def __repr__(self):
