@@ -66,7 +66,7 @@ def getMovieDirector(movieId):
         values = line.split('\t')
         crew = values[EMovieDirector.director.value]
         if len(crew) > 2:
-            director = crew[2:]
+            director = crew[2:9] # end limit, because some of lines in tsv are without '\t' as splitter
         return director
 
 def getNameData(personId):
@@ -143,7 +143,14 @@ def findLineWithId(filename, matchId, delimiter='\t', quiet=True):
                         if start > end:
                             end = start + 1
                 else:
-                    end = fptr.tell()
+                    # dirty trick to fix various length of lines
+                    if lastId == lineId:
+                        helperCounter = helperCounter + 1
+                        end = fptr.tell() - helperCounter * 4 * lineLength
+                        if start > end:
+                            start = end - 1
+                    else:
+                        end = fptr.tell()
             if quiet != True:
                 print("counter = {}, max = {}".format(counter, maxLoopCount))
             return []
