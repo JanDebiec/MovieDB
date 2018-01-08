@@ -86,9 +86,17 @@ def getNameData(personId):
     else:
         return None
 
-def findLineWithId(filename, matchId, delimiter='\t', quiet=True):
+def findLineWithId(filename, matchIdRaw, delimiter='\t', quiet=True):
     '''binary search in TSV files from IMDB'''
     try:
+
+        # check if ID is already 7 char long
+        length = len(matchIdRaw)
+        if length < 7:
+            matchId = ("0" * (7 - length)) + matchIdRaw
+        else:
+            matchId = matchIdRaw
+
         counter = 0
         helperCounter = 1
         lineLengthInBytes = 1

@@ -18,36 +18,54 @@ def search():
         # try to search, result => found
         foundList = searchInDb(form)
         resultCount = len(foundList)
-        if resultCount > 0:
-            if resultCount == 1:
-                return redirect('result')
-            else:
-                return redirect('movielist')
-        else:
-            foundMessage = 'No movie found, search once more'
+        return redirect(url_for('database.singleresult', movieresult='Result text'))
+        # return redirect(url_for('database.singleresult'))
+        # return redirect('/mod_db/singleresult')
+        # return redirect('/mod_db/singleresult', movieresult='Movie resylts')
+        # if resultCount > 0:
+        #     foundMessage = 'search'
+        #     if resultCount == 1:
+        #         return redirect(url_for('singleresult'), movie=foundList[0])
+        #     else:
+        #         return redirect('mod_db/singleresult.html')
+        #         # return redirect('singleresult', movie = 'Found Movie')
+        #         # return redirect('pageresults', movies = foundList)
+        # else:
+        #     foundMessage = 'No movie found, search once more'
     # show form with proper message
     return render_template('mod_db/search.html',
                             title='Search Movie',
                             form=form,
                             message=foundMessage)
 
-@mod_db.route('/singleresult', methods=['GET', 'POST'])
-def singleresult():
+
+
+@mod_db.route('/singleresult/<movieresult>', methods=['GET', 'POST'])
+def singleresult(movieresult):
     form = SingleResultForm()
+    # form.imdbname = movie
+    movietxt = movieresult
+    # movietxt = 'Defined Movie'
     return render_template('mod_db/singleresult.html',
                            title='Movie Result',
+                           moviemsg=movietxt,
                            form=form)
 
+
 @mod_db.route('/pageresults', methods=['GET', 'POST'])
-def pageresults():
+def pageresults(movies):
+    # form =
     pass
 
 def searchInDb(flaskForm):
     ''' extract items from form,
     search for all movies, that fulfils the criteria
     return the list of all results'''
-    result = []
-    return result
+    # first test for year
+    if flaskForm.year.data != '':
+        year = flaskForm.year.data
+        found = Movie.query.filter_by(year= year).all()
+        return found
 
 def insertMovieData(inputMovieId, inputTitle='', medium='', source=''):
     '''insert data from input into db

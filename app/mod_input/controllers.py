@@ -43,7 +43,7 @@ def csvinput():
 
 def checkDataFromCsv():
     '''
-    read CSV file from file system,
+    read CSV file from file system,bbb
     for every line get the data record,
     check if movie alredy listed in db
     and insert/update the db (with the help of db module
