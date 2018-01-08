@@ -2,7 +2,7 @@
 local movie data base, based on infos from IMDB. 
 Some additional informations about source, medium and rating can be added by user
 
-## Project is developed with Flask based on Miguel Grinberg's "Flask mega tutorial" 
+## Project is in early development phase, serves for me as Flask tutorial, based on Miguel Grinberg's "Flask mega tutorial" 
 
 The user should be able to query db about the director, actor, ratings, ...
 
@@ -28,3 +28,5 @@ The structure of the repository:
 To extract the information from TSV file, the procedure similar to binary search was developed. 
 One can check with the call:\n
 python find_line_tsv.py -f'imdbif/title_crew.tsv' -i '0053779'  -d
+
+Testing on 08.01.2018: The infos for ca 600 movies and 250 Directors were proper extracted from tsv files
