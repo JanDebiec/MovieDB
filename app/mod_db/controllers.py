@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director
-from app.mod_db.forms import SearchDbForm, SingleResultForm
+from app.mod_db.forms import SearchDbForm, SingleResultForm, ExploreForm
 
 import app.mod_imdb.controllers as tsv
 
@@ -51,11 +51,21 @@ def singleresult(movieresult):
                            moviemsg=movietxt,
                            form=form)
 
-
 @mod_db.route('/pageresults', methods=['GET', 'POST'])
 def pageresults(movies):
     # form =
     pass
+
+@mod_db.route('/explore', methods=['GET', 'POST'])
+def explore():
+    form = ExploreForm()
+    found = Movie.query.filter_by(year='2016').all()
+    movies = found[0:4]
+    return render_template('mod_db/explore.html',
+                           title='Movie Result',
+                           form=form,
+                           movies=movies)
+
 
 def searchInDb(flaskForm):
     ''' extract items from form,

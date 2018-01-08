@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Search Input</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        {% for movie in movies %}
+        {% include '_movie.html' %}
+        {% endfor %}
+    </form>
+{% endblock %}

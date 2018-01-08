@@ -19,3 +19,8 @@ class SingleResultForm(FlaskForm):
     director = StringField('Director')
     medium = StringField('Medium')
     source = StringField('Source')
+
+class ExploreForm(FlaskForm):
+    localname = StringField('TitleLocal')
+    year = StringField('Year')
+    director = StringField('Director')
