@@ -3,9 +3,11 @@
     <h1>Search Input</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
+        <table>
         {% for movie in movies %}
         {% include '_movie.html' %}
         {% endfor %}
+            </table>
          {{ movies }}
    </form>
 {% endblock %}

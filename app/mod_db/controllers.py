@@ -8,6 +8,8 @@ import app.mod_imdb.controllers as tsv
 
 mod_db = Blueprint('database', __name__, url_prefix='/mod_db')
 
+
+
 @mod_db.route('/search', methods=['GET', 'POST'])
 def search():
     form = SearchDbForm()
@@ -23,12 +25,14 @@ def search():
         found = Movie.query.filter_by(year='2016').all()
         movies = found[0:4]
 
-        return redirect(url_for('database.pageresults', movieresult=movies))
-        # return redirect(url_for('database.singleresult', movieresult='Result text'))
+        # if movies should be transferred, then it will be
+        # transferred the representation (_repr) of the class
+        # one option, first to search, check the results count,
+        # then transfer to proper site the search filter
+        # and in proper site search once more
 
-        # return redirect(url_for('database.singleresult'))
-        # return redirect('/mod_db/singleresult')
-        # return redirect('/mod_db/singleresult', movieresult='Movie resylts')
+        # for testing:
+        return redirect(url_for('database.pageresults', movieresult=movies))
         # if resultCount > 0:
         #     foundMessage = 'search'
         #     if resultCount == 1:
@@ -46,7 +50,6 @@ def search():
                             message=foundMessage)
 
 
-
 @mod_db.route('/singleresult/<movieresult>', methods=['GET', 'POST'])
 def singleresult(movieresult):
     form = SingleResultForm()
@@ -58,6 +61,7 @@ def singleresult(movieresult):
                            moviemsg=movietxt,
                            form=form)
 
+
 @mod_db.route('/pageresults/<movieresult>', methods=['GET', 'POST'])
 def pageresults(movieresult):
     form = PageResultsForm()
@@ -65,7 +69,6 @@ def pageresults(movieresult):
                            title='Movie Result',
                            form=form,
                            movies=movieresult)
-
 
 
 @mod_db.route('/explore', methods=['GET', 'POST'])
@@ -89,6 +92,7 @@ def searchInDb(flaskForm):
         year = flaskForm.year.data
         found = Movie.query.filter_by(year= year).all()
         return found
+
 
 def insertMovieData(inputMovieId, inputTitle='', medium='', source=''):
     '''insert data from input into db

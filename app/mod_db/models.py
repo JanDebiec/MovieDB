@@ -47,7 +47,7 @@ class Movie(DbBase):
 
 
     def __repr__(self):
-        return '<Movie id={} title={} medium={}'.format(self.imdbId, self.titleImdb, self.medium)
+        return '<Movie imdbId={} titleLocal={} medium={}'.format(self.imdbId, self.titleLocal, self.medium)
 
 
 class People(DbBase):
