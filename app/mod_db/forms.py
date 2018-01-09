@@ -24,3 +24,9 @@ class ExploreForm(FlaskForm):
     localname = StringField('TitleLocal')
     year = StringField('Year')
     director = StringField('Director')
+
+class PageResultsForm(FlaskForm):
+    imdbid = StringField('ImdbId')
+    localname = StringField('TitleLocal')
+    year = StringField('Year')
+    director = StringField('Director')

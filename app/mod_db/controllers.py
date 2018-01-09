@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director
-from app.mod_db.forms import SearchDbForm, SingleResultForm, ExploreForm
+from app.mod_db.forms import SearchDbForm, SingleResultForm, ExploreForm, PageResultsForm
 
 import app.mod_imdb.controllers as tsv
 
@@ -16,9 +16,16 @@ def search():
 
     if form.validate_on_submit():
         # try to search, result => found
-        foundList = searchInDb(form)
-        resultCount = len(foundList)
-        return redirect(url_for('database.singleresult', movieresult='Result text'))
+
+        # foundList = searchInDb(form)
+        # resultCount = len(foundList)
+
+        found = Movie.query.filter_by(year='2016').all()
+        movies = found[0:4]
+
+        return redirect(url_for('database.pageresults', movieresult=movies))
+        # return redirect(url_for('database.singleresult', movieresult='Result text'))
+
         # return redirect(url_for('database.singleresult'))
         # return redirect('/mod_db/singleresult')
         # return redirect('/mod_db/singleresult', movieresult='Movie resylts')
@@ -51,10 +58,15 @@ def singleresult(movieresult):
                            moviemsg=movietxt,
                            form=form)
 
-@mod_db.route('/pageresults', methods=['GET', 'POST'])
-def pageresults(movies):
-    # form =
-    pass
+@mod_db.route('/pageresults/<movieresult>', methods=['GET', 'POST'])
+def pageresults(movieresult):
+    form = PageResultsForm()
+    return render_template('mod_db/pageresults.html',
+                           title='Movie Result',
+                           form=form,
+                           movies=movieresult)
+
+
 
 @mod_db.route('/explore', methods=['GET', 'POST'])
 def explore():
@@ -65,6 +77,7 @@ def explore():
                            title='Movie Result',
                            form=form,
                            movies=movies)
+
 
 
 def searchInDb(flaskForm):
