@@ -8,6 +8,7 @@ class SearchDbForm(FlaskForm):
     text = StringField('Text/Title')
     year = StringField('Year')
     director = StringField('Director')
+    medium = StringField('Medium')
     submit = SubmitField('Submit')
 
 class SingleResultForm(FlaskForm):

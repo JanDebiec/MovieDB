@@ -6,8 +6,8 @@ from app.mod_db.forms import SearchDbForm, SingleResultForm, ExploreForm, PageRe
 
 import app.mod_imdb.controllers as tsv
 
-mod_db = Blueprint('database', __name__, url_prefix='/mod_db')
 
+mod_db = Blueprint('database', __name__, url_prefix='/mod_db')
 
 
 @mod_db.route('/search', methods=['GET', 'POST'])
@@ -15,15 +15,25 @@ def search():
     form = SearchDbForm()
     foundMessage = 'search'
     # init content of form
-
+    searchitems = {}
     if form.validate_on_submit():
+        searchitems['imdbid'] = form.imdbid.data
+        searchitems['text'] = form.text.data
+        searchitems['year'] = form.year.data
+        searchitems['medium'] = form.medium.data
+        searchitems['director'] = form.director.data
+
         # try to search, result => found
+        # depending on resultsCout, the proper function will be called
+        # and once more saerched
+        # in such a way, we have the class with all members to display
+        # in proper web page
 
-        # foundList = searchInDb(form)
-        # resultCount = len(foundList)
+        foundList = searchInDb(searchitems)
+        resultCount = len(foundList)
 
-        found = Movie.query.filter_by(year='2016').all()
-        movies = found[0:4]
+        # for the single result, it's enought to transfer imdbid'
+        # for multiple found, the searchitems should be transffered
 
         # if movies should be transferred, then it will be
         # transferred the representation (_repr) of the class
@@ -32,17 +42,19 @@ def search():
         # and in proper site search once more
 
         # for testing:
-        return redirect(url_for('database.pageresults', movieresult=movies))
-        # if resultCount > 0:
-        #     foundMessage = 'search'
-        #     if resultCount == 1:
-        #         return redirect(url_for('singleresult'), movie=foundList[0])
-        #     else:
-        #         return redirect('mod_db/singleresult.html')
-        #         # return redirect('singleresult', movie = 'Found Movie')
-        #         # return redirect('pageresults', movies = foundList)
-        # else:
-        #     foundMessage = 'No movie found, search once more'
+        # return redirect(url_for('database.pageresults', searchitems=searchitems))
+        if resultCount > 0:
+            foundMessage = 'search'
+            if resultCount == 1:
+                foundMovie = foundList[0]
+                searchitems['imdbid'] = foundMovie.imdbId
+                return redirect(url_for('database.singleresult', searchitems=searchitems))
+            else:
+                return redirect(url_for('database.pageresults', searchitems=searchitems))
+                # return redirect('singleresult', movie = 'Found Movie')
+                # return redirect('pageresults', movies = foundList)
+        else:
+            foundMessage = 'No movie found, search once more'
     # show form with proper message
     return render_template('mod_db/search.html',
                             title='Search Movie',
@@ -50,25 +62,34 @@ def search():
                             message=foundMessage)
 
 
-@mod_db.route('/singleresult/<movieresult>', methods=['GET', 'POST'])
-def singleresult(movieresult):
+@mod_db.route('/singleresult/<searchitems>', methods=['GET', 'POST'])
+def singleresult(searchitems):
     form = SingleResultForm()
-    # form.imdbname = movie
-    movietxt = movieresult
-    # movietxt = 'Defined Movie'
+    # TODO: rescue dictionary from the string
+    firstString = searchitems[1:-1]
+
+    # build search command from searchitems
+    idToSearch = searchitems['imdbid']
+
+    # search once more
+    movie = searchDb(idToSearch)
+
+    # display the single result
+    movietxt = movie
+
     return render_template('mod_db/singleresult.html',
                            title='Movie Result',
                            moviemsg=movietxt,
                            form=form)
 
 
-@mod_db.route('/pageresults/<movieresult>', methods=['GET', 'POST'])
-def pageresults(movieresult):
+@mod_db.route('/pageresults/<searchitems>', methods=['GET', 'POST'])
+def pageresults(searchitems):
     form = PageResultsForm()
     return render_template('mod_db/pageresults.html',
                            title='Movie Result',
                            form=form,
-                           movies=movieresult)
+                           movies=searchitems)
 
 
 @mod_db.route('/explore', methods=['GET', 'POST'])
@@ -83,15 +104,40 @@ def explore():
 
 
 
-def searchInDb(flaskForm):
-    ''' extract items from form,
+def searchInDb(searchitems):
+    ''' extract items from searchitems,
     search for all movies, that fulfils the criteria
     return the list of all results'''
-    # first test for year
-    if flaskForm.year.data != '':
-        year = flaskForm.year.data
-        found = Movie.query.filter_by(year= year).all()
-        return found
+    queryStarted = False
+    itemimdbid = searchitems['imdbid']
+    if itemimdbid != '':
+        queryresult = Movie.query.filter_by(imdbid=itemimdbid)
+        queryStarted = True
+    itemmedium = searchitems['medium']
+    if itemmedium != '':
+        if queryStarted == False:
+            queryresult = Movie.query.filter_by(medium=itemmedium)
+            queryStarted = True
+        else:
+            queryresult = queryresult.filter_by(medium=itemmedium)
+    itemtext = searchitems['text']
+    if itemtext != '':
+        if queryStarted == False:
+            queryresult = Movie.query.filter_by(titleLocal=itemtext)
+            queryStarted = True
+        else:
+            queryresult = queryresult.filter_by(titleLocal=itemtext)
+    itemyear = searchitems['year']
+    if itemyear != '':
+        if queryStarted == False:
+            queryresult = Movie.query.filter_by(year=itemyear)
+            queryStarted = True
+        else:
+            queryresult = queryresult.filter_by(year=itemyear)
+    # wull be used later
+    # itemdirector = searchitems['director']
+    found = queryresult.all()
+    return found
 
 
 def insertMovieData(inputMovieId, inputTitle='', medium='', source=''):
@@ -108,7 +154,7 @@ def insertMovieData(inputMovieId, inputTitle='', medium='', source=''):
     if dbMovie == None:
         addManMovieToDb(inputMovieId, inputTitle, medium, source)
     else:
-        updateMovieInDb(inputMovieId, inputTitle, medium, source)
+        updateMovieManual(inputMovieId, inputTitle, medium, source)
 
 
 def searchDb(movieId):
@@ -171,14 +217,39 @@ def addManMovieToDb(inputMovieId, inputTitle='', medium='', source=''):
     db.session.commit()
 
 
-def updateMovieInDb(movieId, inputTitle, medium, source):
+def updateMovieManual(movieId, inputTitle, medium, source):
+
     found = Movie.query.filter_by(imdbId= movieId).first()
-    # TODO check if imdb TSV data has new content
-    # if yes, then update
     found.titleLocal = inputTitle
     found.medium = medium
     found.source = source
     db.session.commit()
 
-# def updateMovieWithTsv(movieId):
-#     found = Movie.query.filter_by(imdbId= movieId).first()
+def updateMovieWithTsv(movieId):
+
+    found = Movie.query.filter_by(imdbId=movieId).first()
+
+    tsvLengthNew = 0
+    tsvLengthOld = found.linelength
+    imdbData = tsv.getMovieData(movieId)
+    if imdbData != None:
+        tsvLengthNew = imdbData[0]
+
+    if tsvLengthNew > tsvLengthOld:
+        titleImdb = ''
+        titleOrig = ''
+        year = ''
+        director = ''
+        # prepare data for
+        length = imdbData[0]
+        titleImdb = imdbData[1]
+        found.titleImdb = titleImdb
+        if len(imdbData) > 2:
+            titleOrig = imdbData[2]
+            found.titleOrig = titleOrig
+            if len(imdbData) > 3:
+                year = imdbData[3]
+                found.year = year
+
+        db.session.commit()
+
