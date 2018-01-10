@@ -141,10 +141,10 @@ class TestAppDb:
         kurz.actor = marlon
         jd = Critic(name='JD', maxVal=5.0)
         rat = Rating(value=5.0)
-        rat.movie = an
+        rat.film = an
         rat.critic= jd
         rats = Rating(value=4.5)
-        rats.movie = sic
+        rats.film = sic
         rats.critic = jd
         willard = Role(characterName='Willard', film=an, actor=sheen)
         an.director = coppola
@@ -161,7 +161,15 @@ class TestAppDb:
         # TODO check ratings
 
         f = Movie.query.get(1)
+        print(type(f))
         dir = f.director.name
-        assert dir == 'Coppola'
-
+        print(dir)
+        r = Rating.query.all()
+        print(type(r))
+        print(len(r))
+        print(r)
+        # val = r.value
+        # assert val == 5.0
+        # m = r.movie_id
+        # print('movie id = {}'.format(m))
 
