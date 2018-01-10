@@ -2,7 +2,7 @@ from pytest import fixture, mark
 import sys
 sys.path.extend(['/home/jan/project/movie_db'])
 from app import create_app, db
-from app.mod_db.models import Movie, Role, People, Director
+from app.mod_db.models import Movie, Role, People, Director, Rating, Critic
 import app.mod_db.controllers as dbc
 
 from config import Config
@@ -125,6 +125,40 @@ class TestAppDb:
         db.session.add(kurz)
         db.session.add(willard)
         db.session.commit()
+
+        f = Movie.query.get(1)
+        dir = f.director.name
+        assert dir == 'Coppola'
+
+    def test_own_critics(self):
+        an = Movie(titleImdb='Apocalypse Now')
+        sic = Movie(titleImdb='Sicario')
+        marlon = People(name='Marlon')
+        sheen = People(name='Scheen')
+        coppola = Director(name='Coppola')
+        kurz = Role(characterName='Kurz')
+        kurz.film = an
+        kurz.actor = marlon
+        jd = Critic(name='JD', maxVal=5.0)
+        rat = Rating(value=5.0)
+        rat.movie = an
+        rat.critic= jd
+        rats = Rating(value=4.5)
+        rats.movie = sic
+        rats.critic = jd
+        willard = Role(characterName='Willard', film=an, actor=sheen)
+        an.director = coppola
+        db.session.add(marlon)
+        db.session.add(sheen)
+        db.session.add(coppola)
+        db.session.add(an)
+        db.session.add(sic)
+        db.session.add(kurz)
+        db.session.add(willard)
+        db.session.add(rat)
+        db.session.add(rats)
+        db.session.commit()
+        # TODO check ratings
 
         f = Movie.query.get(1)
         dir = f.director.name

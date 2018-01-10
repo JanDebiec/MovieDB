@@ -90,16 +90,15 @@ class Critic(DbBase):
     url = db.Column(db.String(128))
     maxVal = db.Column(db.Float)
     # relations
-    movies = db.relationship('Movie', backref='critic', lazy='dynamic')
+    # movies = db.relationship('Movie', backref='critic', lazy='dynamic')
+    ratings = db.relationship('Rating', backref='critic', lazy='dynamic')
 
     def __repr__(self):
         return '<Critic name={name} maxVal={maxVal}'.format(self.name, self.maxVal)
 
 class Rating(DbBase):
-    # movieId = db.Column(db.String(7))
-    # criticId = db.Column(db.Integer)
     value = db.Column(db.Float)
-    criticMaxValue = db.Column(db.Float)
+    # criticMaxValue = db.Column(db.Float)
     # external
     movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'))
     critic_id = db.Column(db.Integer, db.ForeignKey('critic.id'))
