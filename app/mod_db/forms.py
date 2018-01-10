@@ -20,6 +20,7 @@ class SingleResultForm(FlaskForm):
     director = StringField('Director')
     medium = StringField('Medium')
     source = StringField('Source')
+    ownrating = StringField('Own rating')
 
 class ExploreForm(FlaskForm):
     localname = StringField('TitleLocal')

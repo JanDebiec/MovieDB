@@ -1,42 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Search Input</h1>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.imdbid.label}}
-            {{ form.imdbid(size=7)}}
-        </p>
-        <p>
-            {{ form.year.label}}
-            {{ form.year(size=4)}}
-        </p>
-        <p>
-          <h2>
-          {{ moviemsg }}
-        </h2>
-        </p>
-        <p>
-            {{ form.imdbname.label}}
-            {{ form.imdbname(size=32)}}
-        </p>
-        <p>
-            {{ form.originname.label}}
-            {{ form.originname(size=32)}}
-        </p>
-        <p>
-            {{ form.localname.label}}
-            {{ form.localname(size=32)}}
-        </p>
-        <p>
-            {{ form.medium.label}}
-            {{ form.medium(size=8)}}
-            {{ form.source.label}}
-            {{ form.source(size=8)}}
-        </p>
-        <p>
-            {{ form.director.label}}
-            {{ form.director(size=32)}}
-        </p>
-    </form>
+<h1>Search Input</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <table>
+        <tr>
+            <td> {{ form.imdbid.label}}</td>
+            <td>{{ form.imdbid(size=7)}}</td>
+        </tr>
+        <tr>
+
+            <td>{{ form.year.label}}</td>
+            <td>{{ form.year(size=4)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.imdbname.label}}</td>
+            <td>{{ form.imdbname(size=32)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.originname.label}}</td>
+            <td>{{ form.originname(size=32)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.localname.label}}</td>
+            <td>{{ form.localname(size=32)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.medium.label}}</td>
+            <td>{{ form.medium(size=8)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.source.label}}</td>
+            <td>{{ form.source(size=8)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.director.label}}</td>
+            <td>{{ form.director(size=32)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.ownrating.label}}</td>
+            <td>{{ form.director(size=4)}}</td>
+        </tr>
+    </table>
+</form>
 {% endblock %}

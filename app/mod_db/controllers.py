@@ -68,8 +68,6 @@ def search():
 @mod_db.route('/singleresult/<searchitems>', methods=['GET', 'POST'])
 def singleresult(searchitems):
     form = SingleResultForm()
-    # TODO: rescue dictionary from the string
-    firstString = searchitems[1:-1]
     searchdir = json.loads(searchitems)
     # build search command from searchitems
     idToSearch = searchdir['imdbid']
@@ -79,11 +77,17 @@ def singleresult(searchitems):
 
     # display the single result
     movietxt = movie
+    form.imdbid.data = movie.imdbId
+    form.imdbname.data = movie.titleImdb
+    form.year.data = movie.year
+    form.medium.data = movie.medium
+    form.director.data = movie.directors
 
     return render_template('mod_db/singleresult.html',
                            title='Movie Result',
                            moviemsg=movietxt,
                            form=form)
+
 
 
 @mod_db.route('/pageresults/<searchitems>', methods=['GET', 'POST'])
