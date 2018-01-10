@@ -30,6 +30,7 @@ class Movie(DbBase):
     directors = db.Column(db.Integer, db.ForeignKey('director.id'))
     # relations
     roles = db.relationship('Role', backref='film', lazy='dynamic')
+    ratings = db.relationship('Rating', backref='film', lazy='dynamic')
 
     def __init__(self, imdbId='',  titleImdb='', titleOrig='', titleLocal='',
                  directors='', year='', medium='', linelength=0, source='', diskNr='', EAN=''):
@@ -69,7 +70,7 @@ class Director(DbBase):
     movies = db.relationship('Movie', backref='director', lazy='dynamic')
 
     def __repr__(self):
-        return '<Director peopleId={peopleImdbId} name={name}'.format(self.peopleImdbId, self.name)
+        return '<Director peopleId={} name={}'.format(self.peopleImdbId, self.name)
 
 
 class Role(DbBase):
@@ -84,16 +85,24 @@ class Role(DbBase):
         return '<Role peopleId={peopleId} movieId={movieId}'.format(self.peopleId, self.movieId)
 
 
-# class Critic(Base):
-#     name = db.Column(db.String(64))
-#     url = db.Column(db.String(128))
-#     maxVal = db.Column(db.Float)
-#
-#     def __repr__(self):
-#         return '<Critic name={name} maxVal={maxVal}'.format(self.name, self.maxVal)
-#
-# class Rating(Base):
-#     movieId = db.Column(db.String(7))
-#     criticId = db.Column(db.Integer)
-#     value = db.Column(db.Float)
-#     criticMaxValue = db.Column(db.Float)
+class Critic(DbBase):
+    name = db.Column(db.String(64))
+    url = db.Column(db.String(128))
+    maxVal = db.Column(db.Float)
+    # relations
+    movies = db.relationship('Movie', backref='critic', lazy='dynamic')
+
+    def __repr__(self):
+        return '<Critic name={name} maxVal={maxVal}'.format(self.name, self.maxVal)
+
+class Rating(DbBase):
+    # movieId = db.Column(db.String(7))
+    # criticId = db.Column(db.Integer)
+    value = db.Column(db.Float)
+    criticMaxValue = db.Column(db.Float)
+    # external
+    movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'))
+    critic_id = db.Column(db.Integer, db.ForeignKey('critic.id'))
+
+    def __repr__(self):
+        return '<Rating movie={} critic={} Val={}'.format(self.movie_id, self.critic_id, self.value)

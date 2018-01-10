@@ -81,7 +81,7 @@ def singleresult(searchitems):
     form.imdbname.data = movie.titleImdb
     form.year.data = movie.year
     form.medium.data = movie.medium
-    form.director.data = movie.directors
+    form.director.data = movie.director.name
 
     return render_template('mod_db/singleresult.html',
                            title='Movie Result',
