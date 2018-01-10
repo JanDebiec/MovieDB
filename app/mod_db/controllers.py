@@ -1,3 +1,4 @@
+import json
 from flask import Blueprint, render_template, flash, redirect, url_for
 
 from app import db
@@ -15,13 +16,13 @@ def search():
     form = SearchDbForm()
     foundMessage = 'search'
     # init content of form
-    searchitems = {}
+    searchdir = {}
     if form.validate_on_submit():
-        searchitems['imdbid'] = form.imdbid.data
-        searchitems['text'] = form.text.data
-        searchitems['year'] = form.year.data
-        searchitems['medium'] = form.medium.data
-        searchitems['director'] = form.director.data
+        searchdir['imdbid'] = form.imdbid.data
+        searchdir['text'] = form.text.data
+        searchdir['year'] = form.year.data
+        searchdir['medium'] = form.medium.data
+        searchdir['director'] = form.director.data
 
         # try to search, result => found
         # depending on resultsCout, the proper function will be called
@@ -29,11 +30,11 @@ def search():
         # in such a way, we have the class with all members to display
         # in proper web page
 
-        foundList = searchInDb(searchitems)
+        foundList = searchInDb(searchdir)
         resultCount = len(foundList)
 
         # for the single result, it's enought to transfer imdbid'
-        # for multiple found, the searchitems should be transffered
+        # for multiple found, the searchdir should be transffered
 
         # if movies should be transferred, then it will be
         # transferred the representation (_repr) of the class
@@ -42,14 +43,16 @@ def search():
         # and in proper site search once more
 
         # for testing:
-        # return redirect(url_for('database.pageresults', searchitems=searchitems))
+        # return redirect(url_for('database.pageresults', searchdir=searchdir))
         if resultCount > 0:
             foundMessage = 'search'
             if resultCount == 1:
                 foundMovie = foundList[0]
-                searchitems['imdbid'] = foundMovie.imdbId
+                searchdir['imdbid'] = foundMovie.imdbId
+                searchitems = json.dumps(searchdir)
                 return redirect(url_for('database.singleresult', searchitems=searchitems))
             else:
+                searchitems = json.dump(searchdir)
                 return redirect(url_for('database.pageresults', searchitems=searchitems))
                 # return redirect('singleresult', movie = 'Found Movie')
                 # return redirect('pageresults', movies = foundList)
@@ -67,9 +70,9 @@ def singleresult(searchitems):
     form = SingleResultForm()
     # TODO: rescue dictionary from the string
     firstString = searchitems[1:-1]
-
+    searchdir = json.loads(searchitems)
     # build search command from searchitems
-    idToSearch = searchitems['imdbid']
+    idToSearch = searchdir['imdbid']
 
     # search once more
     movie = searchDb(idToSearch)
