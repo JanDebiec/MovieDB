@@ -1,15 +1,20 @@
 {% extends "base.html" %}
 
 {% block app_content %}
+<!--not needed if not fixed navbar-->
+<!--{ padding-top: 200px; }-->
+<div class="container">
     <h1>Explore Database</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
-        <table>
-        {% include '_movieheader.html' %}
+        <!-- Table -->
+        <table class="table">
+            {% include '_movieheader.html' %}
 
-        {% for movie in movies %}
-            {% include '_movie.html' %}
-        {% endfor %}
+            {% for movie in movies %}
+                {% include '_movie.html' %}
+            {% endfor %}
         </table>
-   </form>
+    </form>
+</div>
 {% endblock %}
