@@ -24,44 +24,9 @@ def search():
         searchdir['medium'] = form.medium.data
         searchdir['director'] = form.director.data
 
-        # TODO change:
-        # always call the multipage results
-        # here we can edit some values too
+        searchitems = json.dumps(searchdir)
+        return redirect(url_for('database.pageresults', searchitems=searchitems))
 
-        # try to search, result => found
-        # depending on resultsCout, the proper function will be called
-        # and once more saerched
-        # in such a way, we have the class with all members to display
-        # in proper web page
-
-        foundList = searchInDb(searchdir)
-        resultCount = len(foundList)
-
-        # for the single result, it's enought to transfer imdbid'
-        # for multiple found, the searchdir should be transffered
-
-        # if movies should be transferred, then it will be
-        # transferred the representation (_repr) of the class
-        # one option, first to search, check the results count,
-        # then transfer to proper site the search filter
-        # and in proper site search once more
-
-        # for testing:
-        # return redirect(url_for('database.pageresults', searchdir=searchdir))
-        if resultCount > 0:
-            foundMessage = 'search'
-            if resultCount == 1:
-                foundMovie = foundList[0]
-                searchdir['imdbid'] = foundMovie.imdbId
-                searchitems = json.dumps(searchdir)
-                return redirect(url_for('database.singleresult', searchitems=searchitems))
-            else:
-                searchitems = json.dumps(searchdir)
-                return redirect(url_for('database.pageresults', searchitems=searchitems))
-                # return redirect('singleresult', movie = 'Found Movie')
-                # return redirect('pageresults', movies = foundList)
-        else:
-            foundMessage = 'No movie found, search once more'
     # show form with proper message
     return render_template('mod_db/search.html',
                             title='Search Movie',
@@ -99,12 +64,20 @@ def pageresults(searchitems):
     form = PageResultsForm()
     searchdir = json.loads(searchitems)
     foundList = searchInDb(searchdir)
+    ownerRatings = []
     resultCount = len(foundList)
+    if resultCount != 0:
+        ownerRatings = findOwnerRatings(foundList)
+        # TODO add ratings to foundList
+    else:
+        foundMessage = 'No movie found, search once more'
+        return redirect(url_for('database.search', message=foundMessage))
     return render_template('mod_db/pageresults.html',
                            title='Movie Result',
                            form=form,
                            moviescount=resultCount,
-                           movies=foundList)
+                           movies=foundList
+                           )
 
 
 @mod_db.route('/explore', methods=['GET', 'POST'])
@@ -122,7 +95,9 @@ def explore():
                            form=form,
                            movies=movies)
 
-
+def findOwnerRatings(movieList):
+    ratings = []
+    return ratings
 
 
 def searchInDb(searchitems):

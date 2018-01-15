@@ -164,10 +164,14 @@ class TestAppDb:
         print(type(f))
         dir = f.director.name
         print(dir)
-        r = Rating.query.all()
+        rq = Rating.query
+        # rq = Rating.query.filter_by(critic_id='JD')
+        r = rq.all()
         print(type(r))
         print(len(r))
         print(r)
+        # rjd = rq.filter_by(movie_id='0')
+        # print(rjd)
         # val = r.value
         # assert val == 5.0
         # m = r.movie_id

@@ -3,6 +3,6 @@
         <td>{{ movie.titleLocal }}</td>
         <td>{{ movie.director.name }}</td>
         <td>{{ movie.year }}</td>
-        <td>{{ movie.medium }}</td>
-        <td>{{ movie.rating }}</td>
+        <td><input type='text' name="medium" size="4" maxlength="6" value='{{ movie.medium }}' ></td>
+        <td><input type='text' name="ownerrating" size="4" maxlength="6" value='{{ movie.rating }}' ></td>
     </tr>
