@@ -1,5 +1,5 @@
 import json
-from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import Blueprint, render_template, flash, redirect, url_for, request
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director
@@ -23,6 +23,10 @@ def search():
         searchdir['year'] = form.year.data
         searchdir['medium'] = form.medium.data
         searchdir['director'] = form.director.data
+
+        # TODO change:
+        # always call the multipage results
+        # here we can edit some values too
 
         # try to search, result => found
         # depending on resultsCout, the proper function will be called
@@ -52,7 +56,7 @@ def search():
                 searchitems = json.dumps(searchdir)
                 return redirect(url_for('database.singleresult', searchitems=searchitems))
             else:
-                searchitems = json.dump(searchdir)
+                searchitems = json.dumps(searchdir)
                 return redirect(url_for('database.pageresults', searchitems=searchitems))
                 # return redirect('singleresult', movie = 'Found Movie')
                 # return redirect('pageresults', movies = foundList)
@@ -93,10 +97,14 @@ def singleresult(searchitems):
 @mod_db.route('/pageresults/<searchitems>', methods=['GET', 'POST'])
 def pageresults(searchitems):
     form = PageResultsForm()
+    searchdir = json.loads(searchitems)
+    foundList = searchInDb(searchdir)
+    resultCount = len(foundList)
     return render_template('mod_db/pageresults.html',
                            title='Movie Result',
                            form=form,
-                           movies=searchitems)
+                           moviescount=resultCount,
+                           movies=foundList)
 
 
 @mod_db.route('/explore', methods=['GET', 'POST'])
@@ -105,6 +113,10 @@ def explore():
     found = Movie.query.filter_by(year='2014').all()
     movies = found
     # movies = found[0:4]
+    if request.method == 'POST':
+        result = request.form
+        return render_template("result.html", result=result)
+
     return render_template('mod_db/explore.html',
                            title='Movie Result',
                            form=form,
