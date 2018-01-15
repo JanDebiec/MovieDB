@@ -32,3 +32,4 @@ class PageResultsForm(FlaskForm):
     localname = StringField('TitleLocal')
     year = StringField('Year')
     director = StringField('Director')
+    submit = SubmitField('Submit')

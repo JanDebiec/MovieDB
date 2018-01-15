@@ -58,10 +58,24 @@ def singleresult(searchitems):
                            form=form)
 
 
-
 @mod_db.route('/pageresults/<searchitems>', methods=['GET', 'POST'])
 def pageresults(searchitems):
     form = PageResultsForm()
+    if form.validate_on_submit():
+        if request.method == 'POST':
+            # userinputs = request.form
+            usermedium = request.form['medium']
+            print(type(usermedium))
+            print(len(usermedium))
+            for item in usermedium:
+                print(item)
+            userrating = request.form['ownerrating']
+            print(type(userrating))
+            print(len(userrating))
+            for item in userrating:
+                print(item)
+        foundMessage = "search once more"
+        return redirect(url_for('database.search', message=foundMessage))
     searchdir = json.loads(searchitems)
     foundList = searchInDb(searchdir)
     ownerRatings = []
