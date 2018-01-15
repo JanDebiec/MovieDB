@@ -102,12 +102,14 @@ def pageresults(searchitems):
 @mod_db.route('/explore', methods=['GET', 'POST'])
 def explore():
     form = ExploreForm()
-    found = Movie.query.filter_by(year='2016').all()
-    movies = found[0:4]
+    found = Movie.query.filter_by(year='2014').all()
+    movies = found
+    # movies = found[0:4]
     return render_template('mod_db/explore.html',
                            title='Movie Result',
                            form=form,
                            movies=movies)
+
 
 
 
