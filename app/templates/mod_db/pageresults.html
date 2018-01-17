@@ -18,7 +18,6 @@
                 <td>{{ movie.year }}</td>
                 <td><input type='text' name="medium[{{ loop.index0 }}]" size="4" maxlength="6" value='{{ movie.medium }}'></td>
                 <td><input type='text' name="rating[{{ loop.index0 }}]" size="4" maxlength="6" value='{{ movie.rating }}'></td>
-                <td> {{ loop.index0 }}</td>
             </tr>
             {% endfor %}
         </table>

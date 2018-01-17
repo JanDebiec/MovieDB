@@ -61,6 +61,15 @@ def singleresult(searchitems):
 @mod_db.route('/pageresults/<searchitems>', methods=['GET', 'POST'])
 def pageresults(searchitems):
     form = PageResultsForm()
+    # we need the results of search onSubmit too,
+    # to update the medium and ratings
+    searchdir = json.loads(searchitems)
+    foundList = searchInDb(searchdir)
+    ownerRatings = []
+    resultCount = len(foundList)
+    if resultCount != 0:
+        ownerRatings = findOwnerRatings(foundList)
+        # TODO add ratings to foundList
     if form.validate_on_submit():
         if request.method == 'POST':
             userinputs = request.form
@@ -69,36 +78,35 @@ def pageresults(searchitems):
             # we do not know the amount of ratings or medium
             # we know only global size of input
             # extracting user ratings input
-            ownRating = []
-            for i in range(amount):
+            inputRating = []
+            for i in range(resultCount):
                 try:
                     pointerString = 'rating[{}]'.format(i)
                     rat = newdict[pointerString]
-                    ownRating.append(rat)
+                    inputRating.append(rat)
                 except: # no more ratings
                     break
             # extracting user medium input
-            userMedium = []
-            for i in range(amount):
+            inputMedium = []
+            for i in range(resultCount):
                 try:
                     pointerString = 'medium[{}]'.format(i)
                     med = newdict[pointerString]
-                    userMedium.append(med)
+                    inputMedium.append(med)
                 except: # no more medium input
                     break
 
-            # TODO take inpouts and insert in DB
+            # TODO take inputs and insert in DB
+            updateOwnerRatingInDb(foundList, inputRating)
+            updateMediumInDb(foundList, inputMedium)
 
         foundMessage = "search once more"
         return redirect(url_for('database.search', message=foundMessage))
-    searchdir = json.loads(searchitems)
-    foundList = searchInDb(searchdir)
-    ownerRatings = []
-    resultCount = len(foundList)
-    if resultCount != 0:
-        ownerRatings = findOwnerRatings(foundList)
-        # TODO add ratings to foundList
-    else:
+    # searchdir = json.loads(searchitems)
+    # foundList = searchInDb(searchdir)
+    # ownerRatings = []
+    # resultCount = len(foundList)
+    if resultCount == 0:
         foundMessage = 'No movie found, search once more'
         return redirect(url_for('database.search', message=foundMessage))
     return render_template('mod_db/pageresults.html',
@@ -127,6 +135,14 @@ def explore():
 def findOwnerRatings(movieList):
     ratings = []
     return ratings
+
+
+def updateOwnerRatingInDb(foundList, inputRating):
+    pass
+
+
+def updateMediumInDb(foundList, inputMedium):
+    pass
 
 
 def searchInDb(searchitems):
