@@ -1,5 +1,6 @@
 import json
 from flask import Blueprint, render_template, flash, redirect, url_for, request
+from jinja2 import Template
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director
@@ -57,23 +58,23 @@ def singleresult(searchitems):
                            moviemsg=movietxt,
                            form=form)
 
-
 @mod_db.route('/pageresults/<searchitems>', methods=['GET', 'POST'])
 def pageresults(searchitems):
     form = PageResultsForm()
     if form.validate_on_submit():
         if request.method == 'POST':
-            # userinputs = request.form
-            usermedium = request.form['medium']
-            print(type(usermedium))
-            print(len(usermedium))
-            for item in usermedium:
+            userinputs = request.form
+            # TODO
+            # actually i can only get the one (first) content
+            # of medium and rating
+            # how to get a list of values
+            newdict = userinputs.to_dict()
+            print(type(newdict))
+            print(len(newdict))
+            for item in newdict:
                 print(item)
-            userrating = request.form['ownerrating']
-            print(type(userrating))
-            print(len(userrating))
-            for item in userrating:
-                print(item)
+                value = newdict[item]
+                print(value)
         foundMessage = "search once more"
         return redirect(url_for('database.search', message=foundMessage))
     searchdir = json.loads(searchitems)

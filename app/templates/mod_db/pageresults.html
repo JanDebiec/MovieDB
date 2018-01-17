@@ -2,17 +2,26 @@
 {% block app_content %}
 <div class="container">
     <form action="" method="post">
-    <h1>found {{ moviescount}} Movies: </h1>
-            {{ form.submit() }}
+        <h1>found {{ moviescount}} Movies: </h1>
+        {{ form.submit() }}
         {{ form.hidden_tag() }}
         <!-- Table -->
         <table class="table">
             {% include '_movieheader.html' %}
-
             {% for movie in movies %}
-                {% include '_movie.html' %}
+            <!--{% include '_movie.html' %}-->
+            <!--without subframe, to enable loop variable-->
+            <tr valign="top">
+                <td>{{ movie.imdbId }}</td>
+                <td>{{ movie.titleLocal }}</td>
+                <td>{{ movie.director.name }}</td>
+                <td>{{ movie.year }}</td>
+                <td><input type='text' name="medium[{{ loop.index0 }}]" size="4" maxlength="6" value='{{ movie.medium }}'></td>
+                <td><input type='text' name="rating[{{ loop.index0 }}]" size="4" maxlength="6" value='{{ movie.rating }}'></td>
+                <td> {{ loop.index0 }}</td>
+            </tr>
             {% endfor %}
         </table>
     </form>
 </div>
-    {% endblock %}
+{% endblock %}
