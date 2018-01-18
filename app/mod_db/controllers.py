@@ -152,7 +152,7 @@ def searchInDb(searchitems):
     queryStarted = False
     itemimdbid = searchitems['imdbid']
     if itemimdbid != '':
-        queryresult = Movie.query.filter_by(imdbid=itemimdbid)
+        queryresult = Movie.query.filter_by(imdbId=itemimdbid)
         queryStarted = True
     itemmedium = searchitems['medium']
     if itemmedium != '':
@@ -258,6 +258,59 @@ def addManMovieToDb(inputMovieId, inputTitle='', medium='', source=''):
     db.session.commit()
 
 
+def addManMovieWithoutIdToDb(inputTitle='', medium='-', source=''):
+    '''
+    '''
+    newMovie = Movie(
+                     titleLocal=inputTitle,
+                     medium = medium,
+                     source = source)
+    db.session.add(newMovie)
+    db.session.commit()
+
+
+def updateMovieWithoutIDManual(inputTitle, imdbid):
+
+    found = Movie.query.filter_by(titleLocal= inputTitle).first()
+    if found == None:
+        return
+    # search imdb for movie
+    # get data from imdb tsv
+    imdbData = tsv.getMovieData(imdbid)
+    titleImdb=''
+    titleOrig=''
+    year = ''
+    director = ''
+    # prepare data for
+    length = 0
+    if imdbData != None:
+        length = imdbData[0]
+        titleImdb = imdbData[1]
+        if len(imdbData) > 2:
+            titleOrig = imdbData[2]
+            if len(imdbData) > 3:
+                year = imdbData[3]
+
+    found.imdbId=imdbid
+    found.titleImdb=titleImdb
+    found.titleOrig=titleOrig
+    found.year = year
+    found.linelength = length
+    dirData = tsv.getMovieDirector(imdbid)
+    if dirData != None:
+        directorId = dirData
+        dirInDb = searchDirectorDb(directorId)
+        if dirInDb == None:
+            dirName = tsv.getNameData(directorId)
+            director = Director(peopleImdbId=directorId, name=dirName)
+        else:
+            director = dirInDb
+        found.director = director
+
+
+    db.session.commit()
+
+
 def updateMovieManual(movieId, inputTitle, medium, source):
 
     found = Movie.query.filter_by(imdbId= movieId).first()
@@ -265,6 +318,7 @@ def updateMovieManual(movieId, inputTitle, medium, source):
     found.medium = medium
     found.source = source
     db.session.commit()
+
 
 def updateMovieWithTsv(movieId):
 
@@ -277,12 +331,12 @@ def updateMovieWithTsv(movieId):
         tsvLengthNew = imdbData[0]
 
     if tsvLengthNew > tsvLengthOld:
-        titleImdb = ''
-        titleOrig = ''
-        year = ''
-        director = ''
-        # prepare data for
-        length = imdbData[0]
+        # titleImdb = ''
+        # titleOrig = ''
+        # year = ''
+        # director = ''
+        # # prepare data for
+        # length = imdbData[0]
         titleImdb = imdbData[1]
         found.titleImdb = titleImdb
         if len(imdbData) > 2:

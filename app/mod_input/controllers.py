@@ -75,20 +75,30 @@ def readFileAddItemsToDb(fileName):
                 if len(row) > 0:
                     count = count + 1
                     imdbID = row[0]
-                    # only rows with not empty imdbId
-                    if imdbID != '':
-                        if len(row) > 4:
-                            titlelocal = row[4]
-                        else:
-                            titlelocal = ''
-                        if len(row) > 5:
-                            medium = row[5]
-                        else:
-                            medium = ''
+                    # only rows with not empty and zero imdbId
+                    # if imdbID != '' and imdbID != '0000000':
+                    if len(row) > 4:
+                        titlelocal = row[4]
+                    else:
+                        titlelocal = ''
+                    if len(row) > 5:
+                        medium = row[5]
+                        if medium == '':
+                            medium = '-'
+                    else:
+                        medium = '-'
 
-                        # (imdbID, EAN, title, titleorig, titlelocal, medium, nr, source) = \
-                        #     row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]
+                    # (imdbID, EAN, title, titleorig, titlelocal, medium, nr, source) = \
+                    #     row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]
 
-                        dbc.insertMovieData(inputMovieId=imdbID,
-                                            inputTitle=titlelocal,
-                                            medium=medium)
+                    if imdbID != '' and imdbID != '0000000':
+                        dbc.insertMovieData(
+                        inputMovieId=imdbID,
+                        inputTitle=titlelocal,
+                        medium=medium
+                        )
+                    else: # rows without imdbId
+                        dbc.addManMovieWithoutIdToDb(
+                            inputTitle=titlelocal,
+                            medium=medium
+                            )
