@@ -80,7 +80,7 @@ def pageresults(searchitems):
             inputImdbId = []
             for i in range(resultCount):
                 try:
-                    pointerString = 'imdbidh[{}]'.format(i)
+                    pointerString = 'imdbid[{}]'.format(i)
                     id = newdict[pointerString]
                     inputImdbId.append(id)
                 except: # no more ratings
@@ -155,7 +155,17 @@ def updateMediumInDb(foundList, inputMedium):
 
 
 def updateImdbidInDb(foundList, inputImdbid):
-    pass
+
+    for i in range(len(foundList)):
+    # for movie in foundList:
+        movie = foundList[i]
+        dbId = movie.imdbId
+        if dbId == '' or dbId == '0000000':
+            inputId = inputImdbid[i]
+            if inputId != '' and inputId != '0000000':
+                movie.imdbId = inputId
+                updateMovieWithoutIDWithImdb(movie, inputId,)
+
 
 
 def searchInDb(searchitems):
@@ -283,11 +293,8 @@ def addManMovieWithoutIdToDb(inputTitle='', medium='-', source=''):
     db.session.commit()
 
 
-def updateMovieWithoutIDManual(inputTitle, imdbid):
+def updateMovieWithoutIDWithImdb(movie, imdbid):
 
-    found = Movie.query.filter_by(titleLocal= inputTitle).first()
-    if found == None:
-        return
     # search imdb for movie
     # get data from imdb tsv
     imdbData = tsv.getMovieData(imdbid)
@@ -305,11 +312,11 @@ def updateMovieWithoutIDManual(inputTitle, imdbid):
             if len(imdbData) > 3:
                 year = imdbData[3]
 
-    found.imdbId=imdbid
-    found.titleImdb=titleImdb
-    found.titleOrig=titleOrig
-    found.year = year
-    found.linelength = length
+    movie.imdbId=imdbid
+    movie.titleImdb=titleImdb
+    movie.titleOrig=titleOrig
+    movie.year = year
+    movie.linelength = length
     dirData = tsv.getMovieDirector(imdbid)
     if dirData != None:
         directorId = dirData
@@ -319,8 +326,7 @@ def updateMovieWithoutIDManual(inputTitle, imdbid):
             director = Director(peopleImdbId=directorId, name=dirName)
         else:
             director = dirInDb
-        found.director = director
-
+        movie.director = director
 
     db.session.commit()
 
