@@ -77,6 +77,14 @@ def pageresults(searchitems):
             amount = len(newdict)
             # we do not know the amount of ratings or medium
             # we know only global size of input
+            inputImdbId = []
+            for i in range(resultCount):
+                try:
+                    pointerString = 'imdbidh[{}]'.format(i)
+                    id = newdict[pointerString]
+                    inputImdbId.append(id)
+                except: # no more ratings
+                    break
             # extracting user ratings input
             inputRating = []
             for i in range(resultCount):
@@ -99,6 +107,7 @@ def pageresults(searchitems):
             # TODO take inputs and insert in DB
             updateOwnerRatingInDb(foundList, inputRating)
             updateMediumInDb(foundList, inputMedium)
+            updateImdbidInDb(foundList, inputImdbId)
 
         foundMessage = "search once more"
         return redirect(url_for('database.search', message=foundMessage))
@@ -142,6 +151,10 @@ def updateOwnerRatingInDb(foundList, inputRating):
 
 
 def updateMediumInDb(foundList, inputMedium):
+    pass
+
+
+def updateImdbidInDb(foundList, inputImdbid):
     pass
 
 
@@ -262,6 +275,7 @@ def addManMovieWithoutIdToDb(inputTitle='', medium='-', source=''):
     '''
     '''
     newMovie = Movie(
+        imdbId='0000000',
                      titleLocal=inputTitle,
                      medium = medium,
                      source = source)
