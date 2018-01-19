@@ -108,5 +108,6 @@ def readFileAddItemsToDb(fileName):
                     else: # rows without imdbId
                         dbc.addManMovieWithoutIdToDb(
                             inputTitle=titlelocal,
+                            place=place,
                             medium=medium
                             )

@@ -334,13 +334,14 @@ def addManMovieToDb(inputMovieId, inputTitle='', medium='', source='', place='')
     db.session.commit()
 
 
-def addManMovieWithoutIdToDb(inputTitle='', medium='-', source=''):
+def addManMovieWithoutIdToDb(inputTitle='', medium='-', source='', place=''):
     '''
     '''
     newMovie = Movie(
         imdbId='0000000',
                      titleLocal=inputTitle,
                      medium = medium,
+                     place=place,
                      source = source)
     db.session.add(newMovie)
     db.session.commit()

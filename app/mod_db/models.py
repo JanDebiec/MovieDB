@@ -33,7 +33,7 @@ class Movie(DbBase):
     ratings = db.relationship('Rating', backref='film', lazy='dynamic')
 
     def __init__(self, imdbId='',  titleImdb='', titleOrig='', titleLocal='',
-                 directors='', year='', medium='', linelength=0, source='', diskNr='', EAN=''):
+                 directors='', year='', medium='', linelength=0, source='', place='', EAN=''):
         self.imdbId = imdbId
         self.titleImdb = titleImdb
         self.titleOrig = titleOrig
@@ -41,7 +41,7 @@ class Movie(DbBase):
         self.year = year
         self.medium = medium
         self.source = source
-        self.diskNr = diskNr
+        self.place = place
         self.EAN = EAN
         self.directors = directors
         self.linelength = linelength
