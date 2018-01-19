@@ -42,6 +42,7 @@ class EditMovieForm(FlaskForm):
     year = StringField('Year')
     director = StringField('Director')
     medium = StringField('Medium')
+    place = StringField('Place')
     source = StringField('Source')
     ownrating = StringField('Own rating')
     submit = SubmitField('Update')

@@ -100,6 +100,7 @@ def edit(movieid):
         form.imdbname.data = movie.titleImdb
         form.year.data = movie.year
         form.medium.data = movie.medium
+        form.place.data = movie.place
         form.localname.data = movie.titleLocal
         form.director.data = movie.director.name
     except:
@@ -442,6 +443,7 @@ def updateMovie(movieid, form):
     ownRating = form.ownrating.data
     # TODO update own rating
     obj.medium = form.medium.data
+    obj.place = form.place.data
     oldImdb = obj.imdbId
     if oldImdb == '' or oldImdb == '0000000':
         if imdbId != '' and imdbId != '0000000':
