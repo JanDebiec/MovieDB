@@ -88,6 +88,13 @@ def readFileAddItemsToDb(fileName):
                     else:
                         medium = '-'
 
+                    if len(row) > 6:
+                        place = row[6]
+                        if place == '':
+                            place = '-'
+                    else:
+                        place = '-'
+
                     # (imdbID, EAN, title, titleorig, titlelocal, medium, nr, source) = \
                     #     row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]
 
@@ -95,6 +102,7 @@ def readFileAddItemsToDb(fileName):
                         dbc.insertMovieData(
                         inputMovieId=imdbID,
                         inputTitle=titlelocal,
+                        place=place,
                         medium=medium
                         )
                     else: # rows without imdbId

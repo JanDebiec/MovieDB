@@ -24,7 +24,7 @@ class Movie(DbBase):
     year = db.Column(db.String(4))
     medium = db.Column(db.String(8))
     source = db.Column(db.String(8))
-    diskNr = db.Column(db.String(8))
+    place = db.Column(db.String(8))
     linelength = db.Column(db.Integer)
     # external
     directors = db.Column(db.Integer, db.ForeignKey('director.id'))

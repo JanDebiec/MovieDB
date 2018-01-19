@@ -256,7 +256,7 @@ def searchInDb(searchitems):
     return found
 
 
-def insertMovieData(inputMovieId, inputTitle='', medium='', source=''):
+def insertMovieData(inputMovieId, inputTitle='', medium='', source='', place=''):
     '''insert data from input into db
     Data from Input (manual or csv) has structure:
     imdbId 7 char obligatory
@@ -268,9 +268,9 @@ def insertMovieData(inputMovieId, inputTitle='', medium='', source=''):
     '''
     dbMovie = searchDb(inputMovieId)
     if dbMovie == None:
-        addManMovieToDb(inputMovieId, inputTitle, medium, source)
+        addManMovieToDb(inputMovieId, inputTitle, medium, source, place)
     else:
-        updateMovieManual(inputMovieId, inputTitle, medium, source)
+        updateMovieManual(inputMovieId, inputTitle, medium, source, place)
 
 
 def searchDb(movieId):
@@ -287,7 +287,7 @@ def searchDirectorDb(peopleId):
     return found
 
 
-def addManMovieToDb(inputMovieId, inputTitle='', medium='', source=''):
+def addManMovieToDb(inputMovieId, inputTitle='', medium='', source='', place=''):
     '''
     first search local imdb data for item, extract infos about
     movie, director, rating
@@ -317,6 +317,7 @@ def addManMovieToDb(inputMovieId, inputTitle='', medium='', source=''):
                      medium = medium,
                      year = year,
                      linelength = length,
+                     place = place,
                      source = source)
     dirData = tsv.getMovieDirector(inputMovieId)
     if dirData != None:
@@ -383,12 +384,13 @@ def updateMovieWithoutIDWithImdb(movie, imdbid):
     db.session.commit()
 
 
-def updateMovieManual(movieId, inputTitle, medium, source):
+def updateMovieManual(movieId, inputTitle, medium, source, place):
 
     found = Movie.query.filter_by(imdbId= movieId).first()
     found.titleLocal = inputTitle
     found.medium = medium
     found.source = source
+    found.place = place
     db.session.commit()
 
 
