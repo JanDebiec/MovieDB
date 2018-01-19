@@ -61,18 +61,25 @@ def singleresult(searchitems):
 @mod_db.route('/delete/<movieid>', methods=['GET', 'POST'])
 def delete(movieid):
     form = DeleteMovieForm()
-    movie = Movie.query.filter_by(id=movieid).first()
+    foundMessage = 'search'
+    if form.validate_on_submit():
+        deleteMovie(movieid)
+        return redirect(url_for('database.search', message=foundMessage))
 
     # display the single result
+    movie = Movie.query.filter_by(id=movieid).first()
     movietxt = movie
-    form.imdbid.data = movie.imdbId
-    form.imdbname.data = movie.titleImdb
-    form.year.data = movie.year
-    form.medium.data = movie.medium
-    form.director.data = movie.director.name
-
+    try:
+        form.imdbid.data = movie.imdbId
+        form.imdbname.data = movie.titleImdb
+        form.year.data = movie.year
+        form.medium.data = movie.medium
+        form.localname.data = movie.titleLocal
+        form.director.data = movie.director.name
+    except:
+        pass
     return render_template('mod_db/delete.html',
-                           title='Movie Result',
+                           title='Movie to delete',
                            moviemsg=movietxt,
                            form=form)
 
@@ -386,8 +393,9 @@ def updateMovieWithTsv(movieId):
 
         db.session.commit()
 
-def deleteObj():
-    obj = Movie.query.filter_by(id=123).first()
-    if len(obj) == 1:
-        db.session.delete(obj[0])
-        db.session.commit()
+def deleteMovie(movieid):
+    obj = Movie.query.filter_by(id=movieid).first()
+    print(obj)
+    # if len(obj) == 1:
+    #     db.session.delete(obj[0])
+    #     db.session.commit()

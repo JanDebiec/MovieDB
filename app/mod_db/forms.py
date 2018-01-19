@@ -32,6 +32,7 @@ class DeleteMovieForm(FlaskForm):
     medium = StringField('Medium')
     source = StringField('Source')
     ownrating = StringField('Own rating')
+    submit = SubmitField('Submit')
 
 class ExploreForm(FlaskForm):
     localname = StringField('TitleLocal')
