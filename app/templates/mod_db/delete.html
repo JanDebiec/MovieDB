@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block app_content %}
+<h1>Delete movie ?</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <table>
+        <tr>
+            <td> {{ form.imdbid.label}}</td>
+            <td>{{ form.imdbid(size=7)}}</td>
+        </tr>
+        <tr>
+
+            <td>{{ form.year.label}}</td>
+            <td>{{ form.year(size=4)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.imdbname.label}}</td>
+            <td>{{ form.imdbname(size=32)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.originname.label}}</td>
+            <td>{{ form.originname(size=32)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.localname.label}}</td>
+            <td>{{ form.localname(size=32)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.medium.label}}</td>
+            <td>{{ form.medium(size=8)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.source.label}}</td>
+            <td>{{ form.source(size=8)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.director.label}}</td>
+            <td>{{ form.director(size=32)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.ownrating.label}}</td>
+            <td>{{ form.ownrating(size=4)}}</td>
+        </tr>
+        <p>
+            {{ form.submit() }}
+        </p>
+    </table>
+</form>
+{% endblock %}

@@ -19,6 +19,8 @@
                 <td>{{ movie.year }}</td>
                 <td><input type='text' name="medium[{{ loop.index0 }}]" size="4" maxlength="6" value='{{ movie.medium }}'></td>
                 <td><input type='text' name="rating[{{ loop.index0 }}]" size="4" maxlength="6" value='{{ movie.rating }}'></td>
+
+            <td><a href="{{ url_for('database.delete', movieid=movie.id) }}">delete</a></td>
             </tr>
             {% endfor %}
         </table>

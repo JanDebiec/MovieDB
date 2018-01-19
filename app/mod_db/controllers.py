@@ -4,7 +4,7 @@ from jinja2 import Template
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director
-from app.mod_db.forms import SearchDbForm, SingleResultForm, ExploreForm, PageResultsForm
+from app.mod_db.forms import SearchDbForm, SingleResultForm, DeleteMovieForm, ExploreForm, PageResultsForm
 
 import app.mod_imdb.controllers as tsv
 
@@ -54,6 +54,24 @@ def singleresult(searchitems):
     form.director.data = movie.director.name
 
     return render_template('mod_db/singleresult.html',
+                           title='Movie Result',
+                           moviemsg=movietxt,
+                           form=form)
+
+@mod_db.route('/delete/<movieid>', methods=['GET', 'POST'])
+def delete(movieid):
+    form = DeleteMovieForm()
+    movie = Movie.query.filter_by(id=movieid).first()
+
+    # display the single result
+    movietxt = movie
+    form.imdbid.data = movie.imdbId
+    form.imdbname.data = movie.titleImdb
+    form.year.data = movie.year
+    form.medium.data = movie.medium
+    form.director.data = movie.director.name
+
+    return render_template('mod_db/delete.html',
                            title='Movie Result',
                            moviemsg=movietxt,
                            form=form)
@@ -368,3 +386,8 @@ def updateMovieWithTsv(movieId):
 
         db.session.commit()
 
+def deleteObj():
+    obj = Movie.query.filter_by(id=123).first()
+    if len(obj) == 1:
+        db.session.delete(obj[0])
+        db.session.commit()

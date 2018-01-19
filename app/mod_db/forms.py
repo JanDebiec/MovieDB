@@ -22,6 +22,17 @@ class SingleResultForm(FlaskForm):
     source = StringField('Source')
     ownrating = StringField('Own rating')
 
+class DeleteMovieForm(FlaskForm):
+    imdbid = StringField('ImdbId')
+    imdbname = StringField('TitleImdb')
+    originname = StringField('TitleOrigin')
+    localname = StringField('TitleLocal')
+    year = StringField('Year')
+    director = StringField('Director')
+    medium = StringField('Medium')
+    source = StringField('Source')
+    ownrating = StringField('Own rating')
+
 class ExploreForm(FlaskForm):
     localname = StringField('TitleLocal')
     year = StringField('Year')
