@@ -15,6 +15,7 @@ class ManInputForm(FlaskForm):
     originname = StringField('OriginalName')
     localname = StringField('LocalName')
     medium = StringField('Medium')
+    place = StringField('Place')
     source = StringField('Source')
     ownrating = StringField('MyOwnRating')
     submit = SubmitField('Submit')
