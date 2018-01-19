@@ -9,7 +9,7 @@ class SearchDbForm(FlaskForm):
     year = StringField('Year')
     director = StringField('Director')
     medium = StringField('Medium')
-    submit = SubmitField('Submit')
+    submit = SubmitField('Search')
 
 class SingleResultForm(FlaskForm):
     imdbid = StringField('ImdbId')
@@ -32,7 +32,19 @@ class DeleteMovieForm(FlaskForm):
     medium = StringField('Medium')
     source = StringField('Source')
     ownrating = StringField('Own rating')
-    submit = SubmitField('Submit')
+    submit = SubmitField('Delete')
+
+class EditMovieForm(FlaskForm):
+    imdbid = StringField('ImdbId')
+    imdbname = StringField('TitleImdb')
+    originname = StringField('TitleOrigin')
+    localname = StringField('TitleLocal')
+    year = StringField('Year')
+    director = StringField('Director')
+    medium = StringField('Medium')
+    source = StringField('Source')
+    ownrating = StringField('Own rating')
+    submit = SubmitField('Update')
 
 class ExploreForm(FlaskForm):
     localname = StringField('TitleLocal')

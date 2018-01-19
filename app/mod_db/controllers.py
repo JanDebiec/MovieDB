@@ -4,7 +4,7 @@ from jinja2 import Template
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director
-from app.mod_db.forms import SearchDbForm, SingleResultForm, DeleteMovieForm, ExploreForm, PageResultsForm
+from app.mod_db.forms import SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
 
 import app.mod_imdb.controllers as tsv
 
@@ -83,6 +83,32 @@ def delete(movieid):
                            moviemsg=movietxt,
                            form=form)
 
+
+@mod_db.route('/edit/<movieid>', methods=['GET', 'POST'])
+def edit(movieid):
+    form = EditMovieForm()
+    foundMessage = 'search'
+    if form.validate_on_submit():
+        updateMovie(movieid, form)
+        return redirect(url_for('database.search', message=foundMessage))
+
+    # display the single result
+    movie = Movie.query.filter_by(id=movieid).first()
+    movietxt = movie
+    try:
+        form.imdbid.data = movie.imdbId
+        form.imdbname.data = movie.titleImdb
+        form.year.data = movie.year
+        form.medium.data = movie.medium
+        form.localname.data = movie.titleLocal
+        form.director.data = movie.director.name
+    except:
+        pass
+    return render_template('mod_db/edit.html',
+                           title='Movie to edit',
+                           moviemsg=movietxt,
+                           form=form)
+
 @mod_db.route('/pageresults/<searchitems>', methods=['GET', 'POST'])
 def pageresults(searchitems):
     form = PageResultsForm()
@@ -102,14 +128,16 @@ def pageresults(searchitems):
             amount = len(newdict)
             # we do not know the amount of ratings or medium
             # we know only global size of input
-            inputImdbId = []
-            for i in range(resultCount):
-                try:
-                    pointerString = 'imdbid[{}]'.format(i)
-                    id = newdict[pointerString]
-                    inputImdbId.append(id)
-                except: # no more ratings
-                    break
+
+            # imdbid moved to individual edit
+            # inputImdbId = []
+            # for i in range(resultCount):
+            #     try:
+            #         pointerString = 'imdbid[{}]'.format(i)
+            #         id = newdict[pointerString]
+            #         inputImdbId.append(id)
+            #     except: # no more ratings
+            #         break
             # extracting user ratings input
             inputRating = []
             for i in range(resultCount):
@@ -132,7 +160,7 @@ def pageresults(searchitems):
             # TODO take inputs and insert in DB
             updateOwnerRatingInDb(foundList, inputRating)
             updateMediumInDb(foundList, inputMedium)
-            updateImdbidInDb(foundList, inputImdbId)
+            # updateImdbidInDb(foundList, inputImdbId)
 
         foundMessage = "search once more"
         return redirect(url_for('database.search', message=foundMessage))
@@ -190,7 +218,6 @@ def updateImdbidInDb(foundList, inputImdbid):
             if inputId != '' and inputId != '0000000':
                 movie.imdbId = inputId
                 updateMovieWithoutIDWithImdb(movie, inputId,)
-
 
 
 def searchInDb(searchitems):
@@ -396,6 +423,25 @@ def updateMovieWithTsv(movieId):
 def deleteMovie(movieid):
     obj = Movie.query.filter_by(id=movieid).first()
     print(obj)
-    # if len(obj) == 1:
-    #     db.session.delete(obj[0])
-    #     db.session.commit()
+    db.session.delete(obj)
+    db.session.commit()
+
+def updateMovie(movieid, form):
+    '''
+    movie without imdbId can get imdbId,
+    rest can get new medium (bought dvd) or user rating
+    :param movieid: db id
+    :param form: UpdateMovieForm to extract input data
+    '''
+    obj = Movie.query.filter_by(id=movieid).first()
+    print(obj)
+    imdbId = form.imdbid.data
+    ownRating = form.ownrating.data
+    # TODO update own rating
+    obj.medium = form.medium.data
+    oldImdb = obj.imdbId
+    if oldImdb == '' or oldImdb == '0000000':
+        if imdbId != '' and imdbId != '0000000':
+            updateMovieWithoutIDWithImdb(obj, imdbId)
+    else:
+        db.session.commit()
