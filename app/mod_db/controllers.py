@@ -130,15 +130,6 @@ def pageresults(searchitems):
             # we do not know the amount of ratings or medium
             # we know only global size of input
 
-            # imdbid moved to individual edit
-            # inputImdbId = []
-            # for i in range(resultCount):
-            #     try:
-            #         pointerString = 'imdbid[{}]'.format(i)
-            #         id = newdict[pointerString]
-            #         inputImdbId.append(id)
-            #     except: # no more ratings
-            #         break
             # extracting user ratings input
             inputRating = []
             for i in range(resultCount):
@@ -458,8 +449,19 @@ def updateMovie(movieid, form):
     obj = Movie.query.filter_by(id=movieid).first()
     print(obj)
     imdbId = form.imdbid.data
-    ownRating = form.ownrating.data
-    # TODO update own rating
+
+    ownRatingNew = form.ownrating.data
+    ownRatingOldObj = getRatingForMovie(obj)
+    ownRatingOld = ownRatingOldObj.value
+    if(ownRatingNew != ownRatingOld) and (ownRatingNew != ''):
+        if(ownRatingOldObj == None):
+            jd = Critic.query.filter_by(name='JD')
+            newRating = Rating(movie_id=obj.id, critic_id=jd.id, value=ownRatingNew)
+            db.session.add(newRating)
+        else:
+            ownRatingOldObj.value = ownRatingNew
+        db.session.commit()
+
     obj.medium = form.medium.data
     obj.place = form.place.data
     oldImdb = obj.imdbId
@@ -468,3 +470,15 @@ def updateMovie(movieid, form):
             updateMovieWithoutIDWithImdb(obj, imdbId)
     else:
         db.session.commit()
+
+
+def getRatingForMovie(movieobj, criticobj):
+    object = None
+    try:
+        # jd = Critic.query.filter_by(name='JD')
+        ownRatings = Rating.query.filter_by(critic_id=criticobj.id)
+        rating = ownRatings.filter_by(movie_id=obj.id)
+        object = rating
+    except:
+        pass
+    return object
