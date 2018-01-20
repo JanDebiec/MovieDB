@@ -13,6 +13,7 @@ nameBasicsFile = 'imdbif/name_basics.tsv'
 # nameBasicsFile = 'app/import_tsv/name_basics.tsv'
 movieDirectorFile = 'imdbif/title_crew.tsv'
 # movieDirectorFile = 'app/import_tsv/title_crew.tsv'
+movieRatingFile = 'imdbif/title_ratings.tsv'
 
 class EMovieBasics(Enum):
     movieId = 0
@@ -25,6 +26,11 @@ class EMovieBasics(Enum):
 class EMovieDirector(Enum):
     movieId = 0
     director = 1
+
+class EMovieRatings(Enum):
+    movieId = 0
+    rating = 1
+    voters = 2
 
 class EPerson(Enum):
     nameId = 0
@@ -68,6 +74,16 @@ def getMovieDirector(movieId):
         if len(crew) > 2:
             director = crew[2:9] # end limit, because some of lines in tsv are without '\t' as splitter
         return director
+
+def getMovieRating(movieId):
+    rating = None
+    line = findLineWithId(movieRatingFile ,movieId)
+    if len(line) > 0:
+        values = line.split('\t')
+        if len(values) > 1:
+            rating = values[EMovieRatings.rating.value]
+    return rating
+
 
 def getNameData(personId):
     ''' search name_basics.tsv for person

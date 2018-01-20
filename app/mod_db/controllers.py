@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for, request
 from jinja2 import Template
 
 from app import db
-from app.mod_db.models import Movie, Role, People, Director
+from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
 from app.mod_db.forms import SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
 
 import app.mod_imdb.controllers as tsv
@@ -267,7 +267,11 @@ def insertMovieData(inputMovieId, inputTitle='', medium='', source='', place='')
     If imdbId not found in db, then add item to db
     else add(modify) items already present
     '''
-    dbMovie = searchDb(inputMovieId)
+    dbMovie = None
+    try:
+        dbMovie = searchDb(inputMovieId)
+    except:
+        pass
     if dbMovie == None:
         addManMovieToDb(inputMovieId, inputTitle, medium, source, place)
     else:
@@ -284,7 +288,11 @@ def searchDb(movieId):
 def searchDirectorDb(peopleId):
     ''' search local db for movie,
     return set of data if found, or None if not found'''
-    found = Director.query.filter_by(peopleImdbId= peopleId).first()
+    found = None
+    try:
+        found = Director.query.filter_by(peopleImdbId= peopleId).first()
+    except:
+        pass
     return found
 
 
@@ -327,10 +335,19 @@ def addManMovieToDb(inputMovieId, inputTitle='', medium='', source='', place='')
         if dirInDb == None:
             dirName = tsv.getNameData(directorId)
             director = Director(peopleImdbId=directorId, name=dirName)
+            db.session.add(director)
         else:
             director = dirInDb
         newMovie.director = director
 
+    ratData = tsv.getMovieRating(inputMovieId)
+    if ratData != None:
+        try:
+            critic = Critic.query.filter_by(name='Imdb').first()
+            rat = Rating(movie_id=newMovie.id, critic_id=critic.id, value=ratData)
+            db.session.add(rat)
+        except:
+            pass
     db.session.add(newMovie)
     db.session.commit()
 
@@ -379,6 +396,7 @@ def updateMovieWithoutIDWithImdb(movie, imdbid):
         if dirInDb == None:
             dirName = tsv.getNameData(directorId)
             director = Director(peopleImdbId=directorId, name=dirName)
+            db.session.add(director)
         else:
             director = dirInDb
         movie.director = director

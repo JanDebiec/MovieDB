@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 {% block app_content %}
     <h1>Hi, Panie Janie!</h1>
-    <!--{% for post in posts %}-->
-      <!--<div>-->
-          <!--<p>-->
-              <!--{{ post.author.nickname }} says: <b>{{ post.body}}</b>-->
-          <!--</p>-->
-      <!--</div>-->
-    <!--{% endfor %}-->
+    <p>
+    {% if message %}
+    <h2>{{ message }}</h2>
+    {% endif %}
+    </p>
+
 {% endblock %}

@@ -5,6 +5,8 @@ import helper as h
 import app.mod_imdb.controllers as tsv
 
 from app import db
+from app.mod_db.models import Movie, Role, People, Director, Critic
+
 from app.mod_input.forms import ManInputForm, CsvInputForm
 import app.mod_db.controllers as dbc
 
@@ -32,6 +34,12 @@ def csvinput():
         flash('File choosen: {}'.format(
             form.filename.data
         ))
+        jd = Critic(name='JD', maxVal='5.0')
+        imdb = Critic(name='Imdb', maxVal='10.0')
+        db.session.add(jd)
+        db.session.add(imdb)
+        db.session.commit()
+
         fileName = '/home/jan/project/movie_db/userdata/input.csv'
         # fileName = '/home/jan/project/movie_db/userdata/input_80.csv'
         readFileAddItemsToDb(fileName)

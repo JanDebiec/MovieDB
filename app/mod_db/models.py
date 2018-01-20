@@ -93,6 +93,11 @@ class Critic(DbBase):
     # movies = db.relationship('Movie', backref='critic', lazy='dynamic')
     ratings = db.relationship('Rating', backref='critic', lazy='dynamic')
 
+    def __init__(self, name='',  url='-', maxVal='100'):
+        self.name = name
+        self.url = url
+        self.maxVal = maxVal
+
     def __repr__(self):
         return '<Critic name={name} maxVal={maxVal}'.format(self.name, self.maxVal)
 
@@ -102,6 +107,11 @@ class Rating(DbBase):
     # external
     movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'))
     critic_id = db.Column(db.Integer, db.ForeignKey('critic.id'))
+
+    def __init__(self, movie_id='',  critic_id='-', value='0'):
+        self.movie_id = movie_id
+        self.critic_id = critic_id
+        self.value = value
 
     def __repr__(self):
         return '<Rating movie={} critic={} Val={}'.format(self.movie_id, self.critic_id, self.value)
