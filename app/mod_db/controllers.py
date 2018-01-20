@@ -95,14 +95,18 @@ def edit(movieid):
     # display the single result
     movie = Movie.query.filter_by(id=movieid).first()
     movietxt = movie
+    form.imdbid.data = movie.imdbId
+    form.imdbname.data = movie.titleImdb
+    form.year.data = movie.year
+    form.medium.data = movie.medium
+    form.place.data = movie.place
+    form.localname.data = movie.titleLocal
     try:
-        form.imdbid.data = movie.imdbId
-        form.imdbname.data = movie.titleImdb
-        form.year.data = movie.year
-        form.medium.data = movie.medium
-        form.place.data = movie.place
-        form.localname.data = movie.titleLocal
         form.director.data = movie.director.name
+    except:
+        pass
+    try:
+        form.ownrating.data = getJdRatingForMovie(movie)
     except:
         pass
     return render_template('mod_db/edit.html',
@@ -152,14 +156,10 @@ def pageresults(searchitems):
             # TODO take inputs and insert in DB
             updateOwnerRatingInDb(foundList, inputRating)
             updateMediumInDb(foundList, inputMedium)
-            # updateImdbidInDb(foundList, inputImdbId)
 
         foundMessage = "search once more"
         return redirect(url_for('database.search', message=foundMessage))
-    # searchdir = json.loads(searchitems)
-    # foundList = searchInDb(searchdir)
-    # ownerRatings = []
-    # resultCount = len(foundList)
+
     if resultCount == 0:
         foundMessage = 'No movie found, search once more'
         return redirect(url_for('database.search', message=foundMessage))
@@ -167,6 +167,7 @@ def pageresults(searchitems):
                            title='Movie Result',
                            form=form,
                            moviescount=resultCount,
+                           # ownerRatings = ownerRatings,
                            movies=foundList
                            )
 
@@ -448,12 +449,10 @@ def updateMovie(movieid, form):
     :param form: UpdateMovieForm to extract input data
     '''
     obj = Movie.query.filter_by(id=movieid).first()
-    # print(obj)
     imdbId = form.imdbid.data
 
     ownRatingNew = form.ownrating.data
     jd = Critic.query.filter_by(name='JD').first()
-    # critic = Critic.query.filter_by(name='Imdb').first()
     ownRatingOldObj = getRatingForMovie(obj, jd)
     if ownRatingOldObj != None:
         ownRatingOld = ownRatingOldObj.value
@@ -466,18 +465,17 @@ def updateMovie(movieid, form):
             db.session.add(newRating)
         else:
             ownRatingOldObj.value = ownRatingNew
-        # db.session.commit()
 
     oldMedium = obj.medium
     newMedium = form.medium.data
     if newMedium != oldMedium:
         obj.medium = newMedium
-        # db.session.commit()
+
     newplace = form.place.data
     oldplace = obj.place
     if newplace != oldplace:
         obj.place = newplace
-        # db.session.commit()
+
     oldImdb = obj.imdbId
     if oldImdb == '' or oldImdb == '0000000':
         if imdbId != '' and imdbId != '0000000':
@@ -488,12 +486,22 @@ def updateMovie(movieid, form):
 def getRatingForMovie(movieobj, criticobj):
     object = None
     try:
-        # jd = Critic.query.filter_by(name='JD')
         ownRatings = Rating.query.filter_by(critic_id=criticobj.id)
-        rating = ownRatings.filter_by(movie_id=obj.id)
+        rating = ownRatings.filter_by(movie_id=movieobj.id).first()
         object = rating
     except:
         pass
     return object
+
+def getJdRatingForMovie(movieobj):
+    ownRating = None
+    try:
+        jd = Critic.query.filter_by(name='JD').first()
+        ownRatingObj = getRatingForMovie(movieobj, jd)
+        if ownRatingObj != None:
+            ownRating = ownRatingObj.value
+    except:
+        pass
+    return ownRating
 
 

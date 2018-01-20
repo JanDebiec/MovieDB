@@ -17,12 +17,13 @@
                 <td>{{ movie.titleLocal }}</td>
                 <td>{{ movie.director.name }}</td>
                 <td>{{ movie.year }}</td>
-                <td><input type='text' name="medium[{{ loop.index0 }}]" size="4" maxlength="6" value='{{ movie.medium }}'></td>
-                <td><input type='text' name="place[{{ loop.index0 }}]" size="4" maxlength="6" value='{{ movie.place }}'></td>
-                <td><input type='text' name="rating[{{ loop.index0 }}]" size="4" maxlength="6" value='{{ movie.rating }}'></td>
+                <td><input type='text' name="medium[{{ loop.index0 }}]" size="4" maxlength="6"
+                           value='{{ movie.medium }}'></td>
+                <td><input type='text' name="place[{{ loop.index0 }}]" size="4" maxlength="6" value='{{ movie.place }}'>
+                </td>
 
-            <td><a href="{{ url_for('database.delete', movieid=movie.id) }}">delete</a></td>
-            <td><a href="{{ url_for('database.edit', movieid=movie.id) }}">edit</a></td>
+                <td><a href="{{ url_for('database.delete', movieid=movie.id) }}">delete</a></td>
+                <td><a href="{{ url_for('database.edit', movieid=movie.id) }}">edit</a></td>
             </tr>
             {% endfor %}
         </table>
