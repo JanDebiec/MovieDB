@@ -356,7 +356,7 @@ def addManMovieWithoutIdToDb(inputTitle='', medium='-', source='', place=''):
     db.session.commit()
 
 
-def updateMovieWithoutIDWithImdb(movie, imdbid):
+def updateMovieWithoutIDWithImdb(movie, imdbid, commit=True):
 
     # search imdb for movie
     # get data from imdb tsv
@@ -392,7 +392,8 @@ def updateMovieWithoutIDWithImdb(movie, imdbid):
             director = dirInDb
         movie.director = director
 
-    db.session.commit()
+    if commit:
+        db.session.commit()
 
 
 def updateMovieManual(movieId, inputTitle, medium, source, place):
@@ -447,29 +448,41 @@ def updateMovie(movieid, form):
     :param form: UpdateMovieForm to extract input data
     '''
     obj = Movie.query.filter_by(id=movieid).first()
-    print(obj)
+    # print(obj)
     imdbId = form.imdbid.data
 
     ownRatingNew = form.ownrating.data
-    ownRatingOldObj = getRatingForMovie(obj)
-    ownRatingOld = ownRatingOldObj.value
+    jd = Critic.query.filter_by(name='JD').first()
+    # critic = Critic.query.filter_by(name='Imdb').first()
+    ownRatingOldObj = getRatingForMovie(obj, jd)
+    if ownRatingOldObj != None:
+        ownRatingOld = ownRatingOldObj.value
+    else:
+        ownRatingOld = None
     if(ownRatingNew != ownRatingOld) and (ownRatingNew != ''):
         if(ownRatingOldObj == None):
-            jd = Critic.query.filter_by(name='JD')
             newRating = Rating(movie_id=obj.id, critic_id=jd.id, value=ownRatingNew)
+            # rat = Rating(movie_id=newMovie.id, critic_id=critic.id, value=ratData)
             db.session.add(newRating)
         else:
             ownRatingOldObj.value = ownRatingNew
-        db.session.commit()
+        # db.session.commit()
 
-    obj.medium = form.medium.data
-    obj.place = form.place.data
+    oldMedium = obj.medium
+    newMedium = form.medium.data
+    if newMedium != oldMedium:
+        obj.medium = newMedium
+        # db.session.commit()
+    newplace = form.place.data
+    oldplace = obj.place
+    if newplace != oldplace:
+        obj.place = newplace
+        # db.session.commit()
     oldImdb = obj.imdbId
     if oldImdb == '' or oldImdb == '0000000':
         if imdbId != '' and imdbId != '0000000':
-            updateMovieWithoutIDWithImdb(obj, imdbId)
-    else:
-        db.session.commit()
+            updateMovieWithoutIDWithImdb(obj, imdbId, commit=False)
+    db.session.commit()
 
 
 def getRatingForMovie(movieobj, criticobj):
@@ -482,3 +495,5 @@ def getRatingForMovie(movieobj, criticobj):
     except:
         pass
     return object
+
+
