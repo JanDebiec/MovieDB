@@ -200,7 +200,23 @@ def critics():
     return render_template('mod_db/critics.html',
                            title='Critics list',
                            form=form,
-                           critics=critics)
+                           critics=critics
+                           )
+
+
+@mod_db.route('/addcritic', methods=['GET', 'POST'])
+def addcritic():
+    pass
+
+
+@mod_db.route('/deletecritic', methods=['GET', 'POST'])
+def deletecritic():
+    pass
+
+@mod_db.route('/editcritic', methods=['GET', 'POST'])
+def editcritic():
+    pass
+
 
 def findOwnerRatings(movieList):
     ratings = []
