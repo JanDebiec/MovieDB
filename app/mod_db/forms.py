@@ -58,3 +58,6 @@ class PageResultsForm(FlaskForm):
     year = StringField('Year')
     director = StringField('Director')
     submit = SubmitField('Update')
+
+class CriticsListForm(FlaskForm):
+    submit = SubmitField('Update')

@@ -4,7 +4,7 @@ from jinja2 import Template
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
-from app.mod_db.forms import SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
+from app.mod_db.forms import CriticsListForm, SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
 
 import app.mod_imdb.controllers as tsv
 
@@ -186,6 +186,21 @@ def explore():
                            title='Movie Result',
                            form=form,
                            movies=movies)
+
+@mod_db.route('/critics', methods=['GET', 'POST'])
+def critics():
+    form = CriticsListForm()
+    found = Critic.query.all()
+    critics = found
+    # movies = found[0:4]
+    # if request.method == 'POST':
+    #     result = request.form
+    #     return render_template("result.html", result=result)
+
+    return render_template('mod_db/critics.html',
+                           title='Critics list',
+                           form=form,
+                           critics=critics)
 
 def findOwnerRatings(movieList):
     ratings = []
