@@ -61,3 +61,10 @@ class PageResultsForm(FlaskForm):
 
 class CriticsListForm(FlaskForm):
     submit = SubmitField('Update')
+
+class EditCriticForm(FlaskForm):
+    name = StringField('Name')
+    url = StringField('Url')
+    maxval = StringField('MaxVal')
+    submit = SubmitField('Update')
+

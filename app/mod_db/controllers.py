@@ -4,7 +4,7 @@ from jinja2 import Template
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
-from app.mod_db.forms import CriticsListForm, SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
+from app.mod_db.forms import EditCriticForm, CriticsListForm, SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
 
 import app.mod_imdb.controllers as tsv
 
@@ -209,13 +209,51 @@ def addcritic():
     pass
 
 
-@mod_db.route('/deletecritic', methods=['GET', 'POST'])
-def deletecritic():
+@mod_db.route('/deletecritic/<criticid>', methods=['GET', 'POST'])
+def deletecritic(criticid):
     pass
 
-@mod_db.route('/editcritic', methods=['GET', 'POST'])
-def editcritic():
-    pass
+    # form = DeleteMovieForm()
+    # foundMessage = 'search'
+    # if form.validate_on_submit():
+    #     deleteMovie(movieid)
+    #     return redirect(url_for('database.search', message=foundMessage))
+    #
+    # # display the single result
+    # movie = Movie.query.filter_by(id=movieid).first()
+    # movietxt = movie
+    # try:
+    #     form.imdbid.data = movie.imdbId
+    #     form.imdbname.data = movie.titleImdb
+    #     form.year.data = movie.year
+    #     form.medium.data = movie.medium
+    #     form.localname.data = movie.titleLocal
+    #     form.director.data = movie.director.name
+    # except:
+    #     pass
+    # return render_template('mod_db/deletecritic.html',
+    #                        title='Movie to delete',
+    #                        moviemsg=movietxt,
+    #                        form=form)
+
+
+@mod_db.route('/editcritic/<criticid>', methods=['GET', 'POST'])
+def editcritic(criticid):
+    form = EditCriticForm()
+    if form.validate_on_submit():
+        updateCritic(criticid, form)
+        return redirect(url_for('database.critics'))
+
+    # display the single result
+    critic= Critic.query.filter_by(id=criticid).first()
+    form.name.data = critic.name
+    form.url.data = critic.url
+    form.maxval.data = critic.maxVal
+    return render_template('mod_db/editcritic.html',
+                           title='Critic to edit',
+                           form=form)
+
+
 
 
 def findOwnerRatings(movieList):
@@ -253,13 +291,19 @@ def searchInDb(searchitems):
     if itemimdbid != '':
         queryresult = Movie.query.filter_by(imdbId=itemimdbid)
         queryStarted = True
+
     itemmedium = searchitems['medium']
     if itemmedium != '':
+        looking_for = '%{0}%'.format(itemmedium)
         if queryStarted == False:
-            queryresult = Movie.query.filter_by(medium=itemmedium)
+            # for testing:
+            queryresult = Movie.query.filter(Movie.medium.like(looking_for))
+            # queryresult = Movie.query.filter_by(medium=itemmedium)
             queryStarted = True
         else:
-            queryresult = queryresult.filter_by(medium=itemmedium)
+            queryresult = queryresult.filter(Movie.medium.like(looking_for))
+            # queryresult = queryresult.filter_by(medium=itemmedium)
+
     itemtext = searchitems['text']
     if itemtext != '':
         if queryStarted == False:
@@ -267,6 +311,7 @@ def searchInDb(searchitems):
             queryStarted = True
         else:
             queryresult = queryresult.filter_by(titleLocal=itemtext)
+
     itemyear = searchitems['year']
     if itemyear != '':
         if queryStarted == False:
@@ -274,8 +319,17 @@ def searchInDb(searchitems):
             queryStarted = True
         else:
             queryresult = queryresult.filter_by(year=itemyear)
-    # wull be used later
-    # itemdirector = searchitems['director']
+
+    itemdirector = searchitems['director']
+    if itemdirector != '':
+        looking_for = '%{0}%'.format(itemdirector)
+        dir = Director.query.filter(Director.name.like(looking_for)).first()
+        dirid = dir.id
+        if queryStarted == False:
+            queryresult = Movie.query.filter_by(directors=dirid)
+            queryStarted = True
+        else:
+            queryresult = queryresult.filter_by(directors=dirid)
     found = queryresult.all()
     return found
 
@@ -512,6 +566,17 @@ def updateMovie(movieid, form):
         if imdbId != '' and imdbId != '0000000':
             updateMovieWithoutIDWithImdb(obj, imdbId, commit=False)
     db.session.commit()
+
+def updateCritic(criticid, form):
+    obj = Critic.query.filter_by(id=criticid).first()
+    name = form.name.data
+    url = form.url.data
+    maxVal = form.maxval.data
+    obj.name = name
+    obj.url = url
+    obj.maxVal = maxVal
+    db.session.commit()
+
 
 
 def getRatingForMovie(movieobj, criticobj):

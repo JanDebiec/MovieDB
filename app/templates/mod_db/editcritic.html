@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block app_content %}
+<h1>Edit movie</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <table>
+        <tr>
+            <td> {{ form.name.label}}</td>
+            <td>{{ form.name(size=7)}}</td>
+        </tr>
+        <tr>
+
+            <td>{{ form.url.label}}</td>
+            <td>{{ form.url(size=32)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.maxval.label}}</td>
+            <td>{{ form.maxval(size=6)}}</td>
+        </tr>
+        <p>
+            {{ form.submit() }}
+        </p>
+    </table>
+</form>
+{% endblock %}
