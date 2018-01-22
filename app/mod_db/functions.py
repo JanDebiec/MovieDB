@@ -328,18 +328,6 @@ def updateMovie(movieid, form):
     ownRatingNew = form.ownrating.data
     jd = Critic.query.filter_by(name='JD').first()
     updateRating(obj, jd, ownRatingNew)
-    # ownRatingOldObj = getRatingForMovie(obj, jd)
-    # if ownRatingOldObj != None:
-    #     ownRatingOld = ownRatingOldObj.value
-    # else:
-    #     ownRatingOld = None
-    # if(ownRatingNew != ownRatingOld) and (ownRatingNew != ''):
-    #     if(ownRatingOldObj == None):
-    #         newRating = Rating(movie_id=obj.id, critic_id=jd.id, value=ownRatingNew)
-    #         # rat = Rating(movie_id=newMovie.id, critic_id=critic.id, value=ratData)
-    #         db.session.add(newRating)
-    #     else:
-    #         ownRatingOldObj.value = ownRatingNew
 
     oldTitle = obj.titleLocal
     newTitle = form.localname.data
@@ -409,11 +397,6 @@ def getJdRatingForMovie(movieobj):
     except:
         pass
     return ownRating
-
-
-# def findOwnerRatings(movieList):
-#     ratings = []
-#     return ratings
 
 
 def updateOwnerRatingInDb(foundList, inputRating):
