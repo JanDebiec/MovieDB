@@ -551,6 +551,11 @@ def updateMovie(movieid, form):
         else:
             ownRatingOldObj.value = ownRatingNew
 
+    oldTitle = obj.titleLocal
+    newTitle = form.localname.data
+    if newTitle != oldTitle:
+        obj.titleLocal = newTitle
+
     oldMedium = obj.medium
     newMedium = form.medium.data
     if newMedium != oldMedium:
