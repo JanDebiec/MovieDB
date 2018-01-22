@@ -10,22 +10,23 @@ import app.mod_imdb.controllers as tsv
 
 class MovieToDisplay:
 
-    def __init__(self, imdbId='',  titleImdb='', titleOrig='', titleLocal='',
-                 director='', year='', medium='', linelength=0, source='', place='', EAN='',
+    def __init__(self,
+                 movie,
                  ownerrating='',
                  amgrating='',
                  imdbrating=''):
-        self.imdbId = imdbId
-        self.titleImdb = titleImdb
-        self.titleOrig = titleOrig
-        self.titleLocal = titleLocal
-        self.year = year
-        self.medium = medium
-        self.source = source
-        self.place = place
-        self.EAN = EAN
-        self.director = director
-        self.linelength = linelength
+        self.id = movie.id
+        self.imdbId = movie.imdbId
+        self.titleImdb = movie.titleImdb
+        self.titleOrig = movie.titleOrig
+        self.titleLocal = movie.titleLocal
+        self.year = movie.year
+        self.medium = movie.medium
+        self.source = movie.source
+        self.place = movie.place
+        self.EAN = movie.EAN
+        self.director = movie.director.name
+        self.linelength = movie.linelength
         self.ownerrating = ownerrating
         self.amgrating = amgrating
         self.imdbrating = imdbrating
@@ -49,34 +50,12 @@ def convertMovieToDIsplay(movie):
     ratingDict = findAllRatingsForMovie(movie)
 
     movieToDisplay = MovieToDisplay(
-        imdbId=movie.imdbId,
-        titleImdb=movie.titleImdb,
-        titleOrig=movie.titleOrig,
-        titleLocal=movie.titleLocal,
-        director=movie.director.name,
-        year=movie.year,
-        medium=movie.medium,
-        linelength=movie.linelength,
-        source=movie.source,
-        place=movie.place,
-        EAN=movie.EAN,
+        movie,
         ownerrating = ratingDict['JD'],
         amgrating = ratingDict['AMG'],
         imdbrating = ratingDict['Imdb']
         )
     return movieToDisplay
-
-def findOwnerRatings(movieList):
-    ratings = []
-    return ratings
-
-
-def updateOwnerRatingInDb(foundList, inputRating):
-    pass
-
-
-def updateMediumInDb(foundList, inputMedium):
-    pass
 
 
 def updateImdbidInDb(foundList, inputImdbid):
@@ -348,18 +327,19 @@ def updateMovie(movieid, form):
 
     ownRatingNew = form.ownrating.data
     jd = Critic.query.filter_by(name='JD').first()
-    ownRatingOldObj = getRatingForMovie(obj, jd)
-    if ownRatingOldObj != None:
-        ownRatingOld = ownRatingOldObj.value
-    else:
-        ownRatingOld = None
-    if(ownRatingNew != ownRatingOld) and (ownRatingNew != ''):
-        if(ownRatingOldObj == None):
-            newRating = Rating(movie_id=obj.id, critic_id=jd.id, value=ownRatingNew)
-            # rat = Rating(movie_id=newMovie.id, critic_id=critic.id, value=ratData)
-            db.session.add(newRating)
-        else:
-            ownRatingOldObj.value = ownRatingNew
+    updateRating(obj, jd, ownRatingNew)
+    # ownRatingOldObj = getRatingForMovie(obj, jd)
+    # if ownRatingOldObj != None:
+    #     ownRatingOld = ownRatingOldObj.value
+    # else:
+    #     ownRatingOld = None
+    # if(ownRatingNew != ownRatingOld) and (ownRatingNew != ''):
+    #     if(ownRatingOldObj == None):
+    #         newRating = Rating(movie_id=obj.id, critic_id=jd.id, value=ownRatingNew)
+    #         # rat = Rating(movie_id=newMovie.id, critic_id=critic.id, value=ratData)
+    #         db.session.add(newRating)
+    #     else:
+    #         ownRatingOldObj.value = ownRatingNew
 
     oldTitle = obj.titleLocal
     newTitle = form.localname.data
@@ -381,6 +361,21 @@ def updateMovie(movieid, form):
         if imdbId != '' and imdbId != '0000000':
             updateMovieWithoutIDWithImdb(obj, imdbId, commit=False)
     db.session.commit()
+
+def updateRating(movie, critic, newRating):
+
+    ratingOldObj = getRatingForMovie(movie, critic)
+    if ratingOldObj != None:
+        ownRatingOld = ratingOldObj.value
+    else:
+        ownRatingOld = None
+    if(newRating != ownRatingOld) and (newRating != ''):
+        if(ratingOldObj == None):
+            newRating = Rating(movie_id=movie.id, critic_id=critic.id, value=newRating)
+            db.session.add(newRating)
+        else:
+            ratingOldObj.value = newRating
+
 
 def updateCritic(criticid, form):
     obj = Critic.query.filter_by(id=criticid).first()
@@ -415,4 +410,25 @@ def getJdRatingForMovie(movieobj):
         pass
     return ownRating
 
+
+# def findOwnerRatings(movieList):
+#     ratings = []
+#     return ratings
+
+
+def updateOwnerRatingInDb(foundList, inputRating):
+    owner = Critic.query.filter_by(name='JD').first()
+
+    for i in range(len(foundList)):
+        updateRating(foundList[i], owner, inputRating[i])
+
+def updateAmgRatingInDb(foundList, inputRating):
+    amg = Critic.query.filter_by(name='AMG').first()
+
+    for i in range(len(foundList)):
+        updateRating(foundList[i], amg, inputRating[i])
+
+
+def updateMediumInDb(foundList, inputMedium):
+    pass
 

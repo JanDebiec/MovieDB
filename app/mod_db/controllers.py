@@ -139,14 +139,27 @@ def pageresults(searchitems):
             amount = len(newdict)
             # we do not know the amount of ratings or medium
             # we know only global size of input
-
+            flagDbShouldCommit = False
             # extracting user ratings input
-            inputRating = []
+            inputOwnRating = []
             for i in range(resultCount):
                 try:
-                    pointerString = 'rating[{}]'.format(i)
+                    pointerString = 'ownrat[{}]'.format(i)
                     rat = newdict[pointerString]
-                    inputRating.append(rat)
+                    if rat != '':
+                        flagDbShouldCommit = True
+                    inputOwnRating.append(rat)
+                except: # no more ratings
+                    break
+            # extracting amg ratings input
+            inputAmRating = []
+            for i in range(resultCount):
+                try:
+                    pointerString = 'amgrat[{}]'.format(i)
+                    rat = newdict[pointerString]
+                    if rat != '':
+                        flagDbShouldCommit = True
+                    inputAmRating.append(rat)
                 except: # no more ratings
                     break
             # extracting user medium input
@@ -155,13 +168,17 @@ def pageresults(searchitems):
                 try:
                     pointerString = 'medium[{}]'.format(i)
                     med = newdict[pointerString]
+                    if med != '':
+                        flagDbShouldCommit = True
                     inputMedium.append(med)
                 except: # no more medium input
                     break
 
-            # TODO take inputs and insert in DB
-            updateOwnerRatingInDb(foundList, inputRating)
+            updateOwnerRatingInDb(foundList, inputOwnRating)
+            updateAmgRatingInDb(foundList, inputAmRating)
             updateMediumInDb(foundList, inputMedium)
+            if flagDbShouldCommit:
+                db.session.commit()
 
         foundMessage = "search once more"
         return redirect(url_for('database.search', message=foundMessage))
