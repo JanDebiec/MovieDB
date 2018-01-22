@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
 import csv
 
+from config import Config
+
 import helper as h
 import app.mod_imdb.controllers as tsv
 
@@ -34,10 +36,15 @@ def csvinput():
         flash('File choosen: {}'.format(
             form.filename.data
         ))
-        jd = Critic(name='JD', maxVal='5.0')
+        ownerName = Config.OWNER_NAME
+        owner = Critic(name=ownerName, maxVal='5.0')
+        amg = Critic(name='AMG', maxVal='5.0')
+        mc = Critic(name='MC', url='http://www.metacritic.com/', maxVal='100.0')
         imdb = Critic(name='Imdb', maxVal='10.0')
-        db.session.add(jd)
+        db.session.add(owner)
         db.session.add(imdb)
+        db.session.add(amg)
+        db.session.add(mc)
         db.session.commit()
 
         fileName = '/home/jan/project/movie_db/userdata/input.csv'

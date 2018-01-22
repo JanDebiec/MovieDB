@@ -15,3 +15,5 @@ class Config(object):
 
     MOVIES_PER_PAGE = 25
 
+    OWNER_NAME = 'JD'
+

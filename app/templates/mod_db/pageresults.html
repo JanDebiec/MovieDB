@@ -15,7 +15,7 @@
                 <!--<td><input type='text' name="imdbid[{{ loop.index0 }}]" size="7" maxlength="7" value='{{ movie.imdbId }}'></td>-->
                 <td>{{ movie.imdbId }}</td>
                 <td>{{ movie.titleLocal }}</td>
-                <td>{{ movie.director.name }}</td>
+                <td>{{ movie.director }}</td>
                 <td>{{ movie.year }}</td>
                 <td><input type='text' name="medium[{{ loop.index0 }}]" size="4" maxlength="6"
                            value='{{ movie.medium }}'></td>

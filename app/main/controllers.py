@@ -26,3 +26,7 @@ def index():
                            message=messageText,
                            title='Home')
 
+@mod_main.route('/ownrating', methods=['GET', 'POST'])
+def ownrating():
+    return render_template('/ownrating.html',
+                           title='Criteria for own ratings')
