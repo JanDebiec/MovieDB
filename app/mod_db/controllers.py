@@ -124,18 +124,14 @@ def pageresults(searchitems):
     searchdir = json.loads(searchitems)
     foundMovieList = searchInDb(searchdir)
 
-    #TODO convert every Movie into MovieToDiplay
     listMovieToDisplay = []
     for movie in foundMovieList:
         movieToDisplay = convertMovieToDIsplay(movie)
         listMovieToDisplay.append(movieToDisplay)
-    # listMovieToDisplay = foundMovieList
 
     foundList = listMovieToDisplay
     resultCount = len(foundList)
-    # if resultCount != 0:
-    #     ownerRatings = findOwnerRatings(foundList)
-    #     # TODO add ratings to foundList
+
     if form.validate_on_submit():
         if request.method == 'POST':
             userinputs = request.form

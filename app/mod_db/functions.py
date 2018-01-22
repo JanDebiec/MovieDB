@@ -12,7 +12,7 @@ class MovieToDisplay:
 
     def __init__(self, imdbId='',  titleImdb='', titleOrig='', titleLocal='',
                  director='', year='', medium='', linelength=0, source='', place='', EAN='',
-                 ownerratings='',
+                 ownerrating='',
                  amgrating='',
                  imdbrating=''):
         self.imdbId = imdbId
@@ -26,7 +26,7 @@ class MovieToDisplay:
         self.EAN = EAN
         self.director = director
         self.linelength = linelength
-        self.ownerratings = ownerratings
+        self.ownerrating = ownerrating
         self.amgrating = amgrating
         self.imdbrating = imdbrating
 
@@ -60,7 +60,7 @@ def convertMovieToDIsplay(movie):
         source=movie.source,
         place=movie.place,
         EAN=movie.EAN,
-        ownerratings = ratingDict['JD'],
+        ownerrating = ratingDict['JD'],
         amgrating = ratingDict['AMG'],
         imdbrating = ratingDict['Imdb']
         )
