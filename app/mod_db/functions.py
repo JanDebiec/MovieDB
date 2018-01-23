@@ -25,7 +25,10 @@ class MovieToDisplay:
         self.source = movie.source
         self.place = movie.place
         self.EAN = movie.EAN
-        self.director = movie.director.name
+        try:
+            self.director = movie.director.name
+        except:
+            self.director = ''
         self.linelength = movie.linelength
         self.ownerrating = ownerrating
         self.amgrating = amgrating
@@ -95,11 +98,13 @@ def searchInDb(searchitems):
 
     itemtext = searchitems['text']
     if itemtext != '':
+        looking_for = '%{0}%'.format(itemtext)
         if queryStarted == False:
-            queryresult = Movie.query.filter_by(titleLocal=itemtext)
+            # queryresult = Movie.query.filter_by(titleLocal=itemtext)
+            queryresult = Movie.query.filter(Movie.titleLocal.like(looking_for))
             queryStarted = True
         else:
-            queryresult = queryresult.filter_by(titleLocal=itemtext)
+            queryresult = queryresult.filter(Movie.titleLocal.like(looking_for))
 
     itemyear = searchitems['year']
     if itemyear != '':
@@ -108,6 +113,16 @@ def searchInDb(searchitems):
             queryStarted = True
         else:
             queryresult = queryresult.filter_by(year=itemyear)
+
+    itemplace = searchitems['place']
+    looking_for = '%{0}%'.format(itemplace)
+    if itemplace != '':
+        if queryStarted == False:
+            # queryresult = Movie.query.filter_by(place=itemplace)
+            queryresult = Movie.query.filter(Movie.place.like(looking_for))
+            queryStarted = True
+        else:
+            queryresult = queryresult.filter(Movie.place.like(looking_for))
 
     itemdirector = searchitems['director']
     if itemdirector != '':
