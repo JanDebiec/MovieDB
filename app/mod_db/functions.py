@@ -138,7 +138,10 @@ def searchInDb(searchitems):
     return found
 
 
-def insertMovieData(inputMovieId, inputTitle='', medium='', source='', place=''):
+def insertMovieData(inputMovieId,
+                    inputTitle='', medium='',
+                    source='', place='',
+                    ownrating=''):
     '''insert data from input into db
     Data from Input (manual or csv) has structure:
     imdbId 7 char obligatory
@@ -154,9 +157,9 @@ def insertMovieData(inputMovieId, inputTitle='', medium='', source='', place='')
     except:
         pass
     if dbMovie == None:
-        addManMovieToDb(inputMovieId, inputTitle, medium, source, place)
+        addManMovieToDb(inputMovieId, inputTitle, medium, source, place, ownrating)
     else:
-        updateMovieManual(inputMovieId, inputTitle, medium, source, place)
+        updateMovieManual(inputMovieId, inputTitle, medium, source, place, ownrating)
 
 
 def searchDb(movieId):
@@ -177,7 +180,10 @@ def searchDirectorDb(peopleId):
     return found
 
 
-def addManMovieToDb(inputMovieId, inputTitle='', medium='', source='', place=''):
+def addManMovieToDb(inputMovieId,
+                    inputTitle='', medium='',
+                    source='', place='',
+                    ownrating=''):
     '''
     first search local imdb data for item, extract infos about
     movie, director, rating
@@ -229,6 +235,14 @@ def addManMovieToDb(inputMovieId, inputTitle='', medium='', source='', place='')
             db.session.add(rat)
         except:
             pass
+
+    try:
+        critic = Critic.query.filter_by(name='JD').first()
+        rat = Rating(movie_id=newMovie.id, critic_id=critic.id, value=ownrating)
+        db.session.add(rat)
+    except:
+        pass
+
     db.session.add(newMovie)
     db.session.commit()
 
@@ -286,13 +300,22 @@ def updateMovieWithoutIDWithImdb(movie, imdbid, commit=True):
         db.session.commit()
 
 
-def updateMovieManual(movieId, inputTitle, medium, source, place):
+def updateMovieManual(movieId, inputTitle, medium, source, place, ownrating):
 
     found = Movie.query.filter_by(imdbId= movieId).first()
     found.titleLocal = inputTitle
     found.medium = medium
     found.source = source
     found.place = place
+
+    try:
+        critic = Critic.query.filter_by(name='JD').first()
+        rat = Rating(movie_id=found.id, critic_id=critic.id, value=ownrating)
+        db.session.add(rat)
+    except:
+        pass
+
+
     db.session.commit()
 
 
