@@ -79,6 +79,7 @@ def searchInDb(searchitems):
     search for all movies, that fulfils the criteria
     return the list of all results'''
     queryStarted = False
+    found = None
     itemimdbid = searchitems['imdbid']
     if itemimdbid != '':
         queryresult = Movie.query.filter_by(imdbId=itemimdbid)
@@ -143,13 +144,16 @@ def searchInDb(searchitems):
     if itemdirector != '':
         looking_for = '%{0}%'.format(itemdirector)
         dir = Director.query.filter(Director.name.like(looking_for)).first()
-        dirid = dir.id
-        if queryStarted == False:
-            queryresult = Movie.query.filter_by(directors=dirid)
-            queryStarted = True
-        else:
-            queryresult = queryresult.filter_by(directors=dirid)
-    found = queryresult.all()
+        if dir != None:
+            dirid = dir.id
+            if queryStarted == False:
+                queryresult = Movie.query.filter_by(directors=dirid)
+                queryStarted = True
+            else:
+                queryresult = queryresult.filter_by(directors=dirid)
+
+    if  queryStarted:
+        found = queryresult.all()
     return found
 
 
@@ -468,3 +472,10 @@ def updateAmgRatingInDb(foundList, inputRating):
 def updateMediumInDb(foundList, inputMedium):
     pass
 
+def updatePlaceInDb(foundList, inputMedium):
+    for i in range(len(foundList)):
+        newPlace = inputMedium[i]
+        movie = foundList[i]
+        oldPlace = movie.place
+        if newPlace != oldPlace:
+            movie.place = newPlace

@@ -126,14 +126,17 @@ def pageresults(searchitems):
     # to update the medium and ratings
     searchdir = json.loads(searchitems)
     foundMovieList = searchInDb(searchdir)
+    foundList = []
+    resultCount = 0
 
     listMovieToDisplay = []
-    for movie in foundMovieList:
-        movieToDisplay = convertMovieToDIsplay(movie)
-        listMovieToDisplay.append(movieToDisplay)
+    if foundMovieList != None:
+        for movie in foundMovieList:
+            movieToDisplay = convertMovieToDIsplay(movie)
+            listMovieToDisplay.append(movieToDisplay)
 
-    foundList = listMovieToDisplay
-    resultCount = len(foundList)
+        foundList = listMovieToDisplay
+        resultCount = len(foundList)
 
     if form.validate_on_submit():
         if request.method == 'POST':
@@ -176,10 +179,21 @@ def pageresults(searchitems):
                     inputMedium.append(med)
                 except: # no more medium input
                     break
+            inputPlace = []
+            for i in range(resultCount):
+                try:
+                    pointerString = 'place[{}]'.format(i)
+                    plc = newdict[pointerString]
+                    if plc != '':
+                        flagDbShouldCommit = True
+                        inputPlace.append(plc)
+                except: # no more medium input
+                    break
 
-            updateOwnerRatingInDb(foundList, inputOwnRating)
-            updateAmgRatingInDb(foundList, inputAmRating)
-            updateMediumInDb(foundList, inputMedium)
+            updateOwnerRatingInDb(foundMovieList, inputOwnRating)
+            updateAmgRatingInDb(foundMovieList, inputAmRating)
+            updateMediumInDb(foundMovieList, inputMedium)
+            updatePlaceInDb(foundMovieList, inputPlace)
             if flagDbShouldCommit:
                 db.session.commit()
 
