@@ -92,11 +92,11 @@ def searchInDb(searchitems):
         if queryStarted == False:
             # for testing:
             # queryresult = Movie.query.filter(Movie.medium.like(looking_for))
-            queryresult = Movie.query.filter_by(medium=itemmedium)
+            queryresult = Movie.query.filter_by(medium=itemmedium).order_by(Movie.year.desc())
             queryStarted = True
         else:
             # queryresult = queryresult.filter(Movie.medium.like(looking_for))
-            queryresult = queryresult.filter_by(medium=itemmedium)
+            queryresult = queryresult.filter_by(medium=itemmedium).order_by(Movie.year.desc())
 
     # itemamg = searchitems['amgrating']
     # if itemmedium != '':
@@ -147,10 +147,10 @@ def searchInDb(searchitems):
         if dir != None:
             dirid = dir.id
             if queryStarted == False:
-                queryresult = Movie.query.filter_by(directors=dirid)
+                queryresult = Movie.query.filter_by(directors=dirid).order_by(Movie.year.desc())
                 queryStarted = True
             else:
-                queryresult = queryresult.filter_by(directors=dirid)
+                queryresult = queryresult.filter_by(directors=dirid).order_by(Movie.year.desc())
 
     if  queryStarted:
         found = queryresult.all()
