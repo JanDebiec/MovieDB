@@ -84,17 +84,32 @@ def searchInDb(searchitems):
         queryresult = Movie.query.filter_by(imdbId=itemimdbid)
         queryStarted = True
 
+    # only equal reults, DVD and excluded DVDR
     itemmedium = searchitems['medium']
     if itemmedium != '':
         looking_for = '%{0}%'.format(itemmedium)
         if queryStarted == False:
             # for testing:
-            queryresult = Movie.query.filter(Movie.medium.like(looking_for))
-            # queryresult = Movie.query.filter_by(medium=itemmedium)
+            # queryresult = Movie.query.filter(Movie.medium.like(looking_for))
+            queryresult = Movie.query.filter_by(medium=itemmedium)
             queryStarted = True
         else:
-            queryresult = queryresult.filter(Movie.medium.like(looking_for))
-            # queryresult = queryresult.filter_by(medium=itemmedium)
+            # queryresult = queryresult.filter(Movie.medium.like(looking_for))
+            queryresult = queryresult.filter_by(medium=itemmedium)
+
+    # itemamg = searchitems['amgrating']
+    # if itemmedium != '':
+    #     looking_for = '%{0}%'.format(itemamg)
+    #     amg = Critic.query.filter_by(name='AMG')
+    #
+    #     if queryStarted == False:
+    #         # for testing:
+    #         queryresult = Movie.query.filter(Movie.medium.like(looking_for))
+    #         # queryresult = Movie.query.filter_by(medium=itemmedium)
+    #         queryStarted = True
+    #     else:
+    #         queryresult = queryresult.filter(Movie.medium.like(looking_for))
+    #         # queryresult = queryresult.filter_by(medium=itemmedium)
 
     itemtext = searchitems['text']
     if itemtext != '':
