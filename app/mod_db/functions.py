@@ -167,6 +167,26 @@ def filterMoviesWithAmgRating(found, itemamg):
 
     return listWithRating
 
+def filterMoviesWithCriticRating(found, critic, rating):
+    listWithRating = []
+    minimalRating = float(rating)
+    for movie in found:
+        if critic == 'AMG':
+            actRating = movie.amgrating
+        elif critic == 'JD':
+            actRating = movie.ownerrating
+        elif critic == 'Imdb':
+            actRating = movie.imdbrating
+
+        try:
+            actfloat = float(actRating)
+        except:
+            actfloat = 0.0
+        if actfloat >= minimalRating:
+            listWithRating.append(movie)
+
+    return listWithRating
+
 def insertMovieData(inputMovieId,
                     inputTitle='', medium='',
                     source='', place='',

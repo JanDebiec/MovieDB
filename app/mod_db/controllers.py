@@ -141,9 +141,12 @@ def pageresults(searchitems):
 
 
     # if activated, filter the results with amg rating
-    itemamg = searchdir['amgrating']
-    if itemamg != '':
-        foundList = filterMoviesWithAmgRating(listMovieToDisplay, itemamg)
+    itemcritic = searchdir['critic']
+    if itemcritic != '':
+        criticName = itemcritic
+    itemrating = searchdir['rating']
+    if itemrating != '':
+        foundList = filterMoviesWithCriticRating(listMovieToDisplay, criticName, itemrating)
     else:
         foundList = listMovieToDisplay
     resultCount = len(foundList)

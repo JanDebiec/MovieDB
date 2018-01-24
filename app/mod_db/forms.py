@@ -18,7 +18,8 @@ class SingleMovieForm(FlaskForm):
 
 class SearchDbForm(SingleMovieForm):
     text = StringField('Text/Title')
-    amgrating = StringField('AMG rating')
+    critic = StringField('Critic')
+    rating = StringField('rating')
     submit = SubmitField('Search')
 
 class SingleResultForm(SingleMovieForm):

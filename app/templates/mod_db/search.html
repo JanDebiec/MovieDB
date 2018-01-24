@@ -1,41 +1,44 @@
 {% extends "base.html" %}
 {% block app_content %}
-    <h1>Search Input</h1>
-    {% if message %}
-      {{ message }}
-    {% endif %}
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.imdbid.label}}
-            {{ form.imdbid(size=7)}}
-        </p>
-        <p>
-            {{ form.text.label}}
-            {{ form.text(size=32)}}
-        </p>
-        <p>
-            {{ form.year.label}}
-            {{ form.year(size=4)}}
-        </p>
-        <p>
-            {{ form.director.label}}
-            {{ form.director(size=32)}}
-        </p>
-        <p>
-            {{ form.medium.label}}
-            {{ form.medium(size=6)}}
-        </p>
-        <p>
-            {{ form.place.label}}
-            {{ form.place(size=6)}}
-        </p>
-        <p>
-            {{ form.amgrating.label}}
-            {{ form.amgrating(size=6)}}
-        </p>
+<h1>Search Input</h1>
+{% if message %}
+{{ message }}
+{% endif %}
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <table>
+        <tr>
+            <td>{{ form.imdbid.label}}</td>
+            <td>{{ form.imdbid(size=7)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.text.label}}</td>
+            <td>{{ form.text(size=32)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.year.label}}</td>
+            <td>{{ form.year(size=4)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.director.label}}</td>
+            <td>{{ form.director(size=32)}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.medium.label}}</td>
+            <td>{{ form.medium(size=6)}}</td>
+            <td>{{ form.place.label}}</td>
+            <td>{{ form.place(size=6)}}</td>
+        </tr>
+        <tr>
+
+            <td> {{ form.critic.label}}</td>
+            <td>{{ form.critic(size=6)}}</td>
+            <td>{{ form.rating.label}}</td>
+            <td>{{ form.rating(size=6)}}</td>
+        </tr>
+    </table>
         <p>
             {{ form.submit() }}
         </p>
-    </form>
+</form>
 {% endblock %}
