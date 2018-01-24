@@ -27,7 +27,8 @@ def search():
         searchdir['medium'] = form.medium.data
         searchdir['place'] = form.place.data
         searchdir['director'] = form.director.data
-        searchdir['amgrating'] = form.amgrating.data
+        searchdir['rating'] = form.rating.data
+        searchdir['critic'] = form.critic.data
 
         searchitems = json.dumps(searchdir)
         return redirect(url_for('database.pageresults', searchitems=searchitems))
