@@ -98,19 +98,6 @@ def searchInDb(searchitems):
             # queryresult = queryresult.filter(Movie.medium.like(looking_for))
             queryresult = queryresult.filter_by(medium=itemmedium).order_by(Movie.year.desc())
 
-    # itemamg = searchitems['amgrating']
-    # if itemmedium != '':
-    #     looking_for = '%{0}%'.format(itemamg)
-    #     amg = Critic.query.filter_by(name='AMG')
-    #
-    #     if queryStarted == False:
-    #         # for testing:
-    #         queryresult = Movie.query.filter(Movie.medium.like(looking_for))
-    #         # queryresult = Movie.query.filter_by(medium=itemmedium)
-    #         queryStarted = True
-    #     else:
-    #         queryresult = queryresult.filter(Movie.medium.like(looking_for))
-    #         # queryresult = queryresult.filter_by(medium=itemmedium)
 
     itemtext = searchitems['text']
     if itemtext != '':
@@ -154,42 +141,31 @@ def searchInDb(searchitems):
 
     if  queryStarted:
         found = queryresult.all()
+
+
     return found
 
 
-def searchAmgInDb(searchitems):
+def searchAmgInWholeDb():
     ''' extract items from searchitems,
     search for all movies, that fulfils the criteria
     return the list of all results'''
-    queryStarted = False
-    found = None
-    itemimdbid = searchitems['imdbid']
-    if itemimdbid != '':
-        queryresult = Movie.query.filter_by(imdbId=itemimdbid)
-        queryStarted = True
-
-    itemamg = searchitems['amgrating']
-    if itemamg != '':
-        looking_for = '%{0}%'.format(itemamg)
-        amg = Critic.query.filter_by(name='AMG')
-
-        # TODO query ratings for amg >= input
-        # create the list of movies
-
-        if queryStarted == False:
-            # for testing:
-            queryresult = Movie.query.filter(Movie.medium.like(looking_for))
-            # queryresult = Movie.query.filter_by(medium=itemmedium)
-            queryStarted = True
-        else:
-            queryresult = queryresult.filter(Movie.medium.like(looking_for))
-            # queryresult = queryresult.filter_by(medium=itemmedium)
-
-
-    if  queryStarted:
-        found = queryresult.all()
+    found = []
     return found
 
+def filterMoviesWithAmgRating(found, itemamg):
+    listWithRating = []
+    minimalRating = float(itemamg)
+    for movie in found:
+        actRating = movie.amgrating
+        try:
+            actfloat = float(actRating)
+        except:
+            actfloat = 0.0
+        if actfloat >= minimalRating:
+            listWithRating.append(movie)
+
+    return listWithRating
 
 def insertMovieData(inputMovieId,
                     inputTitle='', medium='',

@@ -30,10 +30,11 @@ def search():
         searchdir['amgrating'] = form.amgrating.data
 
         searchitems = json.dumps(searchdir)
-        if searchitems['amgrating'] =='':
-            return redirect(url_for('database.pageresults', searchitems=searchitems))
-        else:
-            return redirect(url_for('database.amgresults', searchitems=searchitems))
+        return redirect(url_for('database.pageresults', searchitems=searchitems))
+        # if searchitems['amgrating'] =='':
+        #     return redirect(url_for('database.pageresults', searchitems=searchitems))
+        # else:
+        #     return redirect(url_for('database.amgresults', searchitems=searchitems))
 
     # show form with proper message
     return render_template('mod_db/search.html',
@@ -138,9 +139,14 @@ def pageresults(searchitems):
             movieToDisplay = convertMovieToDIsplay(movie)
             listMovieToDisplay.append(movieToDisplay)
 
-        foundList = listMovieToDisplay
-        resultCount = len(foundList)
 
+    # if activated, filter the results with amg rating
+    itemamg = searchdir['amgrating']
+    if itemamg != '':
+        foundList = filterMoviesWithAmgRating(listMovieToDisplay, itemamg)
+    else:
+        foundList = listMovieToDisplay
+    resultCount = len(foundList)
     if form.validate_on_submit():
         if request.method == 'POST':
             userinputs = request.form
@@ -215,36 +221,36 @@ def pageresults(searchitems):
                            )
 
 
-@mod_db.route('/amgresults/<searchitems>', methods=['GET', 'POST'])
-def amgresults(searchitems):
-    form = PageResultsForm()
-    # we need the results of search onSubmit too,
-    # to update the medium and ratings
-    searchdir = json.loads(searchitems)
-    foundMovieList = searchAmgInDb(searchdir)
-    foundList = []
-    resultCount = 0
-
-    listMovieToDisplay = []
-    if foundMovieList != None:
-        for movie in foundMovieList:
-            movieToDisplay = convertMovieToDIsplay(movie)
-            listMovieToDisplay.append(movieToDisplay)
-
-        foundList = listMovieToDisplay
-        resultCount = len(foundList)
-
-
-    if resultCount == 0:
-        foundMessage = 'No movie found, search once more'
-        return redirect(url_for('database.search', message=foundMessage))
-    return render_template('mod_db/pageresults.html',
-                           title='Movie Result',
-                           form=form,
-                           moviescount=resultCount,
-                           # ownerRatings = ownerRatings,
-                           movies=foundList
-                           )
+# @mod_db.route('/amgresults/<searchitems>', methods=['GET', 'POST'])
+# def amgresults(searchitems):
+#     form = PageResultsForm()
+#     # we need the results of search onSubmit too,
+#     # to update the medium and ratings
+#     searchdir = json.loads(searchitems)
+#     foundMovieList = searchAmgInDb(searchdir)
+#     foundList = []
+#     resultCount = 0
+#
+#     listMovieToDisplay = []
+#     if foundMovieList != None:
+#         for movie in foundMovieList:
+#             movieToDisplay = convertMovieToDIsplay(movie)
+#             listMovieToDisplay.append(movieToDisplay)
+#
+#         foundList = listMovieToDisplay
+#         resultCount = len(foundList)
+#
+#
+#     if resultCount == 0:
+#         foundMessage = 'No movie found, search once more'
+#         return redirect(url_for('database.search', message=foundMessage))
+#     return render_template('mod_db/pageresults.html',
+#                            title='Movie Result',
+#                            form=form,
+#                            moviescount=resultCount,
+#                            # ownerRatings = ownerRatings,
+#                            movies=foundList
+#                            )
 
 @mod_db.route('/explore', methods=['GET', 'POST'])
 def explore():
