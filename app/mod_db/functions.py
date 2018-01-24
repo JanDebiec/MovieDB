@@ -157,6 +157,40 @@ def searchInDb(searchitems):
     return found
 
 
+def searchAmgInDb(searchitems):
+    ''' extract items from searchitems,
+    search for all movies, that fulfils the criteria
+    return the list of all results'''
+    queryStarted = False
+    found = None
+    itemimdbid = searchitems['imdbid']
+    if itemimdbid != '':
+        queryresult = Movie.query.filter_by(imdbId=itemimdbid)
+        queryStarted = True
+
+    itemamg = searchitems['amgrating']
+    if itemamg != '':
+        looking_for = '%{0}%'.format(itemamg)
+        amg = Critic.query.filter_by(name='AMG')
+
+        # TODO query ratings for amg >= input
+        # create the list of movies
+
+        if queryStarted == False:
+            # for testing:
+            queryresult = Movie.query.filter(Movie.medium.like(looking_for))
+            # queryresult = Movie.query.filter_by(medium=itemmedium)
+            queryStarted = True
+        else:
+            queryresult = queryresult.filter(Movie.medium.like(looking_for))
+            # queryresult = queryresult.filter_by(medium=itemmedium)
+
+
+    if  queryStarted:
+        found = queryresult.all()
+    return found
+
+
 def insertMovieData(inputMovieId,
                     inputTitle='', medium='',
                     source='', place='',
