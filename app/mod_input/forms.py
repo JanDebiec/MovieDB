@@ -18,6 +18,7 @@ class ManInputForm(FlaskForm):
     place = StringField('Place')
     source = StringField('Source')
     ownrating = StringField('MyOwnRating')
+    amgrating = StringField('AMGRating')
     submit = SubmitField('Submit')
 
 class CsvInputForm(FlaskForm):

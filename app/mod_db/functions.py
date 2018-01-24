@@ -160,7 +160,8 @@ def searchInDb(searchitems):
 def insertMovieData(inputMovieId,
                     inputTitle='', medium='',
                     source='', place='',
-                    ownrating=''):
+                    ownrating='',
+                    amgrating=''):
     '''insert data from input into db
     Data from Input (manual or csv) has structure:
     imdbId 7 char obligatory
@@ -171,14 +172,15 @@ def insertMovieData(inputMovieId,
     else add(modify) items already present
     '''
     dbMovie = None
-    try:
-        dbMovie = searchDb(inputMovieId)
-    except:
-        pass
+    if inputMovieId != '' and inputMovieId != '0000000':
+        try:
+            dbMovie = searchDb(inputMovieId)
+        except:
+            pass
     if dbMovie == None:
-        addManMovieToDb(inputMovieId, inputTitle, medium, source, place, ownrating)
+        addManMovieToDb(inputMovieId, inputTitle, medium, source, place, ownrating, amgrating)
     else:
-        updateMovieManual(inputMovieId, inputTitle, medium, source, place, ownrating)
+        updateMovieManual(inputMovieId, inputTitle, medium, source, place, ownrating, amgrating)
 
 
 def searchDb(movieId):
@@ -202,7 +204,8 @@ def searchDirectorDb(peopleId):
 def addManMovieToDb(inputMovieId,
                     inputTitle='', medium='',
                     source='', place='',
-                    ownrating=''):
+                    ownrating='',
+                    amgrating=''):
     '''
     first search local imdb data for item, extract infos about
     movie, director, rating
@@ -234,6 +237,8 @@ def addManMovieToDb(inputMovieId,
                      linelength = length,
                      place = place,
                      source = source)
+    db.session.add(newMovie)
+
     dirData = tsv.getMovieDirector(inputMovieId)
     if dirData != None:
         directorId = dirData
@@ -255,14 +260,22 @@ def addManMovieToDb(inputMovieId,
         except:
             pass
 
-    try:
-        critic = Critic.query.filter_by(name='JD').first()
-        rat = Rating(movie_id=newMovie.id, critic_id=critic.id, value=ownrating)
-        db.session.add(rat)
-    except:
-        pass
+    if ownrating != '':
+        try:
+            critic = Critic.query.filter_by(name='JD').first()
+            rat = Rating(movie_id=newMovie.id, critic_id=critic.id, value=ownrating)
+            db.session.add(rat)
+        except:
+            pass
 
-    db.session.add(newMovie)
+    if amgrating != '':
+        try:
+            critic = Critic.query.filter_by(name='AMG').first()
+            rat = Rating(movie_id=newMovie.id, critic_id=critic.id, value=amgrating)
+            db.session.add(rat)
+        except:
+            pass
+
     db.session.commit()
 
 

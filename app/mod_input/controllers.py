@@ -74,11 +74,17 @@ def insertManualInput(manInputForm):
     medium = manInputForm.medium.data
     place = manInputForm.place.data
     ownrating = manInputForm.ownrating.data
+    amgrating = manInputForm.amgrating.data
 
     flash('Added Movie: Id={}, localName={}, medium={}'.format(
         imdbid, localname, medium
     ))
-    dbc.insertMovieData(imdbid, localname, medium, place, ownrating)
+    dbc.insertMovieData(inputMovieId=imdbid,
+                        inputTitle=localname,
+                        medium=medium,
+                        place=place,
+                        ownrating=ownrating,
+                        amgrating=amgrating)
 
 def readFileAddItemsToDb(fileName):
     with h.ManagedUtfFile(fileName) as f:
