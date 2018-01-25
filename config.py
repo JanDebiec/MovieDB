@@ -17,3 +17,4 @@ class Config(object):
 
     OWNER_NAME = 'JD'
 
+    MAX_VAL_NORM = 100
