@@ -22,12 +22,13 @@ def findCommonRatingsFor2Critics(criticAName, criticBName):
         if item in ratingDictB:
             shared[item] = 1
     # create new dict: key=id, value=tuple with both ratings
-    pass
+    return shared
 
 def getRatingsFromCritic(criticName):
     ''' return the list of ratings for the critic '''
-    criticobj = Critic.query.filter_by(criticName=criticName)
-    ratings = Rating.query.filter_by(critic_id=criticobj.id).all().order_by(Movie.id.asc())
+    criticobj = Critic.query.filter_by(name=criticName).first()
+    # ratings = Rating.query.filter_by(critic_id=criticobj.id).all()
+    ratings = Rating.query.filter_by(critic_id=criticobj.id).order_by(Rating.movie_id.asc()).all()
     ratingDict = {}
     # create dict: key = movie.id, value normalized rating
     maxVal = criticobj.maxVal
@@ -44,10 +45,12 @@ def normalizeRating(rating, maxVal):
     '''normalize (extend to 100) the rating '''
     pass
 
-def calc():
+def calcCompare(nameA, nameB):
     ''' input: two lists of ratings
     steps:
     1. find common ratings
     2. normalize to 100
     3. calc
     4. normalize to movie count'''
+    shared = findCommonRatingsFor2Critics(nameA, nameB)
+    return len(shared)

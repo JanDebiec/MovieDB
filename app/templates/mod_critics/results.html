@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block app_content %}
+<h1>Result Compare Critics</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <table>
+        <tr>
+            <td>{{ form.countA.label}}</td>
+            <td></td>
+            <td>{{ form.countB.label}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.countA(size=7)}}</td>
+            <td></td>
+            <td>{{ form.countB(size=7)}}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{{ form.countShared.label}}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{{ form.countShared(size=7)}}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{{ form.result.label}}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{{ form.result(size=7)}}</td>
+            <td></td>
+        </tr>
+    </table>
+</form>
+{% endblock %}
