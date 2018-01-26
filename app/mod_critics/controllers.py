@@ -43,7 +43,7 @@ def results(compareitems):
     # nameB = comparedir['B']
     # result = 17.8
     comparison = Comparison(nameA, nameB)
-    result = comparison.calcCompare()
+    result = comparison.compare()
     return render_template('mod_critics/results.html',
                            title='Result of compare Critics',
                            form=form,

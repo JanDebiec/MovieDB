@@ -10,6 +10,7 @@ class Comparison():
         self.nameB = nameB
         self.sharedFlags = {}
         self.sharedRatings = {}
+        self.countShared = 0
         self.ratingsA = {}
         self.countA = 0
         self.ratingsB = {}
@@ -38,15 +39,25 @@ class Comparison():
         # create new dict: key=id, value=tuple with both ratings
 
 
-    def calcCompare(self):
+    def compare(self):
         ''' input: two lists of ratings
         steps:
         1. find common ratings
         2. normalize to 100
         3. calc
         4. normalize to movie count'''
-        shared = self.findCommonRatings()
-        return len(shared)
+        self.calc()
+        self.countShared =  len(self.sharedFlags)
+        return self
+
+    def calc(self):
+        ''' input: two lists of ratings
+        steps:
+        1. find common ratings
+        2. normalize to 100
+        3. calc
+        4. normalize to movie count'''
+        self.findCommonRatings()
 
 def getRatingsFromCritic(criticName):
     ''' return the list of ratings for the critic '''
