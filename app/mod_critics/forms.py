@@ -7,7 +7,9 @@ class CompareCriticsForm(FlaskForm):
     submit = SubmitField('Compare')
 
 class CompareResultsForm(FlaskForm):
-    countA = StringField('Ratings count A')
-    countB = StringField('Ratings count B')
+    critica = StringField('CriticA')
+    criticb = StringField('CriticB')
+    countA = StringField('Ratings A count')
+    countB = StringField('Ratings B count')
     countShared = StringField('Shared Ratings')
     result = StringField('Result')
