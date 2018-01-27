@@ -37,6 +37,12 @@ class Comparison():
             if item in self.ratingsB:
                 self.sharedFlags[item] = 1
         # create new dict: key=id, value=tuple with both ratings
+        for item in self.sharedFlags:
+            # itemNr = item.key
+            ratA = self.ratingsA[item]
+            ratB = self.ratingsB[item]
+            value = (ratA, ratB)
+            self.sharedRatings[item] = value
 
 
     def compare(self):
@@ -46,18 +52,28 @@ class Comparison():
         2. normalize to 100
         3. calc
         4. normalize to movie count'''
-        self.calc()
+        self.findCommonRatings()
         self.countShared =  len(self.sharedFlags)
+        self.createDataForChart()
         return self
 
-    def calc(self):
-        ''' input: two lists of ratings
-        steps:
-        1. find common ratings
-        2. normalize to 100
-        3. calc
-        4. normalize to movie count'''
-        self.findCommonRatings()
+    def createDataForChart(self):
+        '''from shaaredRatings create a list with tuples
+         with two values'''
+        self.listForChart = []
+
+        for item in self.sharedRatings:
+            itemValue = self.sharedRatings[item]
+            self.listForChart.append(itemValue)
+
+    # def calc(self):
+    #     ''' input: two lists of ratings
+    #     steps:
+    #     1. find common ratings
+    #     2. normalize to 100
+    #     3. calc
+    #     4. normalize to movie count'''
+    #     self.findCommonRatings()
 
 def getRatingsFromCritic(criticName):
     ''' return the list of ratings for the critic '''

@@ -39,15 +39,53 @@ def results(compareitems):
     comparedir = json.loads(compareitems)
     nameA = 'JD'
     # nameA = comparedir['A']
-    nameB = 'AMG'
+    nameB = 'Imdb'
+    # nameB = 'AMG'
     # nameB = comparedir['B']
     # result = 17.8
     comparison = Comparison(nameA, nameB)
     result = comparison.compare()
-    return render_template('mod_critics/results.html',
-                           title='Result of compare Critics',
-                           form=form,
-                           result = result
-                           )
+    labels = []
+    legend = "critics compare"
+    # return render_template('mod_critics/results.html',
+    #                        title='Result of compare Critics',
+    #                        form=form,
+    #                        result = result
+    #                        )
+    return render_template('mod_critics/chart.html',
+                           values=result.listForChart, labels=labels, legend=legend)
 
+
+@mod_critics.route("/chart")
+def chart():
+    legend = 'Monthly Data'
+    labels = ["January","February","March","April","May","June","July","August"]
+    # values = [10,9,8,7,6,4,7,8]
+    values = [
+        (10,
+               9
+         ),(
+       4,
+       7
+        ), (
+            9,
+       9
+        ), (
+            3,
+       8
+        ), (
+            2,
+       4
+        ), (
+            8,
+       7
+        ), (
+            1,
+       3
+        ), (
+            4,
+       5
+        )]
+    return render_template('mod_critics/chart.html',
+                           values=values, labels=labels, legend=legend)
 
