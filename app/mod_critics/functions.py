@@ -56,6 +56,7 @@ class Comparison():
         self.findCommonRatings()
         self.countShared =  len(self.sharedFlags)
         self.createDataForChart()
+        self.sim_pearson()
         return self
 
     def createDataForChart(self):
@@ -98,8 +99,9 @@ class Comparison():
         sum2Sq = 0
         pSum = 0
         for item in self.sharedRatings:
-            rata = item[0]
-            ratb = item[1]
+            itemValue = self.sharedRatings[item]
+            rata = itemValue[0]
+            ratb = itemValue[1]
             sum1 = sum1 + rata
             sum2 = sum2 + ratb
 
@@ -113,7 +115,7 @@ class Comparison():
             # sum2Sq = sum([pow(prefs[p2][it], 2) for it in si])
 
             # Sum of the products
-            pSum = pSum + (rata * ratB)
+            pSum = pSum + (rata * ratb)
             # pSum = sum([prefs[p1][it] * prefs[p2][it] for it in si])
 
         # Calculate r (Pearson score)

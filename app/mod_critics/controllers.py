@@ -39,21 +39,21 @@ def results(compareitems):
     comparedir = json.loads(compareitems)
     nameA = 'JD'
     # nameA = comparedir['A']
-    nameB = 'Imdb'
-    # nameB = 'AMG'
+    # nameB = 'Imdb'
+    nameB = 'AMG'
     # nameB = comparedir['B']
     # result = 17.8
     comparison = Comparison(nameA, nameB)
     result = comparison.compare()
     labels = []
     legend = "critics compare"
-    # return render_template('mod_critics/results.html',
-    #                        title='Result of compare Critics',
-    #                        form=form,
-    #                        result = result
-    #                        )
-    return render_template('mod_critics/chart.html',
-                           values=result.listForChart, labels=labels, legend=legend)
+    return render_template('mod_critics/results.html',
+                           title='Result of compare Critics',
+                           form=form,
+                           result = result
+                           )
+    # return render_template('mod_critics/chart.html',
+    #                        values=result.listForChart, labels=labels, legend=legend)
 
 
 @mod_critics.route("/chart")
