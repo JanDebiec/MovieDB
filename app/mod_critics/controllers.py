@@ -37,8 +37,8 @@ def compare():
 def results(compareitems):
     form = CompareResultsForm()
     comparedir = json.loads(compareitems)
-    # nameA = 'JD'
-    nameA = comparedir['A']
+    nameA = 'JD'
+    # nameA = comparedir['A']
     # nameB = 'AMG'
     nameB = comparedir['B']
 

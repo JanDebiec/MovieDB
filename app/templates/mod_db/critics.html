@@ -11,7 +11,7 @@
         <table class="table">
             {% include '_criticheader.html' %}
 
-            {% for critic in critics %}
+            {% for critic in critics[1:] %}
             <tr valign="top">
                 <td>{{ critic.name }}</td>
                 <td>{{ critic.url }}</td>

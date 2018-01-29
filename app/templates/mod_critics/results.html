@@ -41,7 +41,7 @@
         </tr>
         <tr>
             <td></td>
-            <td>{{ result.distance }}</td>
+            <td>{{ '%0.6f' | format(result.distance|float) }}</td>
             <td></td>
         </tr>
         <tr>
@@ -51,7 +51,7 @@
         </tr>
         <tr>
             <td></td>
-            <td>{{ result.person }}</td>
+            <td>{{ '%0.6f' | format(result.person|float) }}</td>
             <td></td>
         </tr>
     </table>
