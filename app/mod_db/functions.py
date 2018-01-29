@@ -425,6 +425,10 @@ def updateMovie(movieid, form):
     obj = Movie.query.filter_by(id=movieid).first()
     imdbId = form.imdbid.data
 
+    amgRatingNew = form.ratingAmg.data
+    amg = Critic.query.filter_by(name='AMG').first()
+    updateRating(obj, amg, amgRatingNew)
+
     ownRatingNew = form.ownrating.data
     jd = Critic.query.filter_by(name='JD').first()
     updateRating(obj, jd, ownRatingNew)
@@ -497,6 +501,17 @@ def getJdRatingForMovie(movieobj):
     except:
         pass
     return ownRating
+
+def getAmgRatingForMovie(movieobj):
+    amgRating = None
+    try:
+        amg = Critic.query.filter_by(name='AMG').first()
+        amgRatingObj = getRatingForMovie(movieobj, amg)
+        if amgRatingObj != None:
+            amgRating = amgRatingObj.value
+    except:
+        pass
+    return amgRating
 
 
 def updateOwnerRatingInDb(foundList, inputRating):

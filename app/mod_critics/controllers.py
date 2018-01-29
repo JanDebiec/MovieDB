@@ -43,14 +43,15 @@ def results(compareitems):
     nameB = comparedir['B']
 
     comparison = Comparison(nameA, nameB)
-    result = comparison.compare()
+    resultComp = comparison.compare()
 
     labels = []
     legend = "critics compare"
     return render_template('mod_critics/results.html',
                            title='Result of compare Critics',
                            form=form,
-                           result = result
+                           values=resultComp.listForChart,
+                           result = resultComp
                            )
     # return render_template('mod_critics/chart.html',
     #                        values=result.listForChart, labels=labels, legend=legend)

@@ -15,7 +15,8 @@ class Comparison():
         self.countA = 0
         self.ratingsB = {}
         self.countB = 0
-        # self.person = 0
+        self.person = 0
+        self.distance = 0
 
     def findCommonRatings(self):
         ''' search through whole DB
@@ -45,7 +46,6 @@ class Comparison():
             value = (ratA, ratB)
             self.sharedRatings[item] = value
 
-
     def compare(self):
         ''' input: two lists of ratings
         steps:
@@ -54,8 +54,9 @@ class Comparison():
         3. calc
         4. normalize to movie count'''
         self.findCommonRatings()
-        self.countShared =  len(self.sharedFlags)
+        self.countShared = len(self.sharedFlags)
         self.createDataForChart()
+        self.sim_distance()
         self.sim_pearson()
         return self
 
@@ -77,18 +78,17 @@ class Comparison():
     #     4. normalize to movie count'''
     #     self.findCommonRatings()
 
-
     # Returns the Pearson correlation coefficient for p1 and p2
     def sim_pearson(self):
-    # def sim_pearson(prefs, p1, p2):
-    #     # Get the list of mutually rated items
-    #     si = {}
-    #     for item in prefs[p1]:
-    #         if item in prefs[p2]: si[item] = 1
-    #
-    #     # if they are no ratings in common, return 0
-    #     if len(si) == 0: return 0
-    #
+        # def sim_pearson(prefs, p1, p2):
+        #     # Get the list of mutually rated items
+        #     si = {}
+        #     for item in prefs[p1]:
+        #         if item in prefs[p2]: si[item] = 1
+        #
+        #     # if they are no ratings in common, return 0
+        #     if len(si) == 0: return 0
+        #
         # Sum calculations
         n = len(self.sharedRatings)
 
@@ -123,11 +123,41 @@ class Comparison():
         den = sqrt((sum1Sq - pow(sum1, 2) / n) * (sum2Sq - pow(sum2, 2) / n))
         self.person = 0
         if den == 0:
-            return # person
+            return  # person
 
         self.person = num / den
 
         # return person
+
+
+    # Returns a distance-based similarity score for person1 and person2
+    def sim_distance(self):
+        # Get the list of shared_items
+        # si = {}
+        # for item in prefs[person1]:
+        #     if item in prefs[person2]: si[item] = 1
+
+        n = len(self.sharedRatings)
+
+        # if they have no ratings in common, return 0
+        if n == 0:
+            self.distance = 0
+
+        # Add up the squares of all the differences
+        sum_of_squares = 0
+        for item in self.sharedRatings:
+            itemValue = self.sharedRatings[item]
+            rata = itemValue[0]
+            ratb = itemValue[1]
+            sumofq = pow((rata - ratb),2)
+            sum_of_squares = sum_of_squares + sumofq
+
+        # sum_of_squares = sum([pow(prefs[person1][item] - prefs[person2][item], 2)
+        #                       for item in prefs[person1] if item in prefs[person2]])
+        sum_of_squares_norm = sum_of_squares/n
+        dist =  1 / (1 + sqrt(sum_of_squares_norm))
+        self.distance = dist
+
 
 
 def getRatingsFromCritic(criticName):
@@ -146,6 +176,7 @@ def getRatingsFromCritic(criticName):
         ratingDict[movieid] = valNorm
 
     return ratingDict
+
 
 def normalizeRating(rating, maxVal):
     '''normalize (extend to 100) the rating '''

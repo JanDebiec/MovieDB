@@ -119,6 +119,10 @@ def edit(movieid):
         form.ownrating.data = getJdRatingForMovie(movie)
     except:
         pass
+    try:
+        form.ratingAmg.data = getAmgRatingForMovie(movie)
+    except:
+        pass
     return render_template('mod_db/edit.html',
                            title='Movie to edit',
                            moviemsg=movietxt,

@@ -12,4 +12,5 @@ class CompareResultsForm(FlaskForm):
     countA = StringField('Ratings A count')
     countB = StringField('Ratings B count')
     countShared = StringField('Shared Ratings')
-    result = StringField('Result Person')
+    resDistance = StringField('Result Distance')
+    resPerson = StringField('Result Person')

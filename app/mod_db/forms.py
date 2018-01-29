@@ -14,6 +14,7 @@ class SingleMovieForm(FlaskForm):
     medium = StringField('Medium')
     place = StringField('Place')
     source = StringField('Source')
+    ratingAmg = StringField('AMG rating')
     ownrating = StringField('Ownrating')
 
 class SearchDbForm(SingleMovieForm):
