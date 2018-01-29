@@ -37,14 +37,14 @@ def compare():
 def results(compareitems):
     form = CompareResultsForm()
     comparedir = json.loads(compareitems)
-    nameA = 'JD'
-    # nameA = comparedir['A']
-    # nameB = 'Imdb'
-    nameB = 'AMG'
-    # nameB = comparedir['B']
-    # result = 17.8
+    # nameA = 'JD'
+    nameA = comparedir['A']
+    # nameB = 'AMG'
+    nameB = comparedir['B']
+
     comparison = Comparison(nameA, nameB)
     result = comparison.compare()
+
     labels = []
     legend = "critics compare"
     return render_template('mod_critics/results.html',
