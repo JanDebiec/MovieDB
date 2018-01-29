@@ -45,6 +45,14 @@ def results(compareitems):
     comparison = Comparison(nameA, nameB)
     resultComp = comparison.compare()
 
+    # criticA is reserved for owner
+
+    criticBObj = Critic.query.filter_by(name=nameB).first()
+    criticBObj.simdistance = resultComp.distance
+    criticBObj.simperson = resultComp.person
+    db.session.commit()
+
+
     labels = []
     legend = "critics compare"
     return render_template('mod_critics/results.html',

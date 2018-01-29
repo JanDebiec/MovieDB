@@ -16,6 +16,8 @@
                 <td>{{ critic.name }}</td>
                 <td>{{ critic.url }}</td>
                 <td>{{ critic.maxVal }}</td>
+                <td>{{ '%0.4f' | format(critic.simdistance|float) }}</td>
+                <td>{{ '%0.4f' | format(critic.simperson|float) }}</td>
                 <td><a href="{{ url_for('database.deletecritic', criticid=critic.id) }}">delete</a></td>
                 <td><a href="{{ url_for('database.editcritic', criticid=critic.id) }}">edit</a></td>
             </tr>
