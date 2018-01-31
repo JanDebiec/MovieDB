@@ -201,7 +201,7 @@ def pageresults(searchitems):
                 try:
                     pointerString = 'medium[{}]'.format(i)
                     med = newdict[pointerString]
-                    if med != '':
+                    if med != '' and med != '-':
                         flagDbShouldCommit = True
                     inputMedium.append(med)
                 except: # no more medium input
@@ -211,9 +211,9 @@ def pageresults(searchitems):
                 try:
                     pointerString = 'place[{}]'.format(i)
                     plc = newdict[pointerString]
-                    if plc != '':
+                    if plc != '' and plc != '-':
                         flagDbShouldCommit = True
-                        inputPlace.append(plc)
+                    inputPlace.append(plc)
                 except: # no more medium input
                     break
 
