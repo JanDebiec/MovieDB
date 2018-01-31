@@ -1,6 +1,7 @@
 import os
 import sys
 from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import current_app
 from enum import Enum
 import helper
 
@@ -57,6 +58,7 @@ def getMovieData(movieId):
         else:
             return None
     except:
+        current_app.logger.error('line not found', exc_info=sys.exc_info())
         return None
 
 
@@ -179,6 +181,7 @@ def findLineWithId(filename, matchIdRaw, delimiter='\t', quiet=True):
                 print("counter = {}, max = {}".format(counter, maxLoopCount))
             return []
     except:
+        current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
         print("Oops!", sys.exc_info()[0], "occured.")
         return []
 

@@ -1,3 +1,4 @@
+import sys
 import json
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from jinja2 import Template
@@ -9,6 +10,7 @@ from app.mod_db.forms import EditCriticForm, CriticsListForm, SearchDbForm, Sing
 import app.mod_imdb.controllers as tsv
 
 from app.mod_db.functions import *
+from flask import current_app
 
 
 mod_db = Blueprint('database', __name__, url_prefix='/mod_db')
@@ -87,7 +89,8 @@ def delete(movieid):
         form.localname.data = movie.titleLocal
         form.director.data = movie.director.name
     except:
-        pass
+        current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
+        # pass
     return render_template('mod_db/delete.html',
                            title='Movie to delete',
                            moviemsg=movietxt,
@@ -99,7 +102,11 @@ def edit(movieid):
     form = EditMovieForm()
     foundMessage = 'search'
     if form.validate_on_submit():
-        updateMovie(movieid, form)
+        try:
+            updateMovie(movieid, form)
+        except:
+            current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
+
         return redirect(url_for('database.search', message=foundMessage))
 
     # display the single result
@@ -114,15 +121,18 @@ def edit(movieid):
     try:
         form.director.data = movie.director.name
     except:
-        pass
+        current_app.logger.error('director not found', exc_info=sys.exc_info())
+        # pass
     try:
         form.ownrating.data = getJdRatingForMovie(movie)
     except:
-        pass
+        current_app.logger.error('ownrating not found', exc_info=sys.exc_info())
+        # pass
     try:
         form.ratingAmg.data = getAmgRatingForMovie(movie)
     except:
-        pass
+        current_app.logger.error('amg rating not found', exc_info=sys.exc_info())
+        # pass
     return render_template('mod_db/edit.html',
                            title='Movie to edit',
                            moviemsg=movietxt,
