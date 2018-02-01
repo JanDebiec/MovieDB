@@ -7,16 +7,21 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
+from flask_login import LoginManager
 
 db = SQLAlchemy()
 migrate = Migrate()
 bootstrap = Bootstrap()
+login = LoginManager()
+login.login_view = 'auth.login'
+login.login_message = 'Please log as admin in to access this page.'
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
     db.init_app(app)
     bootstrap.init_app(app)
+    login.init_app(app)
 
     migrate.init_app(app, db)
 
