@@ -3,6 +3,6 @@
 
 cd /home/ubuntu/project/MovieDB/
 . /home/ubuntu/project/MovieDB/venv/bin/activate
-echo $FLASK_APP
-flask run
+#echo $FLASK_APP
+flask run --host=0.0.0.0
 
