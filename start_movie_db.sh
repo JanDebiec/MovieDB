@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # a script to start movieDB
 
 cd /home/jan/project/movie_db/
