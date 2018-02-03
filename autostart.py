@@ -8,7 +8,7 @@ def isFlaskRunning():
     return flag
 
 def startFlask():
-    os.popen('/home/ubuntu/project/MovieDb/start_movie_db.sh')
+    os.popen('cat /home/ubuntu/project/MovieDb/start_movie_db.sh')
 
 if __name__ == '__main__':
     ''' check if flask is running,
