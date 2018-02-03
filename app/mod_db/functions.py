@@ -528,11 +528,16 @@ def updateAmgRatingInDb(foundList, inputRating):
 
 
 def updateMediumInDb(foundList, inputMedium):
-    pass
-
-def updatePlaceInDb(foundList, inputMedium):
     for i in range(len(foundList)):
-        newPlace = inputMedium[i]
+        newMedium = inputMedium[i]
+        movie = foundList[i]
+        oldMedium = movie.medium
+        if newMedium != oldMedium:
+            movie.medium = newMedium
+
+def updatePlaceInDb(foundList, inputPlace):
+    for i in range(len(foundList)):
+        newPlace = inputPlace[i]
         movie = foundList[i]
         oldPlace = movie.place
         if newPlace != oldPlace:

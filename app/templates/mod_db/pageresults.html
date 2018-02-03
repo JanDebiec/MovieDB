@@ -29,6 +29,7 @@
 
                 <td><a href="{{ url_for('database.delete', movieid=movie.id) }}">delete</a></td>
                 <td><a href="{{ url_for('database.edit', movieid=movie.id) }}">edit</a></td>
+                <td><a href="http://www.imdb.com/title/tt{{ movie.imdbId }}">ImDb</a></td>
             </tr>
             {% endfor %}
         </table>

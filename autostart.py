@@ -8,11 +8,14 @@ def isFlaskRunning():
     return flag
 
 def startFlask():
-    pass
+    os.popen('/home/jan/project/movie_db/start_movie_db.sh')
 
 if __name__ == '__main__':
     ''' check if flask is running,
     if not start the app'''
     isRunning = isFlaskRunning()
     if isRunning == False:
+        print("starting movieDB")
         startFlask()
+    else:
+        print("flask app MovieDB is running")
