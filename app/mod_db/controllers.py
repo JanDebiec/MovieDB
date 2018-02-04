@@ -103,6 +103,8 @@ def edit(movieid):
     foundMessage = 'search'
     if form.validate_on_submit():
         try:
+            if form.upgradeimdb.data = True:
+                upgradeMovie(movieid, form)
             updateMovie(movieid, form)
         except:
             current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())

@@ -415,6 +415,18 @@ def deleteMovie(movieid):
     db.session.delete(obj)
     db.session.commit()
 
+def upgradeMovie(movieid, form):
+    '''
+    there are some movies added to DB with known ImdbId, but not listed
+    in actual tsv files. with the new version of tsv,
+    movie can be upgraded, t.i. some new infirmations *director, rating)
+    can be added to own DB
+    :param movieid:
+    :param form:
+    :return:
+    '''
+    pass
+
 def updateMovie(movieid, form):
     '''
     movie without imdbId can get imdbId,

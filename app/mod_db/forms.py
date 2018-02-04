@@ -31,6 +31,7 @@ class DeleteMovieForm(SingleMovieForm):
     submit = SubmitField('Delete')
 
 class EditMovieForm(SingleMovieForm):
+    upgradeimdb = BooleanField('Upgrade IMDB')
     submit = SubmitField('Update')
 
 class ExploreForm(FlaskForm):
