@@ -103,7 +103,7 @@ def edit(movieid):
     foundMessage = 'search'
     if form.validate_on_submit():
         try:
-            if form.upgradeimdb.data = True:
+            if form.upgradeimdb.data == True:
                 upgradeMovie(movieid, form)
             updateMovie(movieid, form)
         except:
