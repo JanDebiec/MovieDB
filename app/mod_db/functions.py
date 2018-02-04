@@ -1,6 +1,8 @@
 import json
+import sys
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from jinja2 import Template
+from flask import current_app
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
@@ -206,7 +208,7 @@ def insertMovieData(inputMovieId,
         try:
             dbMovie = searchDb(inputMovieId)
         except:
-            pass
+            current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
     if dbMovie == None:
         addManMovieToDb(inputMovieId, inputTitle, medium, source, place, ownrating, amgrating)
     else:
@@ -227,6 +229,7 @@ def searchDirectorDb(peopleId):
     try:
         found = Director.query.filter_by(peopleImdbId= peopleId).first()
     except:
+        current_app.logger.error('director not found', exc_info=sys.exc_info())
         pass
     return found
 
@@ -288,6 +291,7 @@ def addManMovieToDb(inputMovieId,
             rat = Rating(movie_id=newMovie.id, critic_id=critic.id, value=ratData)
             db.session.add(rat)
         except:
+            current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
             pass
 
     if ownrating != '':
@@ -296,6 +300,7 @@ def addManMovieToDb(inputMovieId,
             rat = Rating(movie_id=newMovie.id, critic_id=critic.id, value=ownrating)
             db.session.add(rat)
         except:
+            current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
             pass
 
     if amgrating != '':
@@ -304,6 +309,7 @@ def addManMovieToDb(inputMovieId,
             rat = Rating(movie_id=newMovie.id, critic_id=critic.id, value=amgrating)
             db.session.add(rat)
         except:
+            current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
             pass
 
     db.session.commit()
@@ -375,6 +381,7 @@ def updateMovieManual(movieId, inputTitle, medium, source, place, ownrating):
         rat = Rating(movie_id=found.id, critic_id=critic.id, value=ownrating)
         db.session.add(rat)
     except:
+        current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
         pass
 
 
@@ -425,7 +432,13 @@ def upgradeMovie(movieid, form):
     :param form:
     :return:
     '''
-    pass
+    try:
+        obj = Movie.query.filter_by(id=movieid).first()
+        imdbId = form.imdbid.data
+        updateMovieWithoutIDWithImdb(obj, imdbId)
+
+    except:
+        current_app.logger.error('upgrade not succeded', exc_info=sys.exc_info())
 
 def updateMovie(movieid, form):
     '''
@@ -500,6 +513,7 @@ def getRatingForMovie(movieobj, criticobj):
         rating = ownRatings.filter_by(movie_id=movieobj.id).first()
         object = rating
     except:
+        current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
         pass
     return object
 
@@ -511,6 +525,7 @@ def getJdRatingForMovie(movieobj):
         if ownRatingObj != None:
             ownRating = ownRatingObj.value
     except:
+        current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
         pass
     return ownRating
 
@@ -522,6 +537,7 @@ def getAmgRatingForMovie(movieobj):
         if amgRatingObj != None:
             amgRating = amgRatingObj.value
     except:
+        current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
         pass
     return amgRating
 
