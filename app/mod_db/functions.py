@@ -65,28 +65,12 @@ def convertMovieToDIsplay(movie):
 
 def updateImdbidInDb(foundList, inputImdbid):
 
-    for i, movie in enumerate(foundList):
-    # for i in range(len(foundList)):
-        movie = foundList[i]
+    for inputId, movie in zip(inputImdbid, foundList):
         dbId = movie.imdbId
         if dbId == '' or dbId == '0000000':
-            inputId = inputImdbid[i]
             if inputId != '' and inputId != '0000000':
                 movie.imdbId = inputId
                 updateMovieWithoutIDWithImdb(movie, inputId,)
-
-
-# def updateImdbidInDb(foundList, inputImdbid):
-#
-#     for i in range(len(foundList)):
-#     # for movie in foundList:
-#         movie = foundList[i]
-#         dbId = movie.imdbId
-#         if dbId == '' or dbId == '0000000':
-#             inputId = inputImdbid[i]
-#             if inputId != '' and inputId != '0000000':
-#                 movie.imdbId = inputId
-#                 updateMovieWithoutIDWithImdb(movie, inputId,)
 
 
 def searchInDb(searchitems):
@@ -557,35 +541,22 @@ def getAmgRatingForMovie(movieobj):
 
 def updateOwnerRatingInDb(foundList, inputRating):
     owner = Critic.query.filter_by(name='JD').first()
-
-    for i, movie in enumerate(foundList):
-    # for i in range(len(foundList)):
-        updateRating(movie, owner, inputRating[i])
-        # updateRating(foundList[i], owner, inputRating[i])
+    for rating, movie in zip(inputRating, foundList):
+        updateRating(movie, owner, rating)
 
 def updateAmgRatingInDb(foundList, inputRating):
     amg = Critic.query.filter_by(name='AMG').first()
-
-    for i, movie in enumerate(foundList):
-    # for i in range(len(foundList)):
-        updateRating(movie, amg, inputRating[i])
-        # updateRating(foundList[i], amg, inputRating[i])
-
+    for rating, movie in zip(inputRating, foundList):
+        updateRating(movie, amg, rating)
 
 def updateMediumInDb(foundList, inputMedium):
-    for i, newMedium in enumerate(inputMedium):
-    # for i in range(len(foundList)):
-    #     newMedium = inputMedium[i]
-        movie = foundList[i]
+    for movie, newMedium in zip(foundList, inputMedium):
         oldMedium = movie.medium
         if newMedium != oldMedium:
             movie.medium = newMedium
 
 def updatePlaceInDb(foundList, inputPlace):
-    for i, newPlace in enumerate(inputPlace):
-    # for i in range(len(foundList)):
-    #     newPlace = inputPlace[i]
-        movie = foundList[i]
+    for movie, newPlace in zip(foundList, inputPlace):
         oldPlace = movie.place
         if newPlace != oldPlace:
             movie.place = newPlace
