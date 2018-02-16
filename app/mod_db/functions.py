@@ -65,8 +65,8 @@ def convertMovieToDIsplay(movie):
 
 def updateImdbidInDb(foundList, inputImdbid):
 
-    for i in range(len(foundList)):
-    # for movie in foundList:
+    for i, movie in enumerate(foundList):
+    # for i in range(len(foundList)):
         movie = foundList[i]
         dbId = movie.imdbId
         if dbId == '' or dbId == '0000000':
@@ -74,6 +74,19 @@ def updateImdbidInDb(foundList, inputImdbid):
             if inputId != '' and inputId != '0000000':
                 movie.imdbId = inputId
                 updateMovieWithoutIDWithImdb(movie, inputId,)
+
+
+# def updateImdbidInDb(foundList, inputImdbid):
+#
+#     for i in range(len(foundList)):
+#     # for movie in foundList:
+#         movie = foundList[i]
+#         dbId = movie.imdbId
+#         if dbId == '' or dbId == '0000000':
+#             inputId = inputImdbid[i]
+#             if inputId != '' and inputId != '0000000':
+#                 movie.imdbId = inputId
+#                 updateMovieWithoutIDWithImdb(movie, inputId,)
 
 
 def searchInDb(searchitems):
@@ -545,14 +558,18 @@ def getAmgRatingForMovie(movieobj):
 def updateOwnerRatingInDb(foundList, inputRating):
     owner = Critic.query.filter_by(name='JD').first()
 
-    for i in range(len(foundList)):
-        updateRating(foundList[i], owner, inputRating[i])
+    for i, movie in enumerate(foundList):
+    # for i in range(len(foundList)):
+        updateRating(movie, owner, inputRating[i])
+        # updateRating(foundList[i], owner, inputRating[i])
 
 def updateAmgRatingInDb(foundList, inputRating):
     amg = Critic.query.filter_by(name='AMG').first()
 
-    for i in range(len(foundList)):
-        updateRating(foundList[i], amg, inputRating[i])
+    for i, movie in enumerate(foundList):
+    # for i in range(len(foundList)):
+        updateRating(movie, amg, inputRating[i])
+        # updateRating(foundList[i], amg, inputRating[i])
 
 
 def updateMediumInDb(foundList, inputMedium):
