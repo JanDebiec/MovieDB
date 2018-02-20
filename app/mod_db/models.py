@@ -90,7 +90,7 @@ class Critic(DbBase):
     url = db.Column(db.String(128))
     maxVal = db.Column(db.Float)
     simdistance = db.Column(db.Float)
-    simperson = db.Column(db.Float)
+    simperson = db.Column(db.Float) # a type, because not to change the DB
     # relations
     # movies = db.relationship('Movie', backref='critic', lazy='dynamic')
     ratings = db.relationship('Rating', backref='critic', lazy='dynamic')

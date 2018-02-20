@@ -15,7 +15,7 @@ class Comparison():
         self.countA = 0
         self.ratingsB = {}
         self.countB = 0
-        self.person = 0
+        self.pearson = 0
         self.distance = 0
 
     def findCommonRatings(self):
@@ -121,13 +121,13 @@ class Comparison():
         # Calculate r (Pearson score)
         num = pSum - (sum1 * sum2 / n)
         den = sqrt((sum1Sq - pow(sum1, 2) / n) * (sum2Sq - pow(sum2, 2) / n))
-        self.person = 0
+        self.pearson = 0
         if den == 0:
-            return  # person
+            return  # pearson
 
-        self.person = num / den
+        self.pearson = num / den
 
-        # return person
+        # return pearson
 
 
     # Returns a distance-based similarity score for person1 and person2

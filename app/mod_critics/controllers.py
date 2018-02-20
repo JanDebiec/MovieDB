@@ -49,7 +49,7 @@ def results(compareitems):
 
     criticBObj = Critic.query.filter_by(name=nameB).first()
     criticBObj.simdistance = resultComp.distance
-    criticBObj.simperson = resultComp.person
+    criticBObj.simpearson = resultComp.pearson
     db.session.commit()
 
 
