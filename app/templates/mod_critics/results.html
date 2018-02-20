@@ -101,6 +101,38 @@ var ctx = document.getElementById("myChart").getContext("2d");
 var myChart = new Chart(ctx, {
   type: 'scatter',
   data: chartData,
+
+
+    options: {
+        scales: {
+                yAxes: [{
+                    scaleLabel:{
+                        display: true,
+                      labelString: '{{labels.1}}'
+                    },
+                          ticks: {
+                max: 100,
+                min: 0,
+                stepSize: 10
+                }
+            }],
+                xAxes: [{
+                    scaleLabel:{
+                        display: true,
+                      labelString: '{{labels.0}}'
+                    },
+                          ticks: {
+                max: 100,
+                min: 0,
+                stepSize: 10
+                }
+            }]
+        }
+    }
+
+
+
+
 });
 </script>
 

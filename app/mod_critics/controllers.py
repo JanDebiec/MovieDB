@@ -53,12 +53,14 @@ def results(compareitems):
     db.session.commit()
 
 
-    labels = []
+    labels = [nameA, nameB]
     legend = "critics compare"
     return render_template('mod_critics/results.html',
                            title='Result of compare Critics',
                            form=form,
                            values=resultComp.listForChart,
+                           labels=labels,
+                           legend=legend,
                            result = resultComp
                            )
     # return render_template('mod_critics/chart.html',
