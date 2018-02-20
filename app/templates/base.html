@@ -21,11 +21,25 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/index">Home</a></li>
-                <li><a href="/mod_input/maninput">Manual input</a></li>
-                <li><a href="/mod_db/search">DB search</a></li>
-                <li><a href="/mod_db/critics">Critics</a></li>
-                <li><a href="/mod_critics/compare">Compare</a></li>
-                <li><a href="/mod_critics/chart">Chart</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Movies<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/mod_input/maninput">Add</a></li>
+                        <li><a href="/mod_db/search">Search</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Critics<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/mod_db/critics">List</a></li>
+                        <li><a href="/mod_critics/compare">Compare</a></li>
+                    </ul>
+                </li>
+
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
@@ -70,5 +84,5 @@
 
 {% block head %}
 {{super()}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 {% endblock %}
