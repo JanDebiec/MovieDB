@@ -68,6 +68,7 @@ var chartData = {
              "{{item}}",
             {% endfor %}],
   datasets : [{
+      type: 'scatter',
       label: '{{ legend }}',
       fill: true,
       lineTension: 0.1,
@@ -92,6 +93,9 @@ var chartData = {
               {% endfor %}],
       spanGaps: false
   },{
+      type: 'line',
+      backgroundColor: "rgba(192,75,75,0.4)",
+      label : 'line best fit',
       data : [{% for item in points %}
                 { x:{{item.0}},
                 y:{{item.1}} },
@@ -100,6 +104,15 @@ var chartData = {
 }]
 }
 
+// var lineData = {
+//   datasets : [{
+//             data : [{% for item in points %}
+//                 { x:{{item.0}},
+//                 y:{{item.1}} },
+//               {% endfor %}]
+//
+//   }]
+// }
 // get chart canvas
 var ctx = document.getElementById("myChart").getContext("2d");
 
@@ -107,7 +120,6 @@ var ctx = document.getElementById("myChart").getContext("2d");
 var myChart = new Chart(ctx, {
   type: 'scatter',
   data: chartData,
-
 
     options: {
         scales: {
