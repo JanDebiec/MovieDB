@@ -52,6 +52,9 @@ def results(compareitems):
     criticBObj.simpearson = resultComp.pearson
     db.session.commit()
 
+    resultComp.best_fit()
+    points = resultComp.generate_line_points()
+
 
     labels = [nameA, nameB]
     legend = "critics compare"
@@ -61,6 +64,7 @@ def results(compareitems):
                            values=resultComp.listForChart,
                            labels=labels,
                            legend=legend,
+                           points= points,
                            result = resultComp
                            )
     # return render_template('mod_critics/chart.html',

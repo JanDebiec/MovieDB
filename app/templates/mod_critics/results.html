@@ -91,7 +91,13 @@ var chartData = {
                 y:{{item.1}} },
               {% endfor %}],
       spanGaps: false
-  }]
+  },{
+      data : [{% for item in points %}
+                { x:{{item.0}},
+                y:{{item.1}} },
+              {% endfor %}]
+
+}]
 }
 
 // get chart canvas

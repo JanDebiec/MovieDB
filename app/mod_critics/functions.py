@@ -129,6 +129,58 @@ class Comparison():
 
         # return pearson
 
+    def best_fit(self):
+        '''
+        calculating parameters for a and b for line
+        :return:
+        '''
+        sum1 = 0
+        sum2 = 0
+        sum12 = 0
+        sumbar = 0
+        sum1Sq = 0
+        sum2Sq = 0
+        pSum = 0
+        for item in self.sharedRatings:
+            itemValue = self.sharedRatings[item]
+            rata = itemValue[0]
+            ratb = itemValue[1]
+            sum1 = sum1 + rata
+            sum2 = sum2 + ratb
+            sum12 = sum12 + rata * ratb
+        n =  len(self.sharedRatings)
+        xbar = sum1/n
+        ybar = sum2/n
+        for item in self.sharedRatings:
+            itemValue = self.sharedRatings[item]
+            rata = itemValue[0]
+            ratb = itemValue[1]
+            sumbar = sumbar + (rata - xbar)**2
+
+        numer = sum12 - n*xbar*ybar
+        denum = sumbar
+
+        self.b = numer / denum
+        self.a = ybar - self.b*xbar
+
+        return self.a, self.b
+
+    def generate_line_points(self):
+        ''' for 11 points: 0, 10, 20,... 100
+        calculate y
+        return list 11 tuples (x, y)
+        '''
+        points_list = []
+        for i in range (11):
+            x = i * 10
+            y = x * self.b + self.a
+
+            # add only points in the area 0 - 100
+            if y > -1 and y < 101:
+                points_list.append((x, y))
+        return points_list
+
+
 
     # Returns a distance-based similarity score for person1 and person2
     def sim_distance(self):
