@@ -3,6 +3,7 @@ import sys
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from jinja2 import Template
 from flask import current_app
+from sqlalchemy import or_
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
@@ -129,11 +130,15 @@ def searchInDb(searchitems):
     itemdirector = searchitems['director']
     if itemdirector != '':
         looking_for = '%{0}%'.format(itemdirector)
-        dir = Director.query.filter(Director.name.like(looking_for)).first()
-        if dir != None:
-            dirid = dir.id
+        dirs = Director.query.filter(Director.name.like(looking_for)).all()
+        if dirs != None:
+            dirid = [dir.id for dir in dirs]
             if queryStarted == False:
-                queryresult = Movie.query.filter_by(directors=dirid).order_by(Movie.year.desc())
+                count = len(dirid)
+                if count == 1:
+                    queryresult = Movie.query.filter_by(directors=dirid[0]).order_by(Movie.year.desc())
+                elif count == 2:
+                    queryresult = Movie.query.filter(or_(Movie.directors == dirid[0], Movie.directors == dirid[1])).order_by(Movie.year.desc())
                 queryStarted = True
             else:
                 queryresult = queryresult.filter_by(directors=dirid).order_by(Movie.year.desc())
