@@ -206,7 +206,7 @@ def insertMovieDataFromForm(singleMovieForm):
         medium = singleMovieForm.medium.data
         place = singleMovieForm.place.data
         ownrating = singleMovieForm.ownrating.data
-        amgrating = singleMovieForm.amgrating.data
+        amgrating = singleMovieForm.ratingAmg.data
         source = ''
         addManMovieToDb(inputMovieId, localname, medium, source, place, ownrating, amgrating)
     else:

@@ -106,7 +106,7 @@ def maninput():
         insertMovieDataFromForm(form)
         # insertManualInput(form)
         return redirect('/index')
-    return render_template('mod_input/maninput.html',
+    return render_template('mod_db/maninput.html',
                            title='Manual Input',
                            form=form)
 
