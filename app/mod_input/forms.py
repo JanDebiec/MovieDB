@@ -9,17 +9,17 @@ from wtforms.validators import DataRequired
 #     medium = StringField('Medium')
 #     submit = SubmitField('Submit')
 #
-class ManInputForm(FlaskForm):
-    imdbid = StringField('Imdb ID')
-    imdbname = StringField('ImdbName')
-    originname = StringField('OriginalName')
-    localname = StringField('LocalName')
-    medium = StringField('Medium')
-    place = StringField('Place')
-    source = StringField('Source')
-    ownrating = StringField('MyOwnRating')
-    amgrating = StringField('AMGRating')
-    submit = SubmitField('Submit')
+# class ManInputForm(FlaskForm):
+#     imdbid = StringField('Imdb ID')
+#     imdbname = StringField('ImdbName')
+#     originname = StringField('OriginalName')
+#     localname = StringField('LocalName')
+#     medium = StringField('Medium')
+#     place = StringField('Place')
+#     source = StringField('Source')
+#     ownrating = StringField('MyOwnRating')
+#     amgrating = StringField('AMGRating')
+#     submit = SubmitField('Submit')
 
 class CsvInputForm(FlaskForm):
     filename = StringField('CsvFileName', validators=[DataRequired()])

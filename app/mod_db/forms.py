@@ -17,6 +17,18 @@ class SingleMovieForm(FlaskForm):
     ratingAmg = StringField('AMG rating')
     ownrating = StringField('Ownrating')
 
+class ManInputForm(SingleMovieForm):
+    # imdbid = StringField('Imdb ID')
+    # imdbname = StringField('ImdbName')
+    # originname = StringField('OriginalName')
+    # localname = StringField('LocalName')
+    # medium = StringField('Medium')
+    # place = StringField('Place')
+    # source = StringField('Source')
+    # ownrating = StringField('MyOwnRating')
+    # amgrating = StringField('AMGRating')
+    submit = SubmitField('Submit')
+
 class SearchDbForm(SingleMovieForm):
     text = StringField('Text/Title')
     critic = StringField('Critic')

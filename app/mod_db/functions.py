@@ -10,6 +10,7 @@ from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
 # from app.mod_db.forms import EditCriticForm, CriticsListForm, SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
 
 import app.mod_imdb.controllers as tsv
+from  helper import clock # decorator clock
 
 class MovieToDisplay:
 
@@ -74,6 +75,7 @@ def updateImdbidInDb(foundList, inputImdbid):
                 updateMovieWithoutIDWithImdb(movie, inputId,)
 
 
+@clock
 def searchInDb(searchitems):
     ''' extract items from searchitems,
     search for all movies, that fulfils the criteria
@@ -191,13 +193,35 @@ def filterMoviesWithCriticRating(found, critic, rating):
 
     return listWithRating
 
+def insertMovieDataFromForm(singleMovieForm):
+    dbMovie = None
+    inputMovieId = singleMovieForm.imdbid.data
+    if inputMovieId != '' and inputMovieId != '0000000':
+        try:
+            dbMovie = searchDb(inputMovieId)
+        except:
+            current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
+    if dbMovie == None:
+        localname = singleMovieForm.localname.data
+        medium = singleMovieForm.medium.data
+        place = singleMovieForm.place.data
+        ownrating = singleMovieForm.ownrating.data
+        amgrating = singleMovieForm.amgrating.data
+        source = ''
+        addManMovieToDb(inputMovieId, localname, medium, source, place, ownrating, amgrating)
+    else:
+        updateMovie(inputMovieId, singleMovieForm)
+        # updateMovieManual(inputMovieId, inputTitle, medium, source, place, ownrating, amgrating)
+
+
 def insertMovieData(inputMovieId,
                     inputTitle='', medium='',
                     source='', place='',
                     ownrating='',
                     amgrating=''):
-    '''insert data from input into db
-    Data from Input (manual or csv) has structure:
+    '''insert data from input into db,
+    used in parsing csv files.
+    Data from Input (csv) has structure:
     imdbId 7 char obligatory
     title (local title) optional
     medium optional
@@ -370,7 +394,7 @@ def updateMovieWithoutIDWithImdb(movie, imdbid, commit=True):
         db.session.commit()
 
 
-def updateMovieManual(movieId, inputTitle, medium, source, place, ownrating):
+def updateMovieManual(movieId, inputTitle, medium, source, place, ownrating, amgrating):
 
     found = Movie.query.filter_by(imdbId= movieId).first()
     found.titleLocal = inputTitle
@@ -381,6 +405,9 @@ def updateMovieManual(movieId, inputTitle, medium, source, place, ownrating):
     try:
         critic = Critic.query.filter_by(name='JD').first()
         rat = Rating(movie_id=found.id, critic_id=critic.id, value=ownrating)
+        db.session.add(rat)
+        critic = Critic.query.filter_by(name='AMG').first()
+        rat = Rating(movie_id=found.id, critic_id=critic.id, value=amgrating)
         db.session.add(rat)
     except:
         current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
@@ -565,3 +592,27 @@ def updatePlaceInDb(foundList, inputPlace):
         oldPlace = movie.place
         if newPlace != oldPlace:
             movie.place = newPlace
+
+# def insertManualInput(manInputForm):
+#     ''' extract data from InputForm,
+#     validate and insert/update in db,
+#     check if movie already exist, if so only update.
+#     using form as parameter
+#     '''
+#     imdbid = manInputForm.imdbid.data
+#     localname = manInputForm.localname.data
+#     medium = manInputForm.medium.data
+#     place = manInputForm.place.data
+#     ownrating = manInputForm.ownrating.data
+#     amgrating = manInputForm.amgrating.data
+#
+#     # flash('Added Movie: Id={}, localName={}, medium={}'.format(
+#     #     imdbid, localname, medium
+#     # ))
+#     insertMovieDataFromForm(inputMovieId=imdbid,
+#                         inputTitle=localname,
+#                         medium=medium,
+#                         place=place,
+#                         ownrating=ownrating,
+#                         amgrating=amgrating)
+

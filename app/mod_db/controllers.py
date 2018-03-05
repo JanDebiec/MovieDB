@@ -5,7 +5,7 @@ from jinja2 import Template
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
-from app.mod_db.forms import EditCriticForm, CriticsListForm, SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
+from app.mod_db.forms import ManInputForm, EditCriticForm, CriticsListForm, SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
 
 import app.mod_imdb.controllers as tsv
 
@@ -95,6 +95,22 @@ def delete(movieid):
                            title='Movie to delete',
                            moviemsg=movietxt,
                            form=form)
+
+@mod_db.route('/maninput', methods=['GET', 'POST'])
+def maninput():
+    form = ManInputForm()
+    if form.validate_on_submit():
+        flash('Added Movie: Id={}, localName={}, medium={}'.format(
+            form.imdbid.data, form.localname.data, form.medium.data
+        ))
+        insertMovieDataFromForm(form)
+        # insertManualInput(form)
+        return redirect('/index')
+    return render_template('mod_input/maninput.html',
+                           title='Manual Input',
+                           form=form)
+
+
 
 
 @mod_db.route('/edit/<movieid>', methods=['GET', 'POST'])

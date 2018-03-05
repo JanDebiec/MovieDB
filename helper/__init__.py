@@ -1,5 +1,6 @@
 import io
 import csv
+import time
 
 from sqlalchemy import create_engine, Column, String, Integer, MetaData, Table
 
@@ -64,3 +65,15 @@ def csvToDbTable(csvFile, delimiter):
             table.insert().values(**row).execute()
     return table
 
+
+def clock(func):
+    def clocked(*args):
+        t0 = time.perf_counter()
+        result = func(*args)
+        elapsed = time.perf_counter() - t0
+        name = func.__name__
+        arg_str = ', '.join(repr(arg) for arg in args)
+        print('[%0.6fs] %s' % (elapsed, name))
+        # print('[%0.8fs] %s(%s) -> %r' % (elapsed, name, arg_str, result))
+        return result
+    return clocked

@@ -9,25 +9,25 @@ import app.mod_imdb.controllers as tsv
 from app import db
 from app.mod_db.models import Movie, Role, People, Director, Critic
 
-from app.mod_input.forms import ManInputForm, CsvInputForm
-import app.mod_db.controllers as dbc
+from app.mod_input.forms import  CsvInputForm
+import app.mod_db.functions as dbc
 
 mod_input = Blueprint('input', __name__, url_prefix='/mod_input')
 
-@mod_input.route('/maninput', methods=['GET', 'POST'])
-def maninput():
-    form = ManInputForm()
-    if form.validate_on_submit():
-        flash('Added Movie: Id={}, localName={}, medium={}'.format(
-            form.imdbid.data, form.localname.data, form.medium.data
-        ))
-        insertManualInput(form)
-        return redirect('/index')
-    return render_template('mod_input/maninput.html',
-                           title='Manual Input',
-                           form=form)
-
-
+# @mod_input.route('/maninput', methods=['GET', 'POST'])
+# def maninput():
+#     form = ManInputForm()
+#     if form.validate_on_submit():
+#         flash('Added Movie: Id={}, localName={}, medium={}'.format(
+#             form.imdbid.data, form.localname.data, form.medium.data
+#         ))
+#         insertManualInput(form)
+#         return redirect('/index')
+#     return render_template('mod_input/maninput.html',
+#                            title='Manual Input',
+#                            form=form)
+#
+#
 
 @mod_input.route('/csvinput', methods=['GET', 'POST'])
 def csvinput():
@@ -65,27 +65,27 @@ def checkDataFromCsv():
     '''
     pass
 
-def insertManualInput(manInputForm):
-    ''' extract data from InputForm,
-    validate and insert/update in db
-    '''
-    imdbid = manInputForm.imdbid.data
-    localname = manInputForm.localname.data
-    medium = manInputForm.medium.data
-    place = manInputForm.place.data
-    ownrating = manInputForm.ownrating.data
-    amgrating = manInputForm.amgrating.data
-
-    flash('Added Movie: Id={}, localName={}, medium={}'.format(
-        imdbid, localname, medium
-    ))
-    dbc.insertMovieData(inputMovieId=imdbid,
-                        inputTitle=localname,
-                        medium=medium,
-                        place=place,
-                        ownrating=ownrating,
-                        amgrating=amgrating)
-
+# def insertManualInput(manInputForm):
+#     ''' extract data from InputForm,
+#     validate and insert/update in db
+#     '''
+#     imdbid = manInputForm.imdbid.data
+#     localname = manInputForm.localname.data
+#     medium = manInputForm.medium.data
+#     place = manInputForm.place.data
+#     ownrating = manInputForm.ownrating.data
+#     amgrating = manInputForm.amgrating.data
+#
+#     flash('Added Movie: Id={}, localName={}, medium={}'.format(
+#         imdbid, localname, medium
+#     ))
+#     dbc.insertMovieData(inputMovieId=imdbid,
+#                         inputTitle=localname,
+#                         medium=medium,
+#                         place=place,
+#                         ownrating=ownrating,
+#                         amgrating=amgrating)
+#
 def readFileAddItemsToDb(fileName):
     with h.ManagedUtfFile(fileName) as f:
         csvReader = csv.reader(f)
