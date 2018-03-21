@@ -595,10 +595,10 @@ def updatePlaceInDb(foundList, inputPlace):
 
 def add_critic(critic_object):
     '''
-    check if critic already in db,
+    check if critic already exists,
     if not insert
     :param critic_object:
-    :return:
+    :return: critic_id
     '''
     try:
         obj = Critic.query.filter_by(name=critic_object.name).first()
@@ -612,3 +612,22 @@ def add_critic(critic_object):
         current_app.logger.error('critic not added', exc_info=sys.exc_info())
         return 0
 
+def add_rating(rating_obj):
+    '''
+    check if rating already exist,
+    if yes, modify
+    if not, insert
+    :param rating_obj:
+    :return:
+    '''
+    try:
+        crit_query = Rating.query.filter_by(critic_id=rating_obj.critic_id)
+        old_rating = crit_query.filter_by(movie_id=rating_obj.movie_id).first()
+        if old_rating != None:
+            # update
+            old_rating.value = rating_obj.value
+        else:
+            db.session.add(rating_obj)
+        db.session.commit()
+    except:
+        current_app.logger.error('rating not added', exc_info=sys.exc_info())

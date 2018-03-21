@@ -156,3 +156,47 @@ class TestMcIntoDb:
         count_ratings = len(ratings)
         assert 48 == count_ratings
 
+    def test_insert_arr(self):
+        arr = Movie.query.filter_by(titleImdb='Arrival').first()
+        arr_id = arr.id
+
+        count, list_ = mc.get_ratings_list(self.arrival_soup)
+        for item in list_:
+            name = '{} {}'.format(item.author, item.source)
+            url = 'http://www.metacritic.com/critic/{}?filter=movies'.format(item.author)
+            maxVal = 100.0
+            crit = Critic(name=name, url=url, maxVal=maxVal)
+            crit_id = dbf.add_critic(crit)
+            rat = Rating(arr_id, critic_id=crit_id, value=item.rating)
+            db.session.add(rat)
+        db.session.commit()
+
+        critics = Critic.query.all()
+        count_critics = len(critics)
+        assert 52 == count_critics
+
+        ratings = Rating.query.all()
+        count_ratings = len(ratings)
+        assert 52 == count_ratings
+
+    def test_insert_arr_sic(self):
+        arr = Movie.query.filter_by(titleImdb='Arrival').first()
+        arr_id = arr.id
+
+        mc.insert_rating_for_movie_from_html(arr_id, self.arrival_html)
+
+        sic = Movie.query.filter_by(titleImdb='Sicario').first()
+        sic_id = sic.id
+
+        mc.insert_rating_for_movie_from_html(sic_id, self.sicario_html)
+
+        critics = Critic.query.all()
+        count_critics = len(critics)
+        assert 76 == count_critics
+
+        ratings = Rating.query.all()
+        count_ratings = len(ratings)
+        assert 100 == count_ratings
+
+
+
