@@ -87,6 +87,7 @@ class Role(DbBase):
 
 class Critic(DbBase):
     name = db.Column(db.String(64))
+    # as url, the content of metacritic will be used
     url = db.Column(db.String(128))
     maxVal = db.Column(db.Float)
     simdistance = db.Column(db.Float)

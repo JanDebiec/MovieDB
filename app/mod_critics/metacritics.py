@@ -1,7 +1,9 @@
 from bs4 import BeautifulSoup
-import tools
 import time
 import collections
+import sys
+sys.path.extend(['/home/jan/project/movie_db'])
+import app.mod_critics.tools as t
 
 McRating = collections.namedtuple("McRating", "source author rating")
 

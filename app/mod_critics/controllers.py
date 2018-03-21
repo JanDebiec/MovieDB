@@ -70,6 +70,9 @@ def results(compareitems):
     # return render_template('mod_critics/chart.html',
     #                        values=result.listForChart, labels=labels, legend=legend)
 
+@mod_critics.route("/init_mc")
+def init_mc():
+    pass
 
 @mod_critics.route("/chart")
 def chart():
