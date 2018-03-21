@@ -5,6 +5,7 @@ sys.path.extend(['/home/jan/project/movie_db'])
 from app import create_app, db
 from app.mod_db.models import Movie, Role, People, Director, Rating, Critic
 import app.mod_db.controllers as dbc
+import app.mod_db.functions as dbf
 import app.mod_critics.tools as t
 import app.mod_critics.metacritics as mc
 import time
@@ -90,4 +91,68 @@ class TestExtractSoup:
         count, list_ = mc.get_ratings_list(self.sicario_soup)
         assert 48 == count
         assert 48 == len(list_)
+
+    def test_arr_count(self):
+        count = mc.get_critics_count(self.arrival_soup)
+        assert 52 == count
+
+    def test_arr_ratings(self):
+        count, list_ = mc.get_ratings_list(self.arrival_soup)
+        assert 52 == count
+        assert 52 == len(list_)
+
+class TestMcIntoDb:
+    def setup(self):
+        print("setup method, class: TestMcIntoDb, fixture test method")
+        self.app = create_app(TestConfig)
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        db.create_all()
+        sic = Movie(titleImdb='Sicario')
+        db.session.add(sic)
+        arr = Movie(titleImdb='Arrival')
+        db.session.add(arr)
+        db.session.commit()
+
+    def teardown(self):
+        print("teardown method class: TestMcIntoDb")
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
+
+
+    def setup_class(self):
+        with open('input_data/mc_arrival.html', 'rb') as f:
+            self.arrival_html = f.read()
+        with open('input_data/mc_sicario.html', 'rb') as f:
+            self.sicario_html = f.read()
+        self.sicario_soup = BeautifulSoup(self.sicario_html, 'html.parser')
+        self.arrival_soup = BeautifulSoup(self.arrival_html, 'html.parser')
+        print("\nsetup class      class: %s, fixture test class" % self.__name__)
+
+    def teardown_class(self):
+        print("\nteardown class      class: %s" % self.__name__)
+
+    def test_insert_sic(self):
+        sic = Movie.query.filter_by(titleImdb='Sicario').first()
+        sic_id = sic.id
+
+        count, list_ = mc.get_ratings_list(self.sicario_soup)
+        for item in list_:
+            name = '{} {}'.format(item.author, item.source)
+            url = 'http://www.metacritic.com/critic/{}?filter=movies'.format(item.author)
+            maxVal = 100.0
+            crit = Critic(name=name, url=url, maxVal=maxVal)
+            crit_id = dbf.add_critic(crit)
+            rat = Rating(sic_id, critic_id=crit_id, value=item.rating)
+            db.session.add(rat)
+        db.session.commit()
+
+        critics = Critic.query.all()
+        count_critics = len(critics)
+        assert 48 == count_critics
+
+        ratings = Rating.query.all()
+        count_ratings = len(ratings)
+        assert 48 == count_ratings
 

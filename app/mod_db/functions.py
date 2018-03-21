@@ -593,26 +593,22 @@ def updatePlaceInDb(foundList, inputPlace):
         if newPlace != oldPlace:
             movie.place = newPlace
 
-# def insertManualInput(manInputForm):
-#     ''' extract data from InputForm,
-#     validate and insert/update in db,
-#     check if movie already exist, if so only update.
-#     using form as parameter
-#     '''
-#     imdbid = manInputForm.imdbid.data
-#     localname = manInputForm.localname.data
-#     medium = manInputForm.medium.data
-#     place = manInputForm.place.data
-#     ownrating = manInputForm.ownrating.data
-#     amgrating = manInputForm.amgrating.data
-#
-#     # flash('Added Movie: Id={}, localName={}, medium={}'.format(
-#     #     imdbid, localname, medium
-#     # ))
-#     insertMovieDataFromForm(inputMovieId=imdbid,
-#                         inputTitle=localname,
-#                         medium=medium,
-#                         place=place,
-#                         ownrating=ownrating,
-#                         amgrating=amgrating)
+def add_critic(critic_object):
+    '''
+    check if critic already in db,
+    if not insert
+    :param critic_object:
+    :return:
+    '''
+    try:
+        obj = Critic.query.filter_by(name=critic_object.name).first()
+        if obj == None:
+            db.session.add(critic_object)
+            db.session.commit()
+        real_obj = Critic.query.filter_by(name=critic_object.name).first()
+        id = real_obj.id
+        return id
+    except:
+        current_app.logger.error('critic not added', exc_info=sys.exc_info())
+        return 0
 
