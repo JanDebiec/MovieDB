@@ -11,8 +11,32 @@
         </tr>
         <tr>
             <td>{{ form.upgradeimdb.label}}</td>
-            <td></td>
             <td>{{ form.upgradeimdb}}</td>
+        </tr>
+        <tr>
+            <td>{{ form.upgrademc.label}}</td>
+            <td>{{ form.upgrademc}}</td>
+            <td><a href="http://www.metacritic.com">Metacritic</a></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{{ form.ownrating.label}}</td>
+            <td>{{ form.ratingAmg.label}}</td>
+            <td>{{ form.ratingMCvalue.label}} </td>
+        </tr>
+
+
+        <tr>
+            <td></td>
+            <td>{{ form.ownrating(size=4)}}</td>
+            <td>{{ form.ratingAmg(size=4)}}</td>
+            <td>{{ movie.ratingMCvalue }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>{{ form.ratingMCcount.label}}</td>
+            <td>{{ movie.ratingMCcount }}</td>
         </tr>
         <tr>
 
@@ -21,39 +45,31 @@
         </tr>
         <tr>
             <td>{{ form.imdbname.label}}</td>
-            <td>{{ form.imdbname(size=32)}}</td>
+            <td>{{ form.imdbname(size=20)}}</td>
         </tr>
         <tr>
             <td>{{ form.originname.label}}</td>
-            <td>{{ form.originname(size=32)}}</td>
+            <td>{{ form.originname(size=20)}}</td>
         </tr>
         <tr>
             <td>{{ form.localname.label}}</td>
-            <td>{{ form.localname(size=32)}}</td>
-        </tr>
-        <tr>
-            <td>{{ form.medium.label}}</td>
-            <td>{{ form.medium(size=8)}}</td>
-        </tr>
-        <tr>
-            <td>{{ form.place.label}}</td>
-            <td>{{ form.place(size=8)}}</td>
-        </tr>
-        <tr>
-            <td>{{ form.source.label}}</td>
-            <td>{{ form.source(size=8)}}</td>
+            <td>{{ form.localname(size=20)}}</td>
         </tr>
         <tr>
             <td>{{ form.director.label}}</td>
-            <td>{{ form.director(size=32)}}</td>
+            <td>{{ form.director(size=20)}}</td>
         </tr>
         <tr>
-            <td>{{ form.ownrating.label}}</td>
-            <td>{{ form.ownrating(size=4)}}</td>
+            <td></td>
+            <td>{{ form.medium.label}}</td>
+            <td>{{ form.place.label}}</td>
+            <td>{{ form.source.label}}</td>
         </tr>
         <tr>
-            <td>{{ form.ratingAmg.label}}</td>
-            <td>{{ form.ratingAmg(size=4)}}</td>
+            <td></td>
+            <td>{{ form.medium(size=8)}}</td>
+            <td>{{ form.place(size=8)}}</td>
+            <td>{{ form.source(size=8)}}</td>
         </tr>
         <p>
             {{ form.submit() }}

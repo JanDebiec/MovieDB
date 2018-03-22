@@ -55,7 +55,7 @@ def findReferenceRatingsForMovie(movie):
             criticsList.append(critic)
 
     for critic in criticsList:
-        rating = getRatingForMovie(movie, critic)
+        rating = getRatingObjForMovie(movie, critic)
         if rating != None:
             ratingDict[critic.name] = rating.value
         else:
@@ -74,6 +74,14 @@ def convertMovieToDIsplay(movie):
         amgrating = ratingDict['AMG']
         )
     return movieToDisplay
+
+@clock
+def convert_list_to_display(foundMovieList):
+    list_ = []
+    for movie in foundMovieList:
+        movieToDisplay = convertMovieToDIsplay(movie)
+        list_.append(movieToDisplay)
+    return list_
 
 
 def updateImdbidInDb(foundList, inputImdbid):
@@ -462,6 +470,9 @@ def deleteMovie(movieid):
     db.session.delete(obj)
     db.session.commit()
 
+def updateMovieMetacrit(movieid, form):
+    pass
+
 def upgradeMovie(movieid, form):
     '''
     there are some movies added to DB with known ImdbId, but not listed
@@ -521,7 +532,7 @@ def updateMovie(movieid, form):
 
 def updateRating(movie, critic, newRating):
 
-    ratingOldObj = getRatingForMovie(movie, critic)
+    ratingOldObj = getRatingObjForMovie(movie, critic)
     if ratingOldObj != None:
         ownRatingOld = ratingOldObj.value
     else:
@@ -546,10 +557,11 @@ def updateCritic(criticid, form):
 
 
 
-def getRatingForMovie(movieobj, criticobj):
+def getRatingObjForMovie(movieobj, critic_obj):
     object = None
+    # critic = Critic.query.filter_by(name=critic_name).first()
     try:
-        ownRatings = Rating.query.filter_by(critic_id=criticobj.id)
+        ownRatings = Rating.query.filter_by(critic_id=critic_obj.id)
         rating = ownRatings.filter_by(movie_id=movieobj.id).first()
         object = rating
     except:
@@ -557,11 +569,24 @@ def getRatingForMovie(movieobj, criticobj):
         pass
     return object
 
+def getRatingValueForMovie(movieobj, critic_name):
+    rating = None
+    try:
+        critic = Critic.query.filter_by(name=critic_name).first()
+        ratingObj = getRatingObjForMovie(movieobj, critic)
+        if ratingObj != None:
+            rating = ratingObj.value
+    except:
+        current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
+        pass
+    return rating
+
+
 def getJdRatingForMovie(movieobj):
     ownRating = None
     try:
         jd = Critic.query.filter_by(name='JD').first()
-        ownRatingObj = getRatingForMovie(movieobj, jd)
+        ownRatingObj = getRatingObjForMovie(movieobj, jd)
         if ownRatingObj != None:
             ownRating = ownRatingObj.value
     except:
@@ -573,13 +598,25 @@ def getAmgRatingForMovie(movieobj):
     amgRating = None
     try:
         amg = Critic.query.filter_by(name='AMG').first()
-        amgRatingObj = getRatingForMovie(movieobj, amg)
+        amgRatingObj = getRatingObjForMovie(movieobj, amg)
         if amgRatingObj != None:
             amgRating = amgRatingObj.value
     except:
         current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
         pass
     return amgRating
+
+def getMcRatingForMovie(movieobj):
+    mcRating = None
+    try:
+        mc = Critic.query.filter_by(name='MC').first()
+        mcRatingObj = getRatingObjForMovie(movieobj, mc)
+        if mcRatingObj != None:
+            mcRating = mcRatingObj.value
+    except:
+        current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
+        pass
+    return mcRating
 
 
 def updateOwnerRatingInDb(foundList, inputRating):

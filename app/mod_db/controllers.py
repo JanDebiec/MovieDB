@@ -125,6 +125,13 @@ def edit(movieid):
         except:
             current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
 
+        try:
+            if form.upgrademc.data == True:
+                updateMovieMetacrit(movieid, form)
+            # updateMovie(movieid, form)
+        except:
+            current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
+
         return redirect(url_for('database.search', message=foundMessage))
 
     # display the single result
@@ -142,18 +149,23 @@ def edit(movieid):
         current_app.logger.error('director not found', exc_info=sys.exc_info())
         # pass
     try:
-        form.ownrating.data = getJdRatingForMovie(movie)
+        form.ownrating.data = getRatingValueForMovie(movie, 'JD')
     except:
         current_app.logger.error('ownrating not found', exc_info=sys.exc_info())
         # pass
     try:
-        form.ratingAmg.data = getAmgRatingForMovie(movie)
+        form.ratingAmg.data = getRatingValueForMovie(movie, 'AMG')
     except:
         current_app.logger.error('amg rating not found', exc_info=sys.exc_info())
         # pass
+    try:
+        form.ratingMCvalue.data = getRatingValueForMovie(movie, 'MC')
+    except:
+        current_app.logger.error('mc rating not found', exc_info=sys.exc_info())
     return render_template('mod_db/edit.html',
                            title='Movie to edit',
                            moviemsg=movietxt,
+                           movie=movie,
                            form=form)
 
 @mod_db.route('/pageresults/<searchitems>', methods=['GET', 'POST'])
@@ -168,9 +180,7 @@ def pageresults(searchitems):
 
     listMovieToDisplay = []
     if foundMovieList != None:
-        for movie in foundMovieList:
-            movieToDisplay = convertMovieToDIsplay(movie)
-            listMovieToDisplay.append(movieToDisplay)
+        listMovieToDisplay = convert_list_to_display(foundMovieList)
 
 
     # if activated, filter the results with amg rating

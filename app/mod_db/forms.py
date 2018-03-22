@@ -16,6 +16,8 @@ class SingleMovieForm(FlaskForm):
     source = StringField('Source')
     ratingAmg = StringField('AMG rating')
     ownrating = StringField('Ownrating')
+    ratingMCvalue = StringField('MC rating')
+    ratingMCcount = StringField('MC count')
 
 class ManInputForm(SingleMovieForm):
     # imdbid = StringField('Imdb ID')
@@ -44,6 +46,7 @@ class DeleteMovieForm(SingleMovieForm):
 
 class EditMovieForm(SingleMovieForm):
     upgradeimdb = BooleanField('Upgrade IMDB')
+    upgrademc = BooleanField('Upgrade Metacritic')
     submit = SubmitField('Update')
 
 class ExploreForm(FlaskForm):
