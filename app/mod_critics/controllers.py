@@ -72,6 +72,18 @@ def results(compareitems):
 
 @mod_critics.route("/init_mc")
 def init_mc():
+    '''
+    for movies, which have JD or AMG ratings,
+    scrap the metacritics for the film.
+    Insert the ratings in db.
+    Schow the results
+    Then go to template to calculate similarity of critics
+    :return:
+    '''
+    pass
+
+@mod_critics.route("/calc_mc")
+def calc_mc():
     pass
 
 @mod_critics.route("/chart")

@@ -18,6 +18,7 @@ class MovieToDisplay:
                  movie,
                  ownerrating='',
                  amgrating='',
+                 mcrating='',
                  imdbrating=''):
         self.id = movie.id
         self.imdbId = movie.imdbId
@@ -37,11 +38,21 @@ class MovieToDisplay:
         self.ownerrating = ownerrating
         self.amgrating = amgrating
         self.imdbrating = imdbrating
+        self.mcrating = mcrating
 
-def findAllRatingsForMovie(movie):
-
+def findReferenceRatingsForMovie(movie):
+    '''
+    only ratings from JD, AMG, MC will be shown in the display
+    :param movie:
+    :return:
+    '''
+    critic_reference_list = ['JD', 'AMG', 'MC']
     ratingDict = {}
-    criticsList = Critic.query.all()
+    criticsList = []
+    for item in critic_reference_list:
+        critic = Critic.query.filter_by(name=item).first()
+        if critic != None:
+            criticsList.append(critic)
 
     for critic in criticsList:
         rating = getRatingForMovie(movie, critic)
@@ -54,13 +65,13 @@ def findAllRatingsForMovie(movie):
 
 def convertMovieToDIsplay(movie):
 
-    ratingDict = findAllRatingsForMovie(movie)
+    ratingDict = findReferenceRatingsForMovie(movie)
 
     movieToDisplay = MovieToDisplay(
         movie,
         ownerrating = ratingDict['JD'],
-        amgrating = ratingDict['AMG'],
-        imdbrating = ratingDict['Imdb']
+        mcrating = ratingDict['MC'],
+        amgrating = ratingDict['AMG']
         )
     return movieToDisplay
 
