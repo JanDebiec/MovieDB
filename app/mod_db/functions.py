@@ -684,12 +684,11 @@ def add_rating(rating_obj):
 
 def insert_rating_for_movie_from_html(movie_id, movie_html):
     count, list_ = mc.get_rating_list_for_movie(movie_id, movie_html)
-    # movie_soup = BeautifulSoup(movie_html, 'html.parser')
-    # count, list_ = get_ratings_list(movie_soup)
     if count > 0:
         for item in list_:
-            name = '{} {}'.format(item.author, item.source)
-            url = 'http://www.metacritic.com/critic/{}?filter=movies'.format(item.author)
+            name = '{}'.format(item.author) # only author, without newspaper
+            name_mc = mc.convert_name_to_mc(name)
+            url = 'http://www.metacritic.com/critic/{}?filter=movies'.format(name_mc)
             maxVal = 100.0
             crit_obj = Critic(name=name, url=url, maxVal=maxVal)
             crit_id = add_critic(crit_obj)

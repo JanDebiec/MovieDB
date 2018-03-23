@@ -1,23 +1,12 @@
-# from requests import get
-# from requests.exceptions import RequestException
-# from contextlib import closing
 from bs4 import BeautifulSoup
-# import time
-# import collections
 import sys
 sys.path.extend(['/home/jan/project/movie_db'])
 from app.mod_critics import tools as t
 
-from app.mod_db.models import Movie, Role, People, Director, Rating, Critic
-import app.mod_db.controllers as dbc
-# mport app.mod_db.functions as dbf
-
-
-# from bs4 import BeautifulSoup
-#
 
 def find_by_class(soup, class_, element_type='div'):
     return soup.find(element_type, attrs={'class': class_})
+
 
 def get_critics_count(soup):
     count_tag = find_by_class(soup, 'based_on', 'span')
@@ -31,6 +20,7 @@ def get_critics_count(soup):
         except:
             pass
     return 0
+
 
 def get_ratings_list(soup):
     list_ = []
@@ -50,6 +40,7 @@ def get_ratings_list(soup):
             break
     return i, list_
 
+
 def get_mc_rating(soup):
     try:
         rating_tag = find_by_class(soup, 'metascore_w', 'span')
@@ -59,6 +50,7 @@ def get_mc_rating(soup):
     except:
         return 0
 
+
 def get_detail_rating(review_class):
     try:
         author = find_by_class(review_class, 'author', 'span').getText()
@@ -67,6 +59,7 @@ def get_detail_rating(review_class):
         return t.McRating(source, author, rating)
     except:
         return None
+
 
 def get_response(mc_name):
     '''
@@ -83,15 +76,12 @@ def get_response(mc_name):
     t.log_error('No pageviews found for {}'.format(mc_name))
     return None
 
+
 def convert_name_to_mc(name):
     name_temp = name.replace(' ', '-')
     mc_name = name_temp.lower()
     return mc_name
 
-# def get_ratings_on_title(mc_title):
-#     response = get_response(mc_title)
-#     if response is not None:
-#         html = BeautifulSoup(response, 'html.parser')
 
 def get_movie_html(movie_obj):
     movie_id = movie_obj.id
@@ -100,27 +90,9 @@ def get_movie_html(movie_obj):
     movie_html = get_response(title_mc)
     return movie_html
 
+
 def get_rating_list_for_movie(movie_id, movie_html):
     movie_soup = BeautifulSoup(movie_html, 'html.parser')
     count, list_ = get_ratings_list(movie_soup)
     return count, list_
-
-    # if count > 0:
-    #     for item in list_:
-    #         name = '{} {}'.format(item.author, item.source)
-    #         url = 'http://www.metacritic.com/critic/{}?filter=movies'.format(item.author)
-    #         maxVal = 100.0
-    #         crit_obj = Critic(name=name, url=url, maxVal=maxVal)
-    #         crit_id = dbf.add_critic(crit_obj)
-    #         rat = Rating(movie_id, critic_id=crit_id, value=item.rating)
-    #         dbf.add_rating(rat)
-
-# def get_update_movie_ratings(movie_obj):
-#     movie_html = get_movie_html(movie_obj)
-#     movie_id = movie_obj.id
-#     insert_rating_for_movie_from_html(movie_id, movie_html)
-#
-# def updateMovieMetacrit(movieid, form):
-#     movie = Movie.query.filter_by(id=movieid).first()
-#     get_update_movie_ratings(movie)
 
