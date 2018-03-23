@@ -45,7 +45,7 @@ def get_mc_rating(soup):
     try:
         rating_tag = find_by_class(soup, 'metascore_w', 'span')
         txt = rating_tag.getText()
-        score = int(txt)
+        score = float(txt)
         return score
     except:
         return 0
@@ -100,5 +100,6 @@ def get_movie_html(movie_obj):
 def get_rating_list_for_movie(movie_id, movie_html):
     movie_soup = BeautifulSoup(movie_html, 'html.parser')
     count, list_ = get_ratings_list(movie_soup)
-    return count, list_
+    mc_rating = get_mc_rating(movie_soup)
+    return mc_rating, count, list_
 

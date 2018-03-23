@@ -683,8 +683,18 @@ def add_rating(rating_obj):
         current_app.logger.error('rating not added', exc_info=sys.exc_info())
 
 def insert_rating_for_movie_from_html(movie_id, movie_html):
-    count, list_ = mc.get_rating_list_for_movie(movie_id, movie_html)
+    #TODO extract and add own MC rating
+    mc_rating, count, list_ = mc.get_rating_list_for_movie(movie_id, movie_html)
     if count > 0:
+        mc_crit_obj = Critic.query.filter_by(name='MC').first()
+        if mc_crit_obj == None:
+            mc_critic = Critic(name='MC', maxVal=100)
+            crit_id = add_critic(mc_critic)
+        else:
+            crit_id = mc_crit_obj.id
+        rat = Rating(movie_id, critic_id=crit_id, value=mc_rating)
+        add_rating(rat)
+
         for item in list_:
             name = '{}'.format(item.author) # only author, without newspaper
             name_mc = mc.convert_name_to_mc(name)

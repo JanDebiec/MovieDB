@@ -128,11 +128,17 @@ def edit(movieid):
 
         try:
             if form.upgrademc.data == True:
-                mc.updateMovieMetacrit(movieid, form)
+                updateMovieMetacrit(movieid, form)
             # updateMovie(movieid, form)
         except:
             current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())
 
+        # movie = Movie.query.filter_by(id=movieid).first()
+        # movietxt = movie
+        # return redirect(url_for('database.edit', title='Movie to edit',
+        #                    moviemsg=movietxt,
+        #                    movie=movie,
+        #                    form=form))
         return redirect(url_for('database.search', message=foundMessage))
 
     # display the single result
