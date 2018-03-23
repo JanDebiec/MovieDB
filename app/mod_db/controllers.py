@@ -357,3 +357,25 @@ def editcritic(criticid):
 
 
 
+def init_mc_db():
+    # create the list of movies with JD or AMG ratings
+    critic_jd = Critic.query.filter_by(name= 'JD').first()
+    critic_mc =  Critic.query.filter_by(name= 'MC').first()
+    JD_list = Rating.query.filter_by(critic_id=critic_jd.id).all()
+    movie_dict = {}
+    for rating in JD_list:
+        movie = Movie.query.fiter_by(id=rating.movie_id)
+        query = Rating.query.filter_by(movie_id=movie.id)
+        mc_ratings = query.filter_by(critic_id= critic_mc.id)
+        # check if mc content already saved in DB
+        # if not
+        #     load mc data and save in DB
+        if len(mc_ratings) <= 0:
+            movie_dict[rating.movie_id] = movie
+
+    listWithRatings = list(movie_dict.values())
+    for movie in listWithRatings:
+         mc_name = mc.convert_name_to_mc(movie.titleImdb)
+         html = mc.get_response(mc_name)
+         insert_rating_for_movie_from_html(html, movie.id)
+
