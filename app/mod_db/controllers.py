@@ -8,6 +8,7 @@ from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
 from app.mod_db.forms import ManInputForm, EditCriticForm, CriticsListForm, SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
 
 import app.mod_imdb.controllers as tsv
+# import app.mod_critics.metacritics as mc
 
 from app.mod_db.functions import *
 from flask import current_app
@@ -127,7 +128,7 @@ def edit(movieid):
 
         try:
             if form.upgrademc.data == True:
-                updateMovieMetacrit(movieid, form)
+                mc.updateMovieMetacrit(movieid, form)
             # updateMovie(movieid, form)
         except:
             current_app.logger.error('Unhandled exception', exc_info=sys.exc_info())

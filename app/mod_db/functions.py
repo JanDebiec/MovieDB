@@ -10,6 +10,7 @@ from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
 # from app.mod_db.forms import EditCriticForm, CriticsListForm, SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
 
 import app.mod_imdb.controllers as tsv
+import app.mod_critics.metacritics as mc
 from  helper import clock # decorator clock
 
 class MovieToDisplay:
@@ -470,9 +471,10 @@ def deleteMovie(movieid):
     db.session.delete(obj)
     db.session.commit()
 
-def updateMovieMetacrit(movieid, form):
-    pass
-
+# def updateMovieMetacrit(movieid, form):
+#     movie = Movie.query.filter_by(id=movieid).first()
+#     mc.get_update_movie_ratings(movie)
+#
 def upgradeMovie(movieid, form):
     '''
     there are some movies added to DB with known ImdbId, but not listed
@@ -679,3 +681,27 @@ def add_rating(rating_obj):
         db.session.commit()
     except:
         current_app.logger.error('rating not added', exc_info=sys.exc_info())
+
+def insert_rating_for_movie_from_html(movie_id, movie_html):
+    count, list_ = mc.get_rating_list_for_movie(movie_id, movie_html)
+    # movie_soup = BeautifulSoup(movie_html, 'html.parser')
+    # count, list_ = get_ratings_list(movie_soup)
+    if count > 0:
+        for item in list_:
+            name = '{} {}'.format(item.author, item.source)
+            url = 'http://www.metacritic.com/critic/{}?filter=movies'.format(item.author)
+            maxVal = 100.0
+            crit_obj = Critic(name=name, url=url, maxVal=maxVal)
+            crit_id = add_critic(crit_obj)
+            rat = Rating(movie_id, critic_id=crit_id, value=item.rating)
+            add_rating(rat)
+
+def get_update_movie_ratings(movie_obj):
+    movie_html = mc.get_movie_html(movie_obj)
+    movie_id = movie_obj.id
+    insert_rating_for_movie_from_html(movie_id, movie_html)
+
+def updateMovieMetacrit(movieid, form):
+    movie = Movie.query.filter_by(id=movieid).first()
+    get_update_movie_ratings(movie)
+

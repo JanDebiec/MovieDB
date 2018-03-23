@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 sys.path.extend(['/home/jan/project/movie_db'])
 from app import create_app, db
 from app.mod_db.models import Movie, Role, People, Director, Rating, Critic
-import app.mod_db.controllers as dbc
+# import app.mod_db.controllers as dbc
 import app.mod_db.functions as dbf
 import app.mod_critics.tools as t
 import app.mod_critics.metacritics as mc
@@ -183,12 +183,12 @@ class TestMcIntoDb:
         arr = Movie.query.filter_by(titleImdb='Arrival').first()
         arr_id = arr.id
 
-        mc.insert_rating_for_movie_from_html(arr_id, self.arrival_html)
+        dbf.insert_rating_for_movie_from_html(arr_id, self.arrival_html)
 
         sic = Movie.query.filter_by(titleImdb='Sicario').first()
         sic_id = sic.id
 
-        mc.insert_rating_for_movie_from_html(sic_id, self.sicario_html)
+        dbf.insert_rating_for_movie_from_html(sic_id, self.sicario_html)
 
         critics = Critic.query.all()
         count_critics = len(critics)

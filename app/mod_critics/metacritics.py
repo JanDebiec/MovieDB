@@ -1,60 +1,20 @@
-from requests import get
-from requests.exceptions import RequestException
-from contextlib import closing
+# from requests import get
+# from requests.exceptions import RequestException
+# from contextlib import closing
 from bs4 import BeautifulSoup
-import time
-import collections
+# import time
+# import collections
 import sys
 sys.path.extend(['/home/jan/project/movie_db'])
+from app.mod_critics import tools as t
 
 from app.mod_db.models import Movie, Role, People, Director, Rating, Critic
 import app.mod_db.controllers as dbc
-import app.mod_db.functions as dbf
+# mport app.mod_db.functions as dbf
 
 
 # from bs4 import BeautifulSoup
-
-headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36'}
-McRating = collections.namedtuple("McRating", "source author rating")
-
-
-
-def simple_get(url):
-    """
-    Attempts to get the content at `url` by making an HTTP GET request.
-    If the content-type of response is some kind of HTML/XML, return the
-    text content, otherwise return None
-    """
-    try:
-        with closing(get(url, headers=headers, stream=True)) as resp:
-            if is_good_response(resp):
-                return resp.content
-            else:
-                return None
-
-    except RequestException as e:
-        log_error('Error during requests to {0} : {1}'.format(url, str(e)))
-        return None
-
-
-def is_good_response(resp):
-    """
-    Returns true if the response seems to be HTML, false otherwise
-    """
-    content_type = resp.headers['Content-Type'].lower()
-    return (resp.status_code == 200
-            and content_type is not None
-            and content_type.find('html') > -1)
-
-def log_error(e):
-    """
-    It is always a good idea to log errors.
-    This function just prints them, but you can
-    make it do anything.
-    """
-    print(e)
-
-
+#
 
 def find_by_class(soup, class_, element_type='div'):
     return soup.find(element_type, attrs={'class': class_})
@@ -104,7 +64,7 @@ def get_detail_rating(review_class):
         author = find_by_class(review_class, 'author', 'span').getText()
         source = find_by_class(review_class, 'source', 'span').getText()
         rating = find_by_class(review_class, 'metascore_w', 'div').getText()
-        return McRating(source, author, rating)
+        return t.McRating(source, author, rating)
     except:
         return None
 
@@ -116,11 +76,11 @@ def get_response(mc_name):
     '''
     # url_root is a template string that used to buld a URL.
     url_root = 'http://www.metacritic.com/movie/{}/critic-reviews'
-    response = simple_get(url_root.format(mc_name))
+    response = t.simple_get(url_root.format(mc_name))
     # response = tools.simple_get('http://www.metacritic.com/movie/the-godfather/critic-reviews')
     if response is not None:
         return response
-    log_error('No pageviews found for {}'.format(mc_name))
+    t.log_error('No pageviews found for {}'.format(mc_name))
     return None
 
 def convert_name_to_mc(name):
@@ -140,15 +100,27 @@ def get_movie_html(movie_obj):
     movie_html = get_response(title_mc)
     return movie_html
 
-def insert_rating_for_movie_from_html(movie_id, movie_html):
+def get_rating_list_for_movie(movie_id, movie_html):
     movie_soup = BeautifulSoup(movie_html, 'html.parser')
     count, list_ = get_ratings_list(movie_soup)
-    if count > 0:
-        for item in list_:
-            name = '{} {}'.format(item.author, item.source)
-            url = 'http://www.metacritic.com/critic/{}?filter=movies'.format(item.author)
-            maxVal = 100.0
-            crit_obj = Critic(name=name, url=url, maxVal=maxVal)
-            crit_id = dbf.add_critic(crit_obj)
-            rat = Rating(movie_id, critic_id=crit_id, value=item.rating)
-            dbf.add_rating(rat)
+    return count, list_
+
+    # if count > 0:
+    #     for item in list_:
+    #         name = '{} {}'.format(item.author, item.source)
+    #         url = 'http://www.metacritic.com/critic/{}?filter=movies'.format(item.author)
+    #         maxVal = 100.0
+    #         crit_obj = Critic(name=name, url=url, maxVal=maxVal)
+    #         crit_id = dbf.add_critic(crit_obj)
+    #         rat = Rating(movie_id, critic_id=crit_id, value=item.rating)
+    #         dbf.add_rating(rat)
+
+# def get_update_movie_ratings(movie_obj):
+#     movie_html = get_movie_html(movie_obj)
+#     movie_id = movie_obj.id
+#     insert_rating_for_movie_from_html(movie_id, movie_html)
+#
+# def updateMovieMetacrit(movieid, form):
+#     movie = Movie.query.filter_by(id=movieid).first()
+#     get_update_movie_ratings(movie)
+
