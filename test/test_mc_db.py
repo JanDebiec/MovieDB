@@ -192,11 +192,46 @@ class TestMcIntoDb:
 
         critics = Critic.query.all()
         count_critics = len(critics)
-        assert 76 == count_critics
+        assert 75 == count_critics
 
         ratings = Rating.query.all()
         count_ratings = len(ratings)
         assert 100 == count_ratings
 
+class TestNameConverter:
 
+    def test_one_word(self):
+        input_name = 'Sicario'
+        mc_name = mc.convert_name_to_mc(input_name)
+        reference_name = 'sicario'
+        assert mc_name == reference_name
 
+    def test_two_words(self):
+        input_name = 'The Godfather'
+        mc_name = mc.convert_name_to_mc(input_name)
+        reference_name = 'the-godfather'
+        assert mc_name == reference_name
+
+    def test_three_words(self):
+        input_name = 'I kill Giants'
+        mc_name = mc.convert_name_to_mc(input_name)
+        reference_name = 'i-kill-giants'
+        assert mc_name == reference_name
+
+    def test_name_with_dot_end(self):
+        input_name = 'Robert Yannis Jr.'
+        mc_name = mc.convert_name_to_mc(input_name)
+        reference_name = 'robert-yannis-jr'
+        assert mc_name == reference_name
+
+    def test_name_with_dot_middle(self):
+        input_name = 'Dr.A.A. Names'
+        mc_name = mc.convert_name_to_mc(input_name)
+        reference_name = 'draa-names'
+        assert mc_name == reference_name
+
+    def test_name_with_apo_middle(self):
+        input_name = "Dr.A.A. O'Names"
+        mc_name = mc.convert_name_to_mc(input_name)
+        reference_name = 'draa-onames'
+        assert mc_name == reference_name

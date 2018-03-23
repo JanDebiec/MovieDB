@@ -78,9 +78,15 @@ def get_response(mc_name):
 
 
 def convert_name_to_mc(name):
+    # ignore some chars ['.', ''', ...]
+    # name.strip('.')
+    name.replace('.', '')
+
     name_temp = name.replace(' ', '-')
     mc_name = name_temp.lower()
-    return mc_name
+    mc_name_no_apo = mc_name.replace("'", '')
+    mc_name_no_dot = mc_name_no_apo.replace('.', '')
+    return mc_name_no_dot
 
 
 def get_movie_html(movie_obj):
