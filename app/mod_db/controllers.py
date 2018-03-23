@@ -166,7 +166,11 @@ def edit(movieid):
         current_app.logger.error('amg rating not found', exc_info=sys.exc_info())
         # pass
     try:
-        form.ratingMCvalue.data = getRatingValueForMovie(movie, 'MC')
+        mc_rating = getRatingValueForMovie(movie, 'MC')
+        form.ratingMCvalue.data = mc_rating
+        ratings = Rating.query.filter_by(movie_id=movie.id).all()
+        ratings_count = len(ratings)
+        form.ratingMCcount.data = ratings_count
     except:
         current_app.logger.error('mc rating not found', exc_info=sys.exc_info())
     return render_template('mod_db/edit.html',
