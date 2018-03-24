@@ -386,7 +386,6 @@ def init_mc_db():
              html = mc.get_response(mc_name)
 
              if html != None:
-                 t.log_error('page found for {}'.format(mc_name))
                  current_app.logger.debug('page found for {}'.format(mc_name))
                  insert_rating_for_movie_from_html(movie_id=movie.id, movie_html=html)
              else:
