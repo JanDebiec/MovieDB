@@ -72,3 +72,7 @@ class EditCriticForm(FlaskForm):
 
 class InitMcForm(FlaskForm):
     submit = SubmitField('Download')
+
+class CalcSimilarityForm(FlaskForm):
+    minimal_count = StringField('minimal common movies count')
+    submit = SubmitField('Calc')

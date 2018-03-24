@@ -11,6 +11,7 @@ from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
 
 import app.mod_imdb.controllers as tsv
 import app.mod_critics.metacritics as mc
+import app.mod_critics.functions as mcf
 from  helper import clock # decorator clock
 
 class MovieToDisplay:
@@ -753,3 +754,25 @@ def create_list_for_mc_download():
             pass
     listWithRatings = list(movie_dict.values())
     return listWithRatings
+
+
+def calc_similarity_for_all_critics(minimal_common_count):
+    critics_list = Critic.query.all()
+    # critics_list = list_.pop(0) # remove first criti + JD
+    # get the list of all critics, beside JD
+    # for every critic find common ratings with JD
+    for critic in critics_list[1:]:
+        critic_name = critic.name
+        comp_class = mcf.Comparison('JD', critic_name)
+
+        # wenn common ratings > minimal_common_count
+        common_count = comp_class.get_common_ratings_count()
+        if common_count != None:
+            print('critic name {}, common {}'.format(critic_name, common_count))
+            if common_count >= int(minimal_common_count):
+                # then calculate calc_similarity
+                result_comp = comp_class.compare()
+                # adn write in DB
+                critic.simdistance = result_comp.distance
+                critic.simpearson = result_comp.pearson
+                db.session.commit()

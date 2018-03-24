@@ -5,7 +5,7 @@ from jinja2 import Template
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
-from app.mod_db.forms import InitMcForm, ManInputForm, EditCriticForm, CriticsListForm, SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
+from app.mod_db.forms import CalcSimilarityForm, InitMcForm, ManInputForm, EditCriticForm, CriticsListForm, SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
 
 import app.mod_imdb.controllers as tsv
 # import app.mod_critics.metacritics as mc
@@ -361,21 +361,6 @@ def editcritic(criticid):
 @mod_db.route('/init_mc_db', methods=['GET', 'POST'])
 def init_mc_db():
     form = InitMcForm()
-    # create the list of movies with JD or AMG ratings
-    # critic_jd = Critic.query.filter_by(name='JD').first()
-    # critic_mc = Critic.query.filter_by(name='MC').first()
-    # JD_list = Rating.query.filter_by(critic_id=critic_jd.id).all()
-    # movie_dict = {}
-    # for rating in JD_list:
-    #     movie = Movie.query.filter_by(id=rating.movie_id)
-    #     query = Rating.query.filter_by(movie_id=movie.id)
-    #     mc_ratings = query.filter_by(critic_id=critic_mc.id)
-    #     # check if mc content already saved in DB
-    #     # if not
-    #     #     load mc data and save in DB
-    #     if mc_ratings == None:
-    #         movie_dict[rating.movie_id] = movie
-    #
     listWithRatings = create_list_for_mc_download()
     count = len(listWithRatings)
     messageText = 'Read Metacritic for: {} movies'.format(
@@ -396,3 +381,19 @@ def init_mc_db():
                            title='load Metacritic',
                            form=form)
 
+
+
+@mod_db.route('/calc_similarity', methods=['GET', 'POST'])
+def calc_similarity():
+    form = CalcSimilarityForm()
+    foundMessage = 'search'
+    minimal_common_count = 20 # default value
+    if form.validate_on_submit():
+        minimal_common_count = form.minimal_count.data
+        calc_similarity_for_all_critics(minimal_common_count)
+
+    form.minimal_count.data = minimal_common_count
+    return render_template('mod_db/calc_similarity.html',
+                            title='calc similarity',
+                            form=form,
+                            message=foundMessage)

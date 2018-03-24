@@ -46,6 +46,15 @@ class Comparison():
             value = (ratA, ratB)
             self.sharedRatings[item] = value
 
+
+    def get_common_ratings_count(self):
+        self.findCommonRatings()
+        self.countShared = len(self.sharedFlags)
+        self.createDataForChart()
+        n = len(self.sharedRatings)
+        return n
+
+
     def compare(self):
         ''' input: two lists of ratings
         steps:
