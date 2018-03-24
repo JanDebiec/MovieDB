@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block app_content %}
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {% if message %}
+    <h2>{{ message }}</h2>
+    {% endif %}
+    </p>
+    <p>
+        {{ form.submit() }}
+    </p>
+</form>
+{% endblock %}
