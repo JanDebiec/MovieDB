@@ -14,13 +14,13 @@
             {% for critic in critics[1:] %}
             <tr valign="top">
                 <td>{{ critic.name }}</td>
-                <td>{{ critic.url }}</td>
                 <td>{{ critic.maxVal }}</td>
                 <td>{{ '%0.4f' | format(critic.simdistance|float) }}</td>
                 <td>{{ '%0.4f' | format(critic.simperson|float) }}</td>
                 <td><a href="{{ url_for('database.deletecritic', criticid=critic.id) }}">delete</a></td>
                 <td><a href="{{ url_for('database.editcritic', criticid=critic.id) }}">edit</a></td>
-            </tr>
+                <td><a href="{{ critic.url }}">MC link</a></td>
+           </tr>
             {% endfor %}
             <tr>
                 <td><input type="text" name="name" size="6" maxlength="6"></td>
