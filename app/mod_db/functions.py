@@ -682,17 +682,13 @@ def add_rating(rating_obj):
     except:
         current_app.logger.error('rating not added', exc_info=sys.exc_info())
 
+# @clock
 def insert_rating_for_movie_from_html(movie_id, movie_html):
     mc_rating, count, list_ = mc.get_rating_list_for_movie(movie_id, movie_html)
+    if mc_rating > 0:
+        add_mc_rating_for_movie(mc_rating, movie_id)
     if count > 0:
-        mc_crit_obj = Critic.query.filter_by(name='MC').first()
-        if mc_crit_obj == None:
-            mc_critic = Critic(name='MC', maxVal=100)
-            crit_id = add_critic(mc_critic)
-        else:
-            crit_id = mc_crit_obj.id
-        rat = Rating(movie_id, critic_id=crit_id, value=mc_rating)
-        add_rating(rat)
+        # add_mc_rating_for_movie(mc_rating, movie_id)
 
         for item in list_:
             name = '{}'.format(item.author) # only author, without newspaper
@@ -704,6 +700,18 @@ def insert_rating_for_movie_from_html(movie_id, movie_html):
             rat = Rating(movie_id, critic_id=crit_id, value=item.rating)
             add_rating(rat)
 
+
+def add_mc_rating_for_movie(mc_rating, movie_id):
+    mc_crit_obj = Critic.query.filter_by(name='MC').first()
+    if mc_crit_obj == None:
+        mc_critic = Critic(name='MC', maxVal=100)
+        crit_id = add_critic(mc_critic)
+    else:
+        crit_id = mc_crit_obj.id
+    rat = Rating(movie_id, critic_id=crit_id, value=mc_rating)
+    add_rating(rat)
+
+
 def get_update_movie_ratings(movie_obj):
     movie_html = mc.get_movie_html(movie_obj)
     movie_id = movie_obj.id
@@ -713,3 +721,21 @@ def updateMovieMetacrit(movieid, form):
     movie = Movie.query.filter_by(id=movieid).first()
     get_update_movie_ratings(movie)
 
+@clock
+def create_list_for_mc_download():
+    critic_jd = Critic.query.filter_by(name='JD').first()
+    critic_mc = Critic.query.filter_by(name='MC').first()
+    JD_list = Rating.query.filter_by(critic_id=critic_jd.id).all()
+    movie_dict = {}
+    for rating in JD_list:
+        movie = Movie.query.filter_by(id=rating.movie_id).first()
+        query = Rating.query.filter_by(movie_id=movie.id)
+        mc_ratings = query.filter_by(critic_id=critic_mc.id).all()
+        # check if mc content already saved in DB
+        # if not
+        #     load mc data and save in DB
+        if len(mc_ratings) == 0:
+            movie_dict[rating.movie_id] = movie
+
+    listWithRatings = list(movie_dict.values())
+    return listWithRatings

@@ -192,7 +192,7 @@ class TestMcIntoDb:
 
         critics = Critic.query.all()
         count_critics = len(critics)
-        assert 75 == count_critics
+        assert 76 == count_critics
 
         ratings = Rating.query.all()
         count_ratings = len(ratings)
@@ -235,3 +235,20 @@ class TestNameConverter:
         mc_name = mc.convert_name_to_mc(input_name)
         reference_name = 'draa-onames'
         assert mc_name == reference_name
+
+    def test_space_odysee(self):
+        input_name = "2001: A Space Odyssey"
+        mc_name = mc.convert_name_to_mc(input_name)
+        reference_name = '2001-a-space-odyssey'
+        assert mc_name == reference_name
+
+    def test_heil_caesar(self):
+        input_name = "Hail, Caesar!"
+        mc_name = mc.convert_name_to_mc(input_name)
+        reference_name = 'hail-caesar!'
+        assert mc_name == reference_name
+
+
+
+# No pageviews found for black-cat,-white-cat
+# No pageviews found for o-brother,-where-art-thou?

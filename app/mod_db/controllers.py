@@ -5,13 +5,14 @@ from jinja2 import Template
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
-from app.mod_db.forms import ManInputForm, EditCriticForm, CriticsListForm, SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
+from app.mod_db.forms import InitMcForm, ManInputForm, EditCriticForm, CriticsListForm, SearchDbForm, SingleResultForm, EditMovieForm, DeleteMovieForm, ExploreForm, PageResultsForm
 
 import app.mod_imdb.controllers as tsv
 # import app.mod_critics.metacritics as mc
 
 from app.mod_db.functions import *
 from flask import current_app
+from app.mod_critics import tools as t
 
 
 mod_db = Blueprint('database', __name__, url_prefix='/mod_db')
@@ -357,25 +358,42 @@ def editcritic(criticid):
 
 
 
+@mod_db.route('/init_mc_db', methods=['GET', 'POST'])
 def init_mc_db():
+    form = InitMcForm()
     # create the list of movies with JD or AMG ratings
-    critic_jd = Critic.query.filter_by(name= 'JD').first()
-    critic_mc =  Critic.query.filter_by(name= 'MC').first()
-    JD_list = Rating.query.filter_by(critic_id=critic_jd.id).all()
-    movie_dict = {}
-    for rating in JD_list:
-        movie = Movie.query.fiter_by(id=rating.movie_id)
-        query = Rating.query.filter_by(movie_id=movie.id)
-        mc_ratings = query.filter_by(critic_id= critic_mc.id)
-        # check if mc content already saved in DB
-        # if not
-        #     load mc data and save in DB
-        if len(mc_ratings) <= 0:
-            movie_dict[rating.movie_id] = movie
+    # critic_jd = Critic.query.filter_by(name='JD').first()
+    # critic_mc = Critic.query.filter_by(name='MC').first()
+    # JD_list = Rating.query.filter_by(critic_id=critic_jd.id).all()
+    # movie_dict = {}
+    # for rating in JD_list:
+    #     movie = Movie.query.filter_by(id=rating.movie_id)
+    #     query = Rating.query.filter_by(movie_id=movie.id)
+    #     mc_ratings = query.filter_by(critic_id=critic_mc.id)
+    #     # check if mc content already saved in DB
+    #     # if not
+    #     #     load mc data and save in DB
+    #     if mc_ratings == None:
+    #         movie_dict[rating.movie_id] = movie
+    #
+    listWithRatings = create_list_for_mc_download()
+    count = len(listWithRatings)
+    messageText = 'Read Metacritic for: {} movies'.format(
+        count)
+    if form.validate_on_submit():
+        for movie in listWithRatings:
+             mc_name = mc.convert_name_to_mc(movie.titleImdb)
+             html = mc.get_response(mc_name)
 
-    listWithRatings = list(movie_dict.values())
-    for movie in listWithRatings:
-         mc_name = mc.convert_name_to_mc(movie.titleImdb)
-         html = mc.get_response(mc_name)
-         insert_rating_for_movie_from_html(html, movie.id)
+             if html != None:
+                 t.log_error('page found for {}'.format(mc_name))
+                 current_app.logger.debug('page found for {}'.format(mc_name))
+                 insert_rating_for_movie_from_html(movie_id=movie.id, movie_html=html)
+             else:
+                 current_app.logger.error('page not found for {}'.format(mc_name))
+
+    return render_template('mod_db/init_mc.html',
+                           message=messageText,
+                           title='load Metacritic',
+                           form=form)
 

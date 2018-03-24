@@ -70,3 +70,5 @@ class EditCriticForm(FlaskForm):
     maxval = StringField('MaxVal')
     submit = SubmitField('Update')
 
+class InitMcForm(FlaskForm):
+    submit = SubmitField('Download')

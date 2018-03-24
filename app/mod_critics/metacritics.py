@@ -10,15 +10,16 @@ def find_by_class(soup, class_, element_type='div'):
 
 def get_critics_count(soup):
     count_tag = find_by_class(soup, 'based_on', 'span')
-    # extract number from elem
-    txt = count_tag.getText()
-    elems = txt.split()
-    for elem in elems:
-        try:
-            count = int(elem)
-            return count
-        except:
-            pass
+    if count_tag != None:
+        # extract number from elem
+        txt = count_tag.getText()
+        elems = txt.split()
+        for elem in elems:
+            try:
+                count = int(elem)
+                return count
+            except:
+                pass
     return 0
 
 
@@ -26,6 +27,7 @@ def get_ratings_list(soup):
     list_ = []
     count = get_critics_count(soup)
     i = 0
+    # while True:
     while i < count:
         try:
 
@@ -86,7 +88,9 @@ def convert_name_to_mc(name):
     mc_name = name_temp.lower()
     mc_name_no_apo = mc_name.replace("'", '')
     mc_name_no_dot = mc_name_no_apo.replace('.', '')
-    return mc_name_no_dot
+    mc_name_no_double = mc_name_no_dot.replace(':', '')
+    mc_name_no_comma = mc_name_no_double.replace(',', '')
+    return mc_name_no_comma
 
 
 def get_movie_html(movie_obj):
