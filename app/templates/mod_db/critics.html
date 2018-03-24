@@ -11,10 +11,11 @@
         <table class="table">
             {% include '_criticheader.html' %}
 
-            {% for critic in critics[1:] %}
+            {% for critic in critics %}
             <tr valign="top">
                 <td>{{ critic.name }}</td>
                 <td>{{ critic.maxVal }}</td>
+                <td>{{ critic.common_ratings_count }}</td>
                 <td>{{ '%0.4f' | format(critic.simdistance|float) }}</td>
                 <td>{{ '%0.4f' | format(critic.simperson|float) }}</td>
                 <td><a href="{{ url_for('database.deletecritic', criticid=critic.id) }}">delete</a></td>

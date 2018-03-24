@@ -298,8 +298,9 @@ def explore():
 @mod_db.route('/critics', methods=['GET', 'POST'])
 def critics():
     form = CriticsListForm()
-    found = Critic.query.all()
-    critics = found
+    # all_critics = Critic.query.all()
+    minimal_count = 7
+    critics = select_critics_on_common(minimal_count)
     return render_template('mod_db/critics.html',
                            title='Critics list',
                            form=form,
@@ -391,6 +392,7 @@ def calc_similarity():
     if form.validate_on_submit():
         minimal_common_count = form.minimal_count.data
         calc_similarity_for_all_critics(minimal_common_count)
+        return render_template("critics.html")
 
     form.minimal_count.data = minimal_common_count
     return render_template('mod_db/calc_similarity.html',

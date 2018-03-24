@@ -90,6 +90,7 @@ class Critic(DbBase):
     # as url, the content of metacritic will be used
     url = db.Column(db.String(128))
     maxVal = db.Column(db.Float)
+    common_ratings_count = db.Column(db.Integer)
     simdistance = db.Column(db.Float)
     simperson = db.Column(db.Float) # a type, because not to change the DB
     # relations

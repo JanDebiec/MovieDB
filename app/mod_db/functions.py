@@ -774,5 +774,14 @@ def calc_similarity_for_all_critics(minimal_common_count):
                 result_comp = comp_class.compare()
                 # adn write in DB
                 critic.simdistance = result_comp.distance
-                critic.simpearson = result_comp.pearson
+                critic.simperson = result_comp.pearson
+                critic.common_ratings_count = common_count
                 db.session.commit()
+
+
+def select_critics_on_common(minimal_count):
+    all_critics = Critic.query.all()
+    dict_ = {critic.simperson: critic for critic in all_critics if critic.common_ratings_count != None}
+    list_tupples_sorted = sorted(dict_.items(), reverse=True)
+    list_sorted = [item[1] for item in list_tupples_sorted]
+    return list_sorted
