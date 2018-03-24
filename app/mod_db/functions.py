@@ -724,8 +724,10 @@ def updateMovieMetacrit(movieid, form):
 @clock
 def create_list_for_mc_download():
     critic_jd = Critic.query.filter_by(name='JD').first()
+    critic_amg = Critic.query.filter_by(name='AMG').first()
     critic_mc = Critic.query.filter_by(name='MC').first()
     JD_list = Rating.query.filter_by(critic_id=critic_jd.id).all()
+    AMG_list = Rating.query.filter_by(critic_id=critic_amg.id).all()
     movie_dict = {}
     for rating in JD_list:
         movie = Movie.query.filter_by(id=rating.movie_id).first()
@@ -737,5 +739,17 @@ def create_list_for_mc_download():
         if len(mc_ratings) == 0:
             movie_dict[rating.movie_id] = movie
 
+    for rating in AMG_list:
+        try:
+            movie = Movie.query.filter_by(id=rating.movie_id).first()
+            query = Rating.query.filter_by(movie_id=movie.id)
+            mc_ratings = query.filter_by(critic_id=critic_mc.id).all()
+            # check if mc content already saved in DB
+            # if not
+            #     load mc data and save in DB
+            if len(mc_ratings) == 0:
+                movie_dict[rating.movie_id] = movie
+        except:
+            pass
     listWithRatings = list(movie_dict.values())
     return listWithRatings
