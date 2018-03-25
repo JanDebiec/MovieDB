@@ -19,6 +19,7 @@
                 <td>{{ '%0.4f' | format(critic.simperson|float) }}</td>
                 <td><a href="{{ url_for('database.editcritic', criticid=critic.id) }}">edit</a></td>
                 <td><a href="{{ url_for('critics.results', compare_name=critic.name) }}">compare</a></td>
+                <td><a href="{{ url_for('database.search_critic', critic_name=critic.name) }}">search</a></td>
                 <td><a href="{{ critic.url }}">MC link</a></td>
            </tr>
             {% endfor %}

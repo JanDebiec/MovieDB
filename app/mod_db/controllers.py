@@ -279,6 +279,34 @@ def pageresults(searchitems):
                            )
 
 
+@mod_db.route('/search_critic/<critic_name>', methods=['GET', 'POST'])
+def search_critic(critic_name):
+    form = PageResultsForm()
+    # we need the results of search onSubmit too,
+    # to update the medium and ratings
+
+    foundList = find_movies_for_critic(critic_name)
+
+    if foundList != None:
+        listMovieToDisplay = convert_list_to_display(foundList)
+
+    resultCount = len(foundList)
+
+
+    if resultCount == 0:
+        foundMessage = 'No movie found, search once more'
+        return redirect(url_for('database.search', message=foundMessage))
+    return render_template('mod_db/critic_movies.html',
+                           title="Critic's Movies ",
+                           form=form,
+                           moviescount=resultCount,
+                           critic_name=critic_name,
+                           # ownerRatings = ownerRatings,
+                           movies=listMovieToDisplay
+                           )
+
+
+
 
 @mod_db.route('/explore', methods=['GET', 'POST'])
 def explore():

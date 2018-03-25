@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for, request
 from jinja2 import Template
 from flask import current_app
 from sqlalchemy import or_
+import operator
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
@@ -828,3 +829,27 @@ def select_critics_on_common(minimal_count):
     list_tupples_sorted = sorted(dict_.items(), reverse=True)
     list_sorted = [item[1] for item in list_tupples_sorted]
     return list_sorted
+
+
+@clock
+def find_movies_for_critic(critic_name):
+    critic = Critic.query.filter_by(name=critic_name).first()
+    ratings = Rating.query.filter_by(critic_id=critic.id).all()
+    list_unsorted = [(rating.value, rating.movie_id) for rating in ratings]
+    list_sorted = sorted(list_unsorted, key=operator.itemgetter(0), reverse=True)
+    # dict_ = {rating.movie_id: rating.value for rating in ratings}
+
+    # sorted_x = sorted(dict_.items(), key=operator.itemgetter(1), reverse=True)
+    # sorted_rat = sorted(dict_.values(), key=operator.itemgetter(1), reverse=True)
+
+    list_id_sorted = [item[0] for item in list_sorted]
+    movie_list = []
+    for item in list_sorted:
+        movie_id = item[1]
+        rating = item[0]
+        movie = Movie.query.filter_by(id=movie_id).first()
+        movie_list.append((movie, rating))
+
+
+
+    return movie_list
