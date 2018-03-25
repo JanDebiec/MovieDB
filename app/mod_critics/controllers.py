@@ -20,11 +20,13 @@ mod_critics = Blueprint('critics', __name__, url_prefix='/mod_critics')
 def compare():
     form = CompareCriticsForm()
     if form.validate_on_submit():
-        comparedir = {}
-        comparedir['A'] = form.critica.data
-        comparedir['B'] = form.criticb.data
-        compareitems = json.dumps(comparedir)
-        return redirect(url_for('critics.results',compareitems=compareitems ))
+        # comparedir = {}
+        # comparedir['A'] = form.critica.data
+        # comparedir['B'] = form.criticb.data
+        # compareitems = json.dumps(comparedir)
+        # return redirect(url_for('critics.results',compareitems=compareitems ))
+        compare_name = form.criticb.data
+        return redirect(url_for('critics.results',compare_name=compare_name ))
 
 
     return render_template('mod_critics/compare.html',
@@ -33,14 +35,16 @@ def compare():
                            )
 
 
-@mod_critics.route('/results/<compareitems>', methods=['GET', 'POST'])
-def results(compareitems):
+@mod_critics.route('/results/<compare_name>', methods=['GET', 'POST'])
+# @mod_critics.route('/results/<compareitems>', methods=['GET', 'POST'])
+def results(compare_name):
+# def results(compareitems):
     form = CompareResultsForm()
-    comparedir = json.loads(compareitems)
+    # comparedir = json.loads(compareitems)
     nameA = 'JD'
     # nameA = comparedir['A']
     # nameB = 'AMG'
-    nameB = comparedir['B']
+    nameB = compare_name
 
     comparison = Comparison(nameA, nameB)
     resultComp = comparison.compare()

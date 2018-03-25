@@ -362,12 +362,18 @@ def editcritic(criticid):
 @mod_db.route('/init_mc_db', methods=['GET', 'POST'])
 def init_mc_db():
     form = InitMcForm()
-    listWithRatings = create_list_for_mc_download()
-    count = len(listWithRatings)
-    messageText = 'Read Metacritic for: {} movies'.format(
-        count)
+    listWithRatings_jd = create_list_for_mc_download_jd()
+    count_jd = len(listWithRatings_jd)
+    listWithRatings_amg = create_list_for_mc_download_amg()
+    count_amg = len(listWithRatings_amg)
+    listWithRatings_all = create_list_for_mc_download_all()
+    count_all = len(listWithRatings_all)
+    messageText = 'Read Metacritic for: jd:{}, amg:{}, all:{} movies'.format(
+        count_jd,
+        count_amg,
+        count_all)
     if form.validate_on_submit():
-        for movie in listWithRatings:
+        for movie in listWithRatings_all:
              mc_name = mc.convert_name_to_mc(movie.titleImdb)
              html = mc.get_response(mc_name)
 
