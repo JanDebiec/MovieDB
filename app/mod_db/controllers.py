@@ -288,7 +288,7 @@ def search_critic(critic_name):
     foundList = find_movies_for_critic(critic_name)
 
     if foundList != None:
-        listMovieToDisplay = convert_list_to_display(foundList)
+        listMovieToDisplay = convert_list_with_ratings_to_display(foundList)
 
     resultCount = len(foundList)
 

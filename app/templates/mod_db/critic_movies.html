@@ -2,12 +2,12 @@
 {% block app_content %}
 <div class="container">
     <form action="" method="post">
-        <h1>found {{ moviescount}} Movies for critic {{critic_name}}: </h1>
+        <h1>found {{ moviescount}} movies for critic: {{critic_name}}</h1>
         {{ form.submit() }}
         {{ form.hidden_tag() }}
         <!-- Table -->
         <table class="table">
-            {% include '_movieheader.html' %}
+            {% include '_criticmovieheader.html' %}
             {% for movie in movies %}
             <!--{% include '_movie.html' %}-->
             <!--without subframe, to enable loop variable-->
@@ -23,11 +23,10 @@
                 </td>
                 <td><input type='text' name="ownrat[{{ loop.index0 }}]" size="4" maxlength="4" value='{{ movie.ownerrating }}'>
                 </td>
-                <td>{{ movie.mcrating }}</td>
+                <td>{{ movie.critic_rating }}</td>
                 <td><input type='text' name="amgrat[{{ loop.index0 }}]" size="4" maxlength="4" value='{{ movie.amgrating }}'>
                 </td>
 
-                <td><a href="{{ url_for('database.delete', movieid=movie.id) }}">delete</a></td>
                 <td><a href="{{ url_for('database.edit', movieid=movie.id) }}">edit</a></td>
                 <td><a href="http://www.imdb.com/title/tt{{ movie.imdbId }}">ImDb</a></td>
             </tr>

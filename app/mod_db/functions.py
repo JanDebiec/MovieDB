@@ -42,6 +42,7 @@ class MovieToDisplay:
         self.amgrating = amgrating
         self.imdbrating = imdbrating
         self.mcrating = mcrating
+        self.critic_rating = 0.0
 
 def findReferenceRatingsForMovie(movie):
     '''
@@ -83,6 +84,15 @@ def convert_list_to_display(foundMovieList):
     list_ = []
     for movie in foundMovieList:
         movieToDisplay = convertMovieToDIsplay(movie)
+        list_.append(movieToDisplay)
+    return list_
+
+def convert_list_with_ratings_to_display(foundList):
+    list_ = []
+    for item in foundList:
+        movie = item[0]
+        movieToDisplay = convertMovieToDIsplay(movie)
+        movieToDisplay.critic_rating = item[1]
         list_.append(movieToDisplay)
     return list_
 
