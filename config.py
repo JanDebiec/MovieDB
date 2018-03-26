@@ -21,3 +21,5 @@ class Config(object):
     OWNER_NAME = 'JD'
 
     MAX_VAL_NORM = 100
+
+    MIN_COMMON_RATINGS = 10

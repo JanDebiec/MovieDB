@@ -834,8 +834,15 @@ def calc_similarity_for_all_critics(minimal_common_count):
 
 
 def select_critics_on_common(minimal_count):
+
     all_critics = Critic.query.all()
-    dict_ = {critic.simperson: critic for critic in all_critics if critic.common_ratings_count != None}
+    dict_ = {}
+    for critic in all_critics:
+        if critic.common_ratings_count != None:
+            if critic.common_ratings_count >= minimal_count:
+                dict_[critic.simperson] = critic
+    # if we try both conditions, then we get exception if None
+    # dict_ = {critic.simperson: critic for critic in all_critics if critic.common_ratings_count != None}
     list_tupples_sorted = sorted(dict_.items(), reverse=True)
     list_sorted = [item[1] for item in list_tupples_sorted]
     return list_sorted

@@ -13,6 +13,7 @@ import app.mod_imdb.controllers as tsv
 from app.mod_db.functions import *
 from flask import current_app
 from app.mod_critics import tools as t
+from config import Config
 
 
 mod_db = Blueprint('database', __name__, url_prefix='/mod_db')
@@ -327,7 +328,7 @@ def explore():
 def critics():
     form = CriticsListForm()
     # all_critics = Critic.query.all()
-    minimal_count = 7
+    minimal_count = Config.MIN_COMMON_RATINGS
     critics = select_critics_on_common(minimal_count)
     return render_template('mod_db/critics.html',
                            title='Critics list',
@@ -422,11 +423,11 @@ def init_mc_db():
 def calc_similarity():
     form = CalcSimilarityForm()
     foundMessage = 'search'
-    minimal_common_count = 20 # default value
+    minimal_common_count = Config.MIN_COMMON_RATINGS # default value
     if form.validate_on_submit():
         minimal_common_count = form.minimal_count.data
         calc_similarity_for_all_critics(minimal_common_count)
-        minimal_count = 7
+        minimal_count = Config.MIN_COMMON_RATINGS
         critics = select_critics_on_common(minimal_count)
         return render_template("mod_db/critics.html",
                                 title = 'Critics list',
@@ -441,13 +442,13 @@ def calc_similarity():
                             message=foundMessage)
 
 
-def critics():
-    form = CriticsListForm()
-    # all_critics = Critic.query.all()
-    minimal_count = 7
-    critics = select_critics_on_common(minimal_count)
-    return render_template('mod_db/critics.html',
-                           title='Critics list',
-                           form=form,
-                           critics=critics
-                           )
+# def critics():
+#     form = CriticsListForm()
+#     # all_critics = Critic.query.all()
+#     minimal_count = Config.MIN_COMMON_RATINGS
+#     critics = select_critics_on_common(minimal_count)
+#     return render_template('mod_db/critics.html',
+#                            title='Critics list',
+#                            form=form,
+#                            critics=critics
+#                            )
