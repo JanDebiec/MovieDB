@@ -528,6 +528,11 @@ def updateMovie(movieid, form):
     if newTitle != oldTitle:
         obj.titleLocal = newTitle
 
+    oldImdbTitle = obj.titleImdb
+    newImdbTitle = form.imdbname.data
+    if newImdbTitle != oldImdbTitle:
+        obj.titleImdb = newImdbTitle
+
     oldMedium = obj.medium
     newMedium = form.medium.data
     if newMedium != oldMedium:
