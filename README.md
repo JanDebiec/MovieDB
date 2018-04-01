@@ -1,12 +1,15 @@
 # MovieDB
 local movie data base, based on infos from IMDB. 
-Some additional informations about source, medium and rating can be added by user
+Some additional informations about source, medium and rating can be added by user.
+The ratings from the web-site: www.metacritics.com will be extracted and added to database.
+### The main feature: based on algorithm from the book: Programming Collective Intelligence by Toby Segaran, the Pearson Similarity is calculated and the favourite critic can be evaluated
 
-## Project is in early development phase, serves for me as Flask tutorial, based on Miguel Grinberg's "Flask mega tutorial" 
+## Project serves for me as the Flask tutorial, based on Miguel Grinberg's "Flask mega tutorial" 
 
 The user should be able to query db about the director, actor, ratings, ...
 
-As option user can compare her own ratings with the ratings from various critics and sites
+As main option user can compare her own ratings with the ratings from various critics.
+Based on the ratings, the favourite critic can be evaluated
 
 The structure of the repository:
 
@@ -31,4 +34,3 @@ One can check with the call:
 
 python find_line_tsv.py -f'imdbif/title_crew.tsv' -i '0053779'  -d
 
-Testing on 08.01.2018: The infos for ca 600 movies and 250 Directors were proper extracted from tsv files
