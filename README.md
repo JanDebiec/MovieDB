@@ -1,7 +1,7 @@
-# MovieDB
+# MovieDB with evaluating of the favourite critics
 local movie data base, based on infos from IMDB. 
 Some additional informations about source, medium and rating can be added by user.
-The ratings from the web-site: www.metacritics.com will be extracted and added to database.
+The ratings, loaded from the web-site: www.metacritics.com will be extracted and added to database.
 ### The main feature: based on algorithm from the book: Programming Collective Intelligence by Toby Segaran, the Pearson Similarity is calculated and the favourite critic can be evaluated
 
 ### Project serves for me as the Flask tutorial, based on Miguel Grinberg's "Flask mega tutorial" 
