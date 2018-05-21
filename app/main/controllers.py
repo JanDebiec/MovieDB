@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
+from flask_login import current_user, login_user
 # from app import current_app
 from app import db
-from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
+from app.mod_db.models import Movie, Role, People, Director, Critic, Rating, User
 
 mod_main = Blueprint('main', __name__)
 
@@ -30,3 +31,4 @@ def index():
 def ownrating():
     return render_template('/ownrating.html',
                            title='Criteria for own ratings')
+

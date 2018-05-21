@@ -22,6 +22,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     bootstrap.init_app(app)
     login.init_app(app)
+    login.login_view = 'login'
 
     migrate.init_app(app, db)
 
