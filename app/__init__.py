@@ -37,6 +37,11 @@ def create_app(config_class=Config):
     app.register_blueprint(db_module)
 
     # Import a module / component using its blueprint handler variable (mod_auth)
+    from app.mod_auth.controllers import mod_auth as auth_module
+    # Register blueprint(s)
+    app.register_blueprint(auth_module)
+
+    # Import a module / component using its blueprint handler variable (mod_auth)
     from app.mod_imdb.controllers import mod_imdb as imdb_module
     # Register blueprint(s)
     app.register_blueprint(imdb_module)

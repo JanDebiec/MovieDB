@@ -58,27 +58,13 @@
                     </ul>
                 </li>
 
-
-
-
-                    {% if current_user.is_anonymous %}
-                    <a href="{{ url_for('login') }}">Login</a>
-                    {% else %}
-                    <a href="{{ url_for('logout') }}">Logout</a>
-                    {% endif %}
-
-
-
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_anonymous %}
-                        <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                        <li><a href="/mod_auth/login">Login</a></li>
                     {% else %}
-                        <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                        <li><a href="/mod_auth/logout">Logout</a></li>
                     {% endif %}
                 </ul>
-
-
-
 
             </ul>
         </div>
