@@ -10,7 +10,7 @@ mod_auth = Blueprint('auth', __name__, url_prefix='/mod_auth')
 @mod_auth.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -18,10 +18,10 @@ def login():
             flash('Invalid username or password')
             return redirect(url_for('mod_auth/login'))
         login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     return render_template('mod_auth/login.html', title='Sign In', form=form)
 
 @mod_auth.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
