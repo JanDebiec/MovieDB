@@ -20,10 +20,13 @@ from config import Config
 mod_db = Blueprint('database', __name__, url_prefix='/mod_db')
 
 
-@mod_db.route('/search', methods=['GET', 'POST'])
-def search():
+@mod_db.route('/search/<message>', methods=['GET', 'POST'])
+def search(message):
     form = SearchDbForm()
-    foundMessage = 'search'
+    if message == '':
+        foundMessage = 'search'
+    else:
+        foundMessage = message
     # init content of form
     searchdir = {}
     if form.validate_on_submit():
@@ -270,6 +273,7 @@ def pageresults(searchitems):
                     updatePlaceInDb(foundMovieList, inputPlace)
                     if flagDbShouldCommit:
                         db.session.commit()
+            foundMessage = "movies updated"
         except:
             foundMessage = "update only for admin"
         # foundMessage = "search once more"
