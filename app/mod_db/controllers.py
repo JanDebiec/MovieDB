@@ -2,6 +2,7 @@ import sys
 import json
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from jinja2 import Template
+from flask_login import login_required, current_user, UserMixin, AnonymousUserMixin
 
 from app import db
 from app.mod_db.models import Movie, Role, People, Director, Critic, Rating
@@ -73,6 +74,7 @@ def singleresult(searchitems):
                            form=form)
 
 @mod_db.route('/delete/<movieid>', methods=['GET', 'POST'])
+@login_required
 def delete(movieid):
     form = DeleteMovieForm()
     foundMessage = 'search'
@@ -100,6 +102,7 @@ def delete(movieid):
                            form=form)
 
 @mod_db.route('/maninput', methods=['GET', 'POST'])
+@login_required
 def maninput():
     form = ManInputForm()
     if form.validate_on_submit():
@@ -117,6 +120,7 @@ def maninput():
 
 
 @mod_db.route('/edit/<movieid>', methods=['GET', 'POST'])
+@login_required
 def edit(movieid):
     form = EditMovieForm()
     foundMessage = 'search'
@@ -207,65 +211,68 @@ def pageresults(searchitems):
         foundList = listMovieToDisplay
     resultCount = len(foundList)
     if form.validate_on_submit():
-        if request.method == 'POST':
-            userinputs = request.form
-            newdict = userinputs.to_dict()
-            amount = len(newdict)
-            # we do not know the amount of ratings or medium
-            # we know only global size of input
-            flagDbShouldCommit = False
-            # extracting user ratings input
-            inputOwnRating = []
-            for i in range(resultCount):
-                try:
-                    pointerString = 'ownrat[{}]'.format(i)
-                    rat = newdict[pointerString]
-                    if rat != '':
-                        flagDbShouldCommit = True
-                    inputOwnRating.append(rat)
-                except: # no more ratings
-                    break
-            # extracting amg ratings input
-            inputAmRating = []
-            for i in range(resultCount):
-                try:
-                    pointerString = 'amgrat[{}]'.format(i)
-                    rat = newdict[pointerString]
-                    if rat != '':
-                        flagDbShouldCommit = True
-                    inputAmRating.append(rat)
-                except: # no more ratings
-                    break
-            # extracting user medium input
-            inputMedium = []
-            for i in range(resultCount):
-                try:
-                    pointerString = 'medium[{}]'.format(i)
-                    med = newdict[pointerString]
-                    if med != '' and med != '-':
-                        flagDbShouldCommit = True
-                    inputMedium.append(med)
-                except: # no more medium input
-                    break
-            inputPlace = []
-            for i in range(resultCount):
-                try:
-                    pointerString = 'place[{}]'.format(i)
-                    plc = newdict[pointerString]
-                    if plc != '' and plc != '-':
-                        flagDbShouldCommit = True
-                    inputPlace.append(plc)
-                except: # no more medium input
-                    break
+        try:
+            if current_user.username == 'admin':
+                if request.method == 'POST':
+                    userinputs = request.form
+                    newdict = userinputs.to_dict()
+                    amount = len(newdict)
+                    # we do not know the amount of ratings or medium
+                    # we know only global size of input
+                    flagDbShouldCommit = False
+                    # extracting user ratings input
+                    inputOwnRating = []
+                    for i in range(resultCount):
+                        try:
+                            pointerString = 'ownrat[{}]'.format(i)
+                            rat = newdict[pointerString]
+                            if rat != '':
+                                flagDbShouldCommit = True
+                            inputOwnRating.append(rat)
+                        except: # no more ratings
+                            break
+                    # extracting amg ratings input
+                    inputAmRating = []
+                    for i in range(resultCount):
+                        try:
+                            pointerString = 'amgrat[{}]'.format(i)
+                            rat = newdict[pointerString]
+                            if rat != '':
+                                flagDbShouldCommit = True
+                            inputAmRating.append(rat)
+                        except: # no more ratings
+                            break
+                    # extracting user medium input
+                    inputMedium = []
+                    for i in range(resultCount):
+                        try:
+                            pointerString = 'medium[{}]'.format(i)
+                            med = newdict[pointerString]
+                            if med != '' and med != '-':
+                                flagDbShouldCommit = True
+                            inputMedium.append(med)
+                        except: # no more medium input
+                            break
+                    inputPlace = []
+                    for i in range(resultCount):
+                        try:
+                            pointerString = 'place[{}]'.format(i)
+                            plc = newdict[pointerString]
+                            if plc != '' and plc != '-':
+                                flagDbShouldCommit = True
+                            inputPlace.append(plc)
+                        except: # no more medium input
+                            break
 
-            updateOwnerRatingInDb(foundMovieList, inputOwnRating)
-            updateAmgRatingInDb(foundMovieList, inputAmRating)
-            updateMediumInDb(foundMovieList, inputMedium)
-            updatePlaceInDb(foundMovieList, inputPlace)
-            if flagDbShouldCommit:
-                db.session.commit()
-
-        foundMessage = "search once more"
+                    updateOwnerRatingInDb(foundMovieList, inputOwnRating)
+                    updateAmgRatingInDb(foundMovieList, inputAmRating)
+                    updateMediumInDb(foundMovieList, inputMedium)
+                    updatePlaceInDb(foundMovieList, inputPlace)
+                    if flagDbShouldCommit:
+                        db.session.commit()
+        except:
+            foundMessage = "update only for admin"
+        # foundMessage = "search once more"
         return redirect(url_for('database.search', message=foundMessage))
 
     if resultCount == 0:
@@ -343,6 +350,7 @@ def addcritic():
 
 
 @mod_db.route('/deletecritic/<criticid>', methods=['GET', 'POST'])
+@login_required
 def deletecritic(criticid):
     pass
 
@@ -371,6 +379,7 @@ def deletecritic(criticid):
 
 
 @mod_db.route('/editcritic/<criticid>', methods=['GET', 'POST'])
+@login_required
 def editcritic(criticid):
     form = EditCriticForm()
     if form.validate_on_submit():
@@ -389,6 +398,7 @@ def editcritic(criticid):
 
 
 @mod_db.route('/init_mc_db', methods=['GET', 'POST'])
+@login_required
 def init_mc_db():
     form = InitMcForm()
     listWithRatings_jd = create_list_for_mc_download_jd()
@@ -420,6 +430,7 @@ def init_mc_db():
 
 
 @mod_db.route('/calc_similarity', methods=['GET', 'POST'])
+@login_required
 def calc_similarity():
     form = CalcSimilarityForm()
     foundMessage = 'search'
