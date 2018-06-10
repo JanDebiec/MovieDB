@@ -191,27 +191,33 @@ def edit(movieid):
 @mod_db.route('/pageresults/<searchitems>', methods=['GET', 'POST'])
 def pageresults(searchitems):
     form = PageResultsForm()
+    searchdir = json.loads(searchitems)
+
     # we need the results of search onSubmit too,
     # to update the medium and ratings
-    searchdir = json.loads(searchitems)
-    foundMovieList = searchInDb(searchdir)
-    foundList = []
-    resultCount = 0
-
-    listMovieToDisplay = []
-    if foundMovieList != None:
-        listMovieToDisplay = convert_list_to_display(foundMovieList)
-
-
-    # if activated, filter the results with amg rating
-    itemcritic = searchdir['critic']
-    if itemcritic != '':
-        criticName = itemcritic
-    itemrating = searchdir['rating']
-    if itemrating != '':
-        foundList = filterMoviesWithCriticRating(listMovieToDisplay, criticName, itemrating)
+    # special handling: search only for critic's ratings
+    critic = isSearchOnlyForCriticRatings(searchdir)
+    if(critic != ''):
+        itemrating = searchdir['rating']
+        foundList = searchDbForCriticRatings(critic, itemrating)
     else:
-        foundList = listMovieToDisplay
+
+        foundMovieList = searchInDb(searchdir)
+
+        listMovieToDisplay = []
+        if foundMovieList != None:
+            listMovieToDisplay = convert_list_to_display(foundMovieList)
+
+
+        # if activated, filter the results with amg rating
+        itemcritic = searchdir['critic']
+        if itemcritic != '':
+            criticName = itemcritic
+        itemrating = searchdir['rating']
+        if itemrating != '':
+            foundList = filterMoviesWithCriticRating(listMovieToDisplay, criticName, itemrating)
+        else:
+            foundList = listMovieToDisplay
     resultCount = len(foundList)
     if form.validate_on_submit():
         try:

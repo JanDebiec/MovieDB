@@ -205,6 +205,45 @@ def filterMoviesWithAmgRating(found, itemamg):
 
     return listWithRating
 
+def isSearchOnlyForCriticRatings(searchitems):
+    criticName = ''
+    itemimdbid = searchitems['imdbid']
+    itemmedium = searchitems['medium']
+    itemtext = searchitems['text']
+    itemyear = searchitems['year']
+    itemplace = searchitems['place']
+    itemdirector = searchitems['director']
+
+    if itemimdbid == '' and itemmedium == '' and itemtext == '' \
+        and itemyear == '' and itemplace == '' and itemdirector =='':
+        itemcritic = searchitems['critic']
+        if itemcritic != '':
+            criticName = itemcritic
+    return criticName
+
+def searchDbForCriticRatings(critic, rating):
+    listWithRating = []
+    minimalRating = float(rating)
+    allMovieList = Movie.query.all()
+    listWithRating = []
+    for movie in allMovieList:
+        movieToDisplay = convertMovieToDIsplay(movie)
+        if critic == 'AMG':
+            actRating = movieToDisplay.amgrating
+        elif critic == 'JD':
+            actRating = movieToDisplay.ownerrating
+        elif critic == 'Imdb':
+            actRating = movieToDisplay.imdbrating
+
+        try:
+            actfloat = float(actRating)
+        except:
+            actfloat = 0.0
+        if actfloat >= minimalRating:
+            listWithRating.append(movieToDisplay)
+    return listWithRating
+
+
 def filterMoviesWithCriticRating(found, critic, rating):
     listWithRating = []
     minimalRating = float(rating)
