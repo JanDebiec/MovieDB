@@ -221,7 +221,25 @@ def isSearchOnlyForCriticRatings(searchitems):
             criticName = itemcritic
     return criticName
 
+@clock
 def searchDbForCriticRatings(critic, rating):
+    listWithRating = []
+    minimalRating = float(rating)
+    criticObj = Critic.query.filter_by(name=critic).first()
+    criticRatingsList = criticObj.ratings
+    criticMovieIdList = []
+    for rating in criticRatingsList:
+        if rating.value >= minimalRating:
+            movieId = rating.movie_id
+            movie = Movie.query.filter_by(id=movieId).first()
+            movieToDisplay = convertMovieToDIsplay(movie)
+            listWithRating.append(movieToDisplay)
+    return listWithRating
+
+
+
+@clock
+def searchDbForCriticRatings_old(critic, rating):
     listWithRating = []
     minimalRating = float(rating)
     allMovieList = Movie.query.all()
