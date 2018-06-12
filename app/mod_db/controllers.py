@@ -446,7 +446,7 @@ def calc_similarity():
     foundMessage = 'search'
     minimal_common_count = Config.MIN_COMMON_RATINGS # default value
     if form.validate_on_submit():
-        minimal_common_count = form.minimal_count.data
+        minimal_common_count = int(form.minimal_count.data)
         calc_similarity_for_all_critics(minimal_common_count)
         critics = select_critics_on_common(minimal_common_count)
         return render_template("mod_db/critics.html",
