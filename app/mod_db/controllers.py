@@ -448,8 +448,7 @@ def calc_similarity():
     if form.validate_on_submit():
         minimal_common_count = form.minimal_count.data
         calc_similarity_for_all_critics(minimal_common_count)
-        minimal_count = Config.MIN_COMMON_RATINGS
-        critics = select_critics_on_common(minimal_count)
+        critics = select_critics_on_common(minimal_common_count)
         return render_template("mod_db/critics.html",
                                 title = 'Critics list',
                                 form = form,
